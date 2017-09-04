@@ -1,83 +1,84 @@
-#Install Umbraco with Microsoft WebMatrix
+#通过Microsoft WebMatrix安装Umbraco 
 
-Follow these simple steps to be up and running with WebMatrix quickly and easily. The benefit of using WebMatrix is that it is super simple to get up and running.
+按照这些简单的步骤，使用WebMatrix可以快速并且容易的运行你的实例。使用WebMatrix的好处就在于，它非常的快速以及简易。
 
-##Download and Launch WebMatrix 3
+##下载并启动 WebMatrix3
 
-1. Go to [http://www.microsoft.com/web/webmatrix/](http://www.microsoft.com/web/webmatrix/) and download WebMatrix 3 for free.
+1. 前往 [http://www.microsoft.com/web/webmatrix/](http://www.microsoft.com/web/webmatrix/) 下载免费的 WebMatrix 3。
 
-1. Once installed, launch WebMatrix.
+2. 正确安装后，启动WebMatrix。
 
-1. From the three options shown, choose the option **New**. Then choose **App Gallery**.
+3. 在显示的三个选项中，选择**New**。然后选择**App Gallery**。
 
-	![Web Matrix - Choose New](images/WebMatrix/webmatrix3-start.PNG)
+  ![Web Matrix - Choose New](images/WebMatrix/webmatrix3-start.PNG)
 
-1. In the search box in the top right hand corner, type "Umbraco".
+4. 在右上方的搜索框内，输入"Umbraco"。
 
-	![Web Matrix - Search for Umbraco CMS](images/WebMatrix/webmatrix-search.png)
+  ![Web Matrix - Search for Umbraco CMS](images/WebMatrix/webmatrix-search.png)
 
-1. From the results select the item marked **Umbraco CMS**. Click **Next**.
+5. 在结果列表中选择**Umbraco CMS** 。点击**Next**。
 
-1. In the **Site Name** box give your site an appropriate name and click **Next** again.
+6. 在**Site Name**输入框中给你的网站起一个适合的名字然后再次点击**Next**。
 
-	*The list of items may be more than just Umbraco as shown in the screenshot. This is because WebMatrix uses the Web Platform installer behind the scenes to install Umbraco and will also download any other software that is required in order for the website to run.*
+  *在搜索结果的下拉条目中，可能会比截图中包含的 Umbraco 项目要多。这是因为 WebMatrix 使用 WebPI 安装时会在后台下载一些其他软件来帮助网站运行。*
 
-1. The next screen presents you with two options for the database to be used by Umbraco. Choose the option marked **SQL CE Server (Installed)** and click **Next**. This is the quickest and easiest option to get started with Umbraco - especially for small sites - and uses a file stored on disk as the database.
+7. 在下一屏中你会看到 Umbraco 有两个可用的数据库选项。确定并选择其中的 **SQL CE Server (Installed)** 然后点击**Next**。这是 Umbraco 最简单快速的选择-对于大多数中小网站来说，使用存储在磁盘上的文件作为数据库是比较便利的方式。
 
-	![Web Matrix - Database Selection](images/WebMatrix/webmatrix3-database.png)
+  ![Web Matrix - Database Selection](images/WebMatrix/webmatrix3-database.png)
 
-	*If you need to migrate your database from SQL CE Server to the full edition of SQL Server, you can do it at a later point.*
+  *如果你需要将你的数据库从SQL CE Server迁移到完整版的SQL Server，你可以在之后的任意时间点进行。*
 
-1. Accept the licensing terms and conditions by clicking **I Accept**.
+8. 点击 **I Accept** 接受授权协议和条款。
 
-1. WebMatrix will download the required files to run Umbraco. Once done you will see a confirmation message.
+9. WebMatrix会自动下载运行 Umbraco 所需的文件。当完成时你会看到确认信息。
 
-	![Web Matrix - Install Complete](images/WebMatrix/webmatrix3-install-complete.png)
+  ![Web Matrix - Install Complete](images/WebMatrix/webmatrix3-install-complete.png)
 
-## Umbraco Web Installer
-This section continues from where we left off but covers the installation and configuration of Umbraco inside your web browser when you run Umbraco for the first time.
-	
-1. Once completed you may need to launch the website from WebMatrix. (WebMatrix may also launch the site automatically upon completion of installation.)
-	1. Click the Sites section in the lower left-hand corner.
-	1. Then click on the URL such as `http://localhost:22830`<br/>*Port number may be different as it is random*.
-	1. The Web installer for Umbraco will now launch inside your default browser.
+## Umbraco 安装网站
+本节继续讲述的内容包含当你第一次运行网站时，需要安装和配置的内部信息。	
+1. 当你完成安装后你可能需要从 WebMatrix 中启动网站 (WebMatrix也可能会在完成安装后自动启动网站。)
+  1. 点击左下方的站点部分。
 
-	![Web Matrix - Finding Local Host](images/WebMatrix/webmatrix3-localhost.png)
+  2. 然后点击类似于 `http://localhost:22830`的 URL。
 
-1. You will see the welcome screen. After reading through the page click **Lets get started!**
+     *端口号由于是随机生成的，因此会与这里不同*。
 
-	![Web Installer - Lets Get Started](images/WebMatrix/web-start.png)
+  3. Umbraco网站安装程序会在你的默认浏览器中启动。
 
-1. On the next screen, review the licensing terms and conditions and click **Accept and Continue**.
+  ![Web Matrix - Finding Local Host](images/WebMatrix/webmatrix3-localhost.png)
 
-1. On the next screen you are presented with four options for configuring the database to be used by Umbraco. Choose the option marked I want to use SQL CE 4 and click Install. This is the quickest and easiest option to get started with Umbraco, especially for small sites, and uses a file stored on disk as the database.
+2. 你会看到欢迎画面。阅读后，点击 **Lets get started!**
 
-	*If you need to migrate your database from SQL CE to SQL Server you can do it at a later point.*
+  ![Web Installer - Lets Get Started](images/WebMatrix/web-start.png)
 
-	![Web Installer - Database choice](images/WebMatrix/web-db-CE.png)
+3. 在下一屏，查看许可条款和条件，然后点击 **Accept and Continue**。
 
-	1. You will be shown the progress bar during the database installation, once done click **Next**
+4. 在下一屏中你会看到 Umbraco 可以使用的4个数据库选项。选择**I want to use SQL CE 4** 后点击**Install**。
 
-	![Web Installer - Database Install](images/WebMatrix/web-db-install.png)
+  ![Web Installer - Database choice](images/WebMatrix/web-db-CE.png)
 
-1. On the next screen you need to fill in the form to create a user so you can access the back office of Umbraco. Once completed click **Create user**
+  1. 在数据库安装期间你会看到进度条提醒，安装结束点击 **Next**
 
-	![Web Installer - Create User](images/WebMatrix/web-user.png)
+  ![Web Installer - Database Install](images/WebMatrix/web-db-install.png)
 
-1.  From this next step you can decide if you want to install a starter kit. A starter kit installs an example site for you which allows you to pull it apart and learn how Umbraco works.
+5. 在下一屏你需要在表单中创建可以在 Umbraco 后台中操作的用户。输入完成后点击 **Create user**
 
-1. After deciding whether to skip or install a starter kit you are finished!
+  ![Web Installer - Create User](images/WebMatrix/web-user.png)
 
-1. Now click the **Set up your new website** to be logged into the Umbraco back-office.
+6.  下一步，你可以选择是否安装 starter kit。Starter kit会安装一个示例网站，并允许你分析它，并学习 Umbraco 是如何运作的。
 
-	![Web Installer - Install Complete](images/WebMatrix/web-finish.png)
+7. 在决定你是否要安装 starter kit 之后你就完成了整个安装过程！
 
-1. Celebrate - you're all done!
+8. 现在，点击 **Set up your new website** 登入后台。
 
-### Congratulations, you have installed an Umbraco site!
+  ![Web Installer - Install Complete](images/WebMatrix/web-finish.png)
 
-### Note
-*You can log into your Umbraco site by entering the following into your browser: http://yoursite.com/umbraco/*
+9. 恭喜 - 你已经完成了!
 
-###Post installation
-One important recommendation is to always remove the `install` folder immediately after installing Umbraco and never to upload it to a live server.
+### 祝贺你，已经安装了一个 Umbraco 网站!
+
+### 注意
+*你可以在浏览器中直接输入网址: http://yoursite.com/umbraco/进入后台*
+
+###安装之后
+一个非常重要的建议是在安装完成后删除 `install` 文件夹，并且绝对不要把他上传到生产服务器。

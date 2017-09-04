@@ -1,85 +1,87 @@
-#Upgrades in general
+# 常规升级
 
-_This is the guide for upgrading in general. Sometimes there are exceptions to these guidelines, which are listed in the **[version-specific guide](version-specific.md)**._
+_这是常规的升级手册。有时这些准则会有一些例外情况，具体请参看 **[特殊版本指导](version-specific.md)**._
 
-##Warning
-First of all, things may go wrong for various reasons. Make sure to **ALWAYS** make a backup of both your site's files and the database so that you can return to a version that you know works. You will need the backed up files for merging later so this step is not optional.
+##警告
+首先，不管出于任何原因，都可能导致过程出错。确保你**一直**拥有网站和数据库的备份，这样您就可以还原到你确知可以运行的版本。稍后你将需要这些备份文件来合并，因此这个步骤是不可缺少的。
 
-Before upgrading to a new major version (like v6 to v7), check if the packages you're using are compatible with the version you're upgrading to. On the package's download page, in the **Project compatibility** area, click **View details** to check version-specific compatibility.
+在升级到一个新的主要版本之前（例如 v6到 v7），请检查你要升级到的版本是兼容的。在软件包下载页面， **项目兼容性** 部分，点击 **查看详细** 检查特殊版本的兼容性。
 
-##Note
-It is necessary to run the upgrade installer on each environment of your Umbraco site. So if you want to update your staging and your live site then you need to repeat the steps below and make sure that you click through the install screens so that your upgrade is complete.
+##注意
+你需要在你的每一个 Umbraco 站点中运行升级安装程序。因此如果你想要同时升级测试和生产站点，你需要重复下面的步骤，确保在安装画面中点击并完成了更新操作。
 
-##Are you using NuGet?
+##使用 NuGet 安装?
 
-You can simply open up the **Package Console** and type:
+你可以打开 **程序包控制台** 输入：
 `Update-Package UmbracoCms`
 
-You will be prompted to overwrite files, you should choose **"No to All"** by pressing the **"L"** . If there are any specific configuration changes required for the version you are upgrading to then they will be noted in the the **[version-specific guide](version-specific.md)**.
+系统会提示您文件会被覆盖，你应该选择 **"No to All"** 在点击 **"L"**。如果你升级到的版本需要任何特定的配置更改，那么它们将会在 **[特殊版本指南](version-specific.md)** 中被提及。
 
-Or you can open the **NuGet Package Manager** and select the **Updates** pane to get a list of available updates. Choose the package called **UmbracoCms** and click update. This will run through all the files and make sure you have the latest changes while leaving files you have updated.
+或者你可以打开 **NuGet Package Manager** 之后选择 **Updates** 面板来获取所有的更新版本。选择 **Umbraco CMS** 然后点击 **Update**。这样开始运行所有的更新程序，在确保更新到最新文件的同时，会留下你修改过的文件。*(这一段的翻译很别扭)*
 
-####Upgrades to versions lower than 7.2.0
-If you're not upgrading to 7.2.0 or higher then you should follow these extra instructions, if you are upgrading to 7.2.0+ then you can skip this and go to [Merge UI.xml and language files](#MergeUIxmlandlanguagefiles)
+####升级版本低于 7.2.0
+如果你未升级到7.2.0或者更高，你需要跟随下面的扩展说明进行操作，如果你更新至7.2.0以上，你可以跳过本段内容前往 [合并 UI.xml and language files](#MergeUIxmlandlanguagefiles)
 
-**The following only applies to upgrading to versions lower than 7.2.0**  
-You will be asked to overwrite your web.config file and the files in /config, make sure to answer **No** to those questions.
+**接下来的内容仅应用于更新版本低于7.2.0**  
 
-For some inexplicable reason, the installation will fail if you click "No to All" (in the GUI) or answer "L" (in the package manager console) to the question: "File 'Web.config' already exists in project 'MySite'. Do you want to overwrite it?" So make sure to only answer "**No**" (in the GUI) or "**N**" (in the package manager console).
+你会被问到要覆盖你的 web.config 以及/config 目录中的文件，确保对这些问题回答 **No** 。
+
+由于某些莫名其妙的原因，当被问到『File 'Web.config' already exists in project 'MySite'. Do you want to overwrite it?』，如果你点击『No to All』（在GUI中）或者回答『L』（在控制台中）可能安装程序会出错。所有确保你回答的是 "**No**" (在GUI中) or "**N**" (在控制台中).
 
 ![](images/nuget-overwrite-dialog.png)
 ![](images/nuget-upgrade-overwrite.png)
 
-Now here comes the tricky bit: We'll be mean and overwrite your web.config file anyway. But we'll back it up so don't worry. (Plus you already had your own backup, right?) You can find the backup in `App_Data\NuGetBackup\20140320-165450\`. (The `20140320-165450` bit is the date and time when the backup occurred, which varies.) You can then merge your config files and make sure they're completely up to date.
+现在会出现一些棘手的问题：我们必须要覆盖你的 web.config 文件。但是我们会对其进行备份请勿担心。 (或者你也可以自行备份该文件) 你可以在 `App_Data\NuGetBackup\20140320-165450\` 中看到备份文件。 (目录 `20140320-165450` 会在备份时自动创建，随着日期时间的不同而变化) 接下来你可以合并这些配置文件，同时确保它们完全是最新的。
 
-##Manually Upgrading from a zip file package
+##从 zip 文件包中手工升级
 
-Download the .zip file for the new version you are upgrading to from [http://our.umbraco.org/download](http://our.umbraco.org/download)
+从 [http://our.umbraco.org/download](http://our.umbraco.org/download) 下载你准备要升级的新版本.zip 文件。
 
-Copy the following folders from inside the .zip file over the existing folders in your site:
+从.zip 文件中复制下面的目录，并粘贴到你网站的同名目录中:
 
 - /bin
 - /Umbraco 
 - /Umbraco_Client
 
-**Note:** There are hosting providers (we know of one: RackSpace Cloud) that require proper casing of file and folder names. Normally on Windows this is not a problem but if your hosting provider forces proper casing then you will need to verify that the folder and file names are in the same casing as in the newest version you're upgrading to.
+**注意:** 有主机提供商（已知有 RackSpace Cloud）要求适当的文件和文件夹大小写命名。一般来说在 Windows 上这不会有问题，但是如果你的主体提供商强制要求适当的文件和文件夹大小写命名，你需要检查验证这些内容并确保新旧版本一致。
 
-##Merge configuration files
-You can expect some changes to the following configuration files:
+##合并配置文件
+你可以对以下的配置文件进行一些修改:
 
-* Any file in the /Config folder
-* The /Global.asax file
-* The web.config file in the root of your site **(Important: make sure to copy back the version number, and the connection string as they were.)**
-* In rare cases, the Web.config file in the Views folder
+* /Config 目录的任何文件
+* /Global.asax 文件
+* 网站根目录下的 web.config 文件 **(重要提示: 确保复制的版本号和数据库连接字符串一致)**
+* /Views 目录下的 Web.config 文件
 
 
-Use a tool like [WinMerge](http://winmerge.org/ "WinMerge") to check changes between all of the config files. Depending on when you last did this there may have been updates to quite a few of them.
+使用类似 [WinMerge](http://winmerge.org/ "WinMerge") 这类的工具检查所有配置文件之间的变化。取决于你上次更新时间，可能会有相当多的内容更新。
 
-There's also the possibility that some files in the /Config folder are new or some have been removed (we do make a note of this in the release notes). WinMerge (and other diff tools) is able to compare folders as well so you can more easily spot these differences.
+还有一种可能性，就是/Config 文件夹中的一些文件是新的，或者有些已经被删除了（我们在发布说明中做了标注）。WinMerge（或其他类似工具）能够比较文件夹，这样就可以更容易地发现这些差异。
 
-Up until version 6.0.0 it was necessary to change the version number in ClientDependency.config. This was to clear the cached html/css/js files in the backoffice. Just change the current version number to one that's higher than that. Make sure not to skip this step as you might get strange behaviour in the backoffice otherwise.
+直到版本6.0.0版本，升级时都有必要更改ClientDependency.config的版本号。这样可以显示的刷新后台缓存的HTML、CSS、JS文件。只需将版本号更改为高于当前版本号即可。不要省略这一步，否则后台可能会出现一些奇怪的问题。
 
-##Merge UI.xml and language files
-Some packages (like Contour) add dialogs to the UI.xml. Make sure to merge those changes back in from your backup during the upgrade so that the packages continue to work. This file can be found in: /Umbraco/Config/Create/UI.xml.
 
-Packages like Contour and Courier also make changes to the language files located in: /Umbraco/Config/Lang/*.xml (typically en.xml).
+##合并 UI.xml and language files
+一些软件包（例如 Contour）会添加对话框到 UI.xml 中。请务必在升级过程中，将这些文件从备份中合并到更新中，以便包继续正常工作。这些文件可以在：**/Umbraco/Config/Create/UI.xml** 找到。
 
-#Finalize
-After copying the files and making the config changes, you can open your site. You should see the installer which will guide you through the upgrade. 
+一些软件包（例如 Contour 和 Courier）还会更改一些语言文件：/Umbraco/Config/Lang/*.xml (例如 en.xml)，不要忘记合并更新。
 
-The installer will do two things:
+#最终
+当你复制文件和更新配置文件后，再次打开你的网站。你会看到安装程序，它将引导你完成升级。
 
-* Update the version number in the Web.config 
-* Upgrade your database in case there are any changes
+安装器会做两件事：
 
-We are aware that, currently, the installer is asking you for the database details of a **blank database** while upgrading. In the near future this will be prefilled with your existing details and the wording will be updated. So no need to be scared. Just enter the details of your existing database and Umbraco will upgrade it to the latest version when necessary.
+* 更新版本号到 Web.config 文件
+* 如果数据库有任何变化都会进行升级
 
-##Post installation
-One important recommendation is to always remove the `install` folder immediately after upgrading Umbraco and never to upload it to a live server.
+安装程序在升级时会要求你提供详细的 **空白 database** 数据库信息。不久之后，这将会预先载入你已有的信息，所以不必在意。填写你已有数据库的相信信息，Umbraco 会在必要时予以更新。
 
-##Potential issues and gotchas
+##安装之后
+一个非常重要的建议是在安装完成后删除 `install` 文件夹，并且绝对不要把他上传到生产服务器。
 
-###Browser cache
-Google Chrome has notoriously aggressive caching, so if something doesn't seem to work well in the backoffice, make sure to clear cache and cookies thoroughly (for other browsers as well). Normally the browser cache problem is automatically handled in an Umbraco upgrade by modifying the config/ClientDependency.config version number, however if you wish to re-force this update you can increment this version number which will ensure that any server-side cache of JavaScript and stylesheets gets cleared as well.
+##潜在的问题和陷阱
 
-One way to nudge the cache in Chrome is to open the developer tools (F12) and go to the settings (the cog icon). There will be a checkbox that says "Disable cache (while DevTools is open)". Once this checkbox is on you can refresh the page and the cache should be invalidated. To force it even more, the "reload" button next to your address bar now has extra options when you right-click it. It should have "Normal reload", "Hard reload" and "Empty cache and hard reload" now. The last option is the most thorough and you might want to try that.
+###浏览器缓存
+Google Chrome 大量的使用缓存内容，所以如果后台工作的不大正常，请确保浏览器缓存和cookie 已经彻底清除（其他浏览器也一样）。通常来说，浏览器缓存问题是由 Umbraco 获知 config/ClientDependency.config 版本号来处理的，如果你想要重置这些更新你可以增加这些版本变化来使 JS 个样式表以及服务器端缓存得以清除。
+
+在 Chrome 中还有一个调整缓存的办法是打开开发者工具(F12)，然后前往设置(齿轮图标)。找到一个叫"Disable cache(while DevTools is open)"的复选框。一旦这个复选框打开，您再次刷新页面，缓存应该会失效。想要清理的更加彻底，可以右击地址栏右侧的"reload"按钮，显示菜单包括："Normal reload"、"Hard reload"和"Empty cache and hard reload"。最后一个选项是清理最彻底的，或许你想尝试一下。

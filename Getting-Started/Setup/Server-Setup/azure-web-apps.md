@@ -1,79 +1,70 @@
-# Running Umbraco on Azure Web Apps
+# 在Azure Web Apps上运行 Umbraco
 
-_This section describes best practices with running Umbraco on Azure Web Apps_
+_本节内容描述了在Azure Web Apps上运行 Umbraco 的最佳实践_
 
-## What is Azure Web Apps
+## 什么是 Azure Web Apps
 
-This has been called a few names in the past, many people still know Azure Web Apps as Azure Web Sites. 
+之前有很多别名可以称呼它，许多人人为 Azure Web Apps 就是 Azure Web Sites（*具体请参考官方解释*）。
 
 > App Service is a fully Managed Platform for professional developers that brings a rich set of capabilities to web, mobile and integration scenarios. Quickly create and deploy mission critical web Apps that scale with your business by using Azure App Service.
 
-[You can read more about this here](https://azure.microsoft.com/en-us/documentation/articles/app-service-web-overview/)
+[你可以在这里获取更多信息](https://azure.microsoft.com/en-us/documentation/articles/app-service-web-overview/)
 
-Umbraco will run on Azure Web Apps but there are some configuration options and some specific Azure Web Apps environment limitations you need to be aware of.
+Umbraco 可以运行在Azure Web Apps，但是需要做一个特殊的设置，同时你要意识到 Azure Web Apps的环境会有一定的局限性。
 
-## Storage
+## 存储
 
-The first important thing to know about Azure Web Apps is that it uses a remote file share. 
-This means that the files being used to run your website do not exist locally to the server that is serving your website.
-In many cases this isn't an issue but it can become an issue if you have a large amount of IO operations like Lucene indexing
-due to IO latency of the remote file share.
+第一件需要知道的重要事情是Azure Web Apps使用了远程文件共享。
+这意味着你的网站运行所需的本地文件，并不在提供网站服务的同一台服务器上。
+在多数情况下，这不是一个问题，但是如果你有大量的 IO 操作这会成为一个问题，例如 Lucene 索引文件，频繁的操作会导致远程共享文件的延迟。
 
-## Scaling
+## 弹性计算
 
-If you require the scaling ("scale out") ability of Azure Web Apps then you need to consult 
-the [Load Balancing documentation](load-balancing.md) since there is a lot more that needs
-to be configured to support scaling/auto-scaling.
+如果你需要Azure Web Apps的弹性计算，你需要前往[负载均衡](load-balancing.md) 了解更多的设置，用于支持弹性计算。
 
-## Web worker migrations
+## 网站进程转移
 
-It's important to know that Azure Web Apps may move your website between it's 'workers' at any
-given time. This is normally a transparent operation but in some cases you may be affected by this 
-if any of your code or libraries use the following variables:
+你要知道一个很重要的事情，Azure Web Apps可能会再任何时间点在你的网站进程之间移动网站。 这是透明的正常操作，但是如果你的任何代码或者库使用了下面的变量，可能会受到影响：
 
-* Environment.MachineName (or equivalent)
-* HttpRuntime.AppDomainAppId (or equivalent)
+* Environment.MachineName (或者类似)
+* HttpRuntime.AppDomainAppId (或者类似)
 
-When your site is migrated to another worker, these variables will change. 
-You cannot rely on these variables remaining static for the lifetime of your website.
+当你的网站迁移到其他进程，这个变量会发生变化。
+在网站的生命周期内，你不能期待这些变量保持不变。
 
 
-## Best practices
+## 最佳实践
 
-These best practices are for a single environment/non-scaled azure website. __If you require the scaling ("scale out") 
-ability of Azure Web Apps then you need to consult the 
-[Load Balancing documentation](load-balancing.md)__ since there is a lot more that needs
-to be configured to support scaling/auto-scaling.
+这些最佳实践仅适用于单一环境或者非弹性计算的Azure网站。 __如果你需要Azure Web Apps的弹性计算，你需要前往[负载均衡](load-balancing.md) 了解更多的设置__，用于支持弹性计算。
 
-* You should ensure that `fcnMode="Single"` in your web.config's `<httpRuntime>` section (this is the default that is shipped with Umbraco, see [here](http://shazwazza.com/post/all-about-aspnet-file-change-notification-fcn/) for more details)
-* You should set your log4net minimum log priority to "WARN" in /Config/log4net.config if you are running a live site (of course if you are debugging this is irrelevant)
-* The minimum recommended Azure SQL Tier is "S2", however noticeable performance improvements are seen in higher Tiers 
+* 你需要确保 `fcnMode="Single"` 存在于你的 web.config文件 `<httpRuntime>` 节点中 (对于 Umbraco 来说，这是默认的设置, 查看 [这里](http://shazwazza.com/post/all-about-aspnet-file-change-notification-fcn/) 了解更多信息)
+* 你需要修改运行的网站中的Config/log4net.config文件，设置你的log4net最小级别为"WARN"(如果在调试中，这是无效的)
+* 推荐的最小Azure SQL Tier 为 "S2", 如果你需要显著的提升性能，可以选择更高的 Tiers 
 
 #### Examine v0.1.80+ ####
 
-Examine v0.1.80 introduced a new `directoryFactory` named `SyncTempEnvDirectoryFactory` which should be added to all indexers in the `~/Config/ExamineSettings.config` file
+Examine v0.1.80 引入了一种名为`SyncTempEnvDirectoryFactory`的新 `directoryFactory`，这会为每个`~/Config/ExamineSettings.config`文件的所有索引项增加这个设置。
 
     directoryFactory="Examine.LuceneEngine.Directories.SyncTempEnvDirectoryFactory,Examine"
 
-The `SyncTempEnvDirectoryFactory` enables Examine to sync indexes between the remote file system and the local environment temporary storage directory, the indexes will be accessed from the temporary storage directory. This setting is required due to the nature of Lucene files and IO latency on Azure Web Apps.
+`SyncTempEnvDirectoryFactory` 允许Examine 在远程文件系统和本地临时存储目录中同步文件，再从临时存储目录中访问索引。由于 Lucene 自身原因和Azure Web Apps 的IO延迟，必须设置这个选项。
 
 #### Pre Examine v0.1.80 ####
 
-* If you have a {machinename} token in your `~/Config/ExamineIndex.config` file remove this part of the path. Example, if you have path that looks like: `~/App_Data/TEMP/ExamineIndexes/{machinename}/External/` it should be `~/App_Data/TEMP/ExamineIndexes/External/` 
-* Due to the nature of Lucene files and IO latency, you should update all of your Indexers and Searchers in the `~/Config/ExamineSettings.config` file to have these two properties (see [here](http://issues.umbraco.org/issue/U4-7614) for more details): `useTempStorage="Sync"`
+* 如果在`~/Config/ExamineIndex.config`文件中，有{machinename}令牌，请删除这部分内容。例如，你有路径类似于: `~/App_Data/TEMP/ExamineIndexes/{machinename}/External/` ，将其改为 `~/App_Data/TEMP/ExamineIndexes/External/` 
+* 由于 Lucene 和 IO 延迟问题，你需要在`~/Config/ExamineSettings.config`文件中更新所有的Indexers 和 Searchers，增加下面的属性(访问 [here](http://issues.umbraco.org/issue/U4-7614) 了解更多): `useTempStorage="Sync"`
 
-### Umbraco XML cache file
+### Umbraco XML 缓存文件
+对于单个实例的Azure Web App，你需要确保Umbraco XML配置文件存储在本地 (因为A Azure使用共享文件系统)。为此你需要在 web.config 中增加新的 app setting：
 
-For a single Azure Web App instance you need to ensure that the Umbraco XML config file is stored on the local server (since Azure uses a shared file system). To do this you need to add a new app setting to web.config:
-
-For **Umbraco v7.6+**
+针对 **Umbraco v7.6+**
 
 	<add key="umbracoContentXMLStorage" value="EnvironmentTemp" />
 
-This will set Umbraco to store `umbraco.config` in the environment temporary folder
+这会使Umbraco将 `umbraco.config`存储在环境变量临时目录
 
-For **Umbraco Pre v7.6**
+针对 **Umbraco Pre v7.6**
 
 	<add key="umbracoContentXMLUseLocalTemp" value="true" /> 
 
-This will set Umbraco to store `umbraco.config` in the ASP.NET temporary folder
+这会使Umbraco将 `umbraco.config`存储在 ASP.NET 临时目录

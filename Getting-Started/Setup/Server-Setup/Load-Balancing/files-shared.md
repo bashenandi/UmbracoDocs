@@ -1,74 +1,74 @@
-# File Storage on SAN/NAS/Clustered File Server/Network Share
+# SAN/NAS/Clustered File Server/Network Share上的文件共享
 
-_documentation about setting up load balanced environments using shared file systems_
+_文档是关于使用共享文件系统来设置负载均衡环境_
 
-## Overview
+## 概述
 
-Configuring your servers to work using a centrally located file system that is shared for all of your IIS instances can be tricky and can take a while to setup correctly. 
+配置你的服务器，使所有 IIS 实例使用共享集中式文件系统，是比较复杂的，需要一段时间才能正常完成。
 
-A note when using this method to store your files centrally, you **must** make sure that your file storage system is HA (Highly Available) which means that there's not single point of failure. If you're hosting your files on a File Server share, you need to make the file share clustered (using [MSCS](http://en.wikipedia.org/wiki/Microsoft_Cluster_Server) or similar). Windows Server 2008 supports connecting directly to a SAN via [iSCSI](http://en.wikipedia.org/wiki/ISCSI) if your SAN supports it (there are also many other ways to connect to a SAN to share folders), otherwise you should be able to connect to a NAS via a UNC path but you must ensure that it is a windows/NTFS file system - IIS will not work properly using a linux shared file system.
+使用这种方式将你的文件集中存储，你**必须**确保你的文件存储系统是 HA(Highly Available)的，这意味着它不能出现一点错误。如果你在文件服务器共享上托管你的文件，你需要使用文件共享集群(使用 [MSCS](http://en.wikipedia.org/wiki/Microsoft_Cluster_Server) 或者类似的)。Windows Server 2008支持通过[iSCSI](http://en.wikipedia.org/wiki/ISCSI)直接连接到 SAN，前提是你的 SAN 支持（也有许多其他方式可以连接到 SAN），另外你也可以通过 UNC 路径连接到 NAS，但是必须确保是 Windows/NTFS 文件系统 - IIS 不能正常使用 Linux 文件共享系统。
 
-There's a lot of work required to get this working, but once it's done it's fairly easy to maintain. We've this same setup working for many websites so hopefully these notes help you get started:
+这里还需要做一些事情才能让它工作起来，但是一但完成之后，维护是非常简单的。对于多数站点来说，还有一些类似的设置工作，希望可以帮助你入门：
 
-### Umbraco XML cache file
+### Umbraco XML 缓存文件
 
-One important configuration option that **must** be set when using a centralized storage is to store the umbraco.config file in a folder that is local to the individual server.
+一个重要的配置配置项，是当使用集中式存储时，**必须**将 umbraco.config 文件存储在各个服务器的本地中。
 
 For **Umbraco v7.6+**
 
 	<add key="umbracoContentXMLStorage" value="EnvironmentTemp" />
 
-This will set Umbraco to store `umbraco.config` in the environment temporary folder
+此设置会将`umbraco.config`，存储在系统环境变量的临时目录中
 
-**Or**
+**或者**
 
 	<add key="umbracoContentXMLStorage" value="AspNetTemp" />
 
-This will set Umbraco to store `umbraco.config` in the ASP.NET temporary folder
+此设置会将`umbraco.config`，存储在 ASP.NET的临时目录中
 
 For **Umbraco Pre v7.6**
 
 	<add key="umbracoContentXMLUseLocalTemp" value="true" /> 
 
-This will set Umbraco to store `umbraco.config` in the ASP.NET temporary folder
+此设置会将`umbraco.config`，存储在 ASP.NET的临时目录中
 
 
-## Lucene/Examine configuration
+## Lucene/Examine 配置
 
-You cannot share indexes between servers, therefore when using a shared file server, Examine settings are a little bit tricky. 
+你不能在服务器之间共享索引，所以当使用共享文件服务时，Examin 设置有一点技巧。
 
 #### Examine v0.1.83+ ####
 
-Examine v0.1.83 introduced a new `directoryFactory` named `TempEnvDirectoryFactory` which should be added to all indexers in the `~/Config/ExamineSettings.config` file
+Examine v0.1.83 引入了新的 `directoryFactory`，名为`TempEnvDirectoryFactory`，你需要把它添加到`~/Config/ExamineSettings.config` 文件的所有索引器中
 
     directoryFactory="Examine.LuceneEngine.Directories.TempEnvDirectoryFactory,Examine"
 
-The `TempEnvDirectoryFactory` allows Examine to store indexes directly in the environment temporary storage directory.
+`TempEnvDirectoryFactory` 允许 Examine 把索引文件直接存储在环境变量的临时存储目录中。
 
 #### Pre Examine v0.1.83 ####
 
-* In ExamineIndex.config, you can tokenize the path for each of your indexes to include the machine name, this will ensure that your indexes are stored in different locations for each machine. An example of a tokenized path is: `~/App_Data/TEMP/ExamineIndexes/{machinename}/Internal/`
-* In ExamineSettings.config, you can add this attribute to all of your indexers and searchers: `useTempStorage="Sync"`
-* The 'Sync' setting will store your indexes in ASP.Net's temporary file folder which is on the local file system. Lucene has issues when working from a remote file share so the files need to be read/accessed locally. Anytime the index is updated, this setting will ensure that both the locally created indexes and the normal indexes are written to. This will ensure that when the app is restarted or the local temp files are cleared out that the index files can be restored from the centrally stored index files. If you see issues with this syncing process (in your logs), you can change this value to be 'LocalOnly' which will only persist the index files to the local file system in ASP.Net temp files.
+* 在ExamineIndex.config配置文件中, 你可以标记每台服务器的路径包含机器名, 这可以确保你在每台机器上的索引都存储在不同的位置。一个标记化的路径为：`~/App_Data/TEMP/ExamineIndexes/{machinename}/Internal/`
+* 在 ExamineSettings.config配置文件中, 你可以给每个索引器和搜索器都增加这个属性`useTempStorage="Sync"`
+* 这个'Sync'设置，可以将你的索引存储在本地文件系统中的 ASP.NET 临时目录。由于 Lucene 只能读取/操作本地文件，因此操作远程共享文件会出现问题。任何时候当索引更新时，这个设置会保证本地索引被创建以及索引可以被正常写入。这样同时会确保，当应用重启或者本地临时文件被清空时，索引都可以从集中存储的索引中获取并重新存储在本地。如果你在日志文件中，看到同步过程发生错误，你也可以设置这个值为'LocalOnly'使索引文件仅保留在本地。
 
-## Windows Setup
+## Windows 设置
 
-* Create domain user account that will run your IIS websites. Example: MyDomain\WebsiteUser
-* Grant this domain user FULL access to your file share
-* On each web server, add this user to the IIS Security group account. Server 2003: IIS_WPG, Server 2008: IIS_IUSRS
-* The .NET Code Access Policy must be updated on each server to run with Full Trust for the UsterNC share:
-** EXAMPLE: %windir%\Microsoft.NET\Framework64\v2.0.50727\caspol -m -ag 1. -url "file://\\fileserver.mydomain.local\Inetpub\MySite\*" FullTrust -name "WebsiteUser"
-* The IIS user above needs to be granted the appropriate IIS permissions:
+* 创建域账户用于运行 IIS 网站。例如：MyDomain\WebsiteUser
+* 给予这个域用户操作你共享文件的完全操作权限
+* 在每台服务器上，将这个用户添加到 IIS 安全账户组中。Server 2003: IIS_WPG, Server 2008: IIS_IUSRS
+* 必须在每台服务器上设置.NET Code Access Policy为完全信任模式，用于UsterNC共享:
+** 例如: %windir%\Microsoft.NET\Framework64\v2.0.50727\caspol -m -ag 1. -url "file://\\fileserver.mydomain.local\Inetpub\MySite\*" FullTrust -name "WebsiteUser"
+* 为上面的 IIS 用户，设置适当的 IIS 操作权限:
 ** EXAMPLE: %windir%\Microsoft.NET\Framework64\v2.0.50727\Aspnet_regiis.exe -ga ActiveDirectoryDomain\ProcessIdentity
-* Restart the server
+* 重启服务器
 
-**Much of the above is covered in this Microsoft doc: [ASP.NET 3.5 Hosting](http://wiki.dev/GetFile.aspx?File=Wiggles-Hosting/ASPNET35_HostingDeploymentGuide.doc)**
+**以上大部分内容都包含在微软文档中: [ASP.NET 3.5 主机](http://wiki.dev/GetFile.aspx?File=Wiggles-Hosting/ASPNET35_HostingDeploymentGuide.doc)**
 
-## IIS Setup
+## IIS 设置
 
-Since the files for the website will be hosted centrally, each IIS website on your servers will need to point to the same UNC share for the files. For example: *\\fileserver.mydomain.local\Inetpub\MySite*
+由于所有的网站文件都集中管理，所以每台服务器的 IIS 都需要将网站指定到同样的UNC 共享中。例如：*\\\\fileserver.mydomain.local\Inetpub\MySite*
 
-* Point to the shared file server: \\fileserver.mydomain.local\Inetpub\MySite
-* "Connect To" this share with the user account created above
-* Have their application pools run as the user above
-* Have the IIS anonymous user account set to the application pool account (IIS 7)
+* 指向共享文件服务器: \\\\fileserver.mydomain.local\Inetpub\MySite
+* 使用上面的账户"连接到……"这个共享地址
+* 应用程序池运行用户均为上面设置的用户
+* 给 IIS 设置匿名访问用户(IIS 7)

@@ -1,16 +1,14 @@
-#Advanced techniques with Flexible Load Balancing
+# 灵活负载均衡的高级技术
 
-_This describes some more advanced techniques that you could achieve with flexible load balancing_
+_这里讲述了一些进阶技术，你可以通过灵活负载均衡技术实现_
 
-## Explicit Master Scheduling server
+## 明确主调度服务器
 
-It is recommended to configure an explicit master scheduling server since this reduces the amount 
-complexity that the [master election](flexible.md#scheduling-and-master-election) process performs.
+建议配置显式的主调度服务器，这会减少[主调度服务器选取](flexible.md#scheduling-and-master-election)的复杂性。
 
-This is configurable and in order to do this you will need to have separate application startup handlers
-for your front-end servers and your admin server... you can make this a configuration option in your own code.
+这是可配置的，为了做到这一点，您需要为你的前端服务器和管理服务器编写单独的应用程序启动处理程序……可以在自己的代码中设置此配置选项。
 
-The first thing to do is create a a couple classes for your front-end servers and master server to use:
+第一件事是为你的前端和主服务器创建关联的class，代码如下：
 
 	public class MasterServerRegistrar : IServerRegistrar2
 	{
@@ -49,40 +47,30 @@ The first thing to do is create a a couple classes for your front-end servers an
 		}
 	}
 
-then you'll need to swap the default `DatabaseServerRegistrar` for the your custom registrars during application startup.
-You'll need to create an [ApplicationEventHandler](/Documentation/Reference/Events/Application-Startup) and override `ApplicationStarting`. 
-During this event you can swap the registrar objects:
+然后你需要在应用启动时，替换注册默认的 `DatabaseServerRegistrar`。
+你需要创建一个[ApplicationEventHandler](/Documentation/Reference/Events/Application-Startup)并且复写`ApplicationStarting`方法。在这里你可以替换注册对象：
 
-	//This should be executed on your master server
+	//这会在你的主服务器执行
 	ServerRegistrarResolver.Current.SetServerRegistrar(new MasterServerRegistrar());
 
-	//This should be executed on your slave servers
+	//这会在你的从属服务器执行
 	ServerRegistrarResolver.Current.SetServerRegistrar(new FrontEndReadOnlyServerRegistrar());
 
-Now that your front-end servers are using your custom `FrontEndReadOnlyServerRegistrar` class, they will always be deemed 'Slave' servers and will not 
-attempt any master election or task scheduling.
+现在你的前端服务器会使用你自定义的`FrontEndReadOnlyServerRegistrar`类，他们会被一直认定是『从』服务器，而不会尝试任何主服务器选择以及任务调度工作。
+同时你的主服务器会使用你定义的`MasterServerRegistrar`类，他们会被一直认定为『主』服务器，而且永远执行所有的任务调度。
 
-By setting your master server to use your custom `MasterServerRegistrar` class, it will always be deemed the 'Master' and will always be the one that 
-executes all task scheduling.
 
-## Front-end servers - Readonly database access
+## 前端服务器 - 数据库只读访问
 
-_This description pertains ONLY to Umbraco database tables_
+_这段内容仅适用于 Umbraco 数据表_
 
-In some cases infrastructure admins will not want their front-end servers to have write access to the database. 
-By default front-end servers will require write full access to the following tables:
+在一些案例结构中，管理员不希望前端服务器有写入/操作数据库的权限。默认情况下，前端服务器对下面的表要有写入及完全操作权限：
 
 * umbracoServer
 * umbracoNode
 
-This is because by default each server will inform the database that they are active and more importantly it is
-used for task scheduling. Only a single server can execute task scheduling and these tables are used for servers 
-to use a master server election process without the need for any configuration. So in the case that a front-end
-server becomes the master task scheduler, **it will actually require write access to all of the Umbraco tables**.
+这是因为默认情况下，每台服务器都会通知数据库它们是活动的，对任务调度来说这更加重要。只有一台服务器可以用于执行任务调度，这些表用于主服务选举过程，而不需要其他配置。因此在具体例子中，当前端服务器成为主任务调度服务器时，**它会请求所有 Umbraco 数据表的写权限**。
 
-In order to have readonly database access configured for your front-end servers, you need to implement 
-the [Explicit master scheduling server](#explicit-master-scheduling-server) configuration mentioned above.
+为了能够为前端服务器设置数据库只读访问，你需要实现上面[Explicit master scheduling server](#explicit-master-scheduling-server)部分提到的配置方法。
 
-Now that your front-end servers are using your custom `FrontEndReadOnlyServerRegistrar` class, they will always be deemed 'Slave' servers and will not 
-attempt any master election or task scheduling and because you are no longer using the default `DatabaseServerRegistrar` they will not try to ping
-the umbracoServer table.
+现在你的前端服务器会使用你自定义的`FrontEndReadOnlyServerRegistrar`类，他们会被一直认定是『从』服务器，而不会尝试任何主服务器选择以及任务调度工作，并且由于你不再使用默认的`DatabaseServerRegistrar`，他们也不会再尝试请求umbracoServer表。

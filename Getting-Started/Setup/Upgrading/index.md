@@ -1,9 +1,9 @@
-#Upgrading existing installs
+#升级已有的安装
 
-_Covers the steps to upgrade your copy of Umbraco to a newer version._
+_包含升级你的 Umbraco 到最新版本._
 
-##[General upgrade instructions](general.md)
-General upgrade instructions which must be followed for each upgrade. Usually, upgrading involves just copying a few files and updating config files.
+##[一般升级说明](general.md)
+每次升级必须遵照升级说明。通常，升级只需要复制一些文件，更新一些配置文件。
 
-##[Version specific](version-specific.md)
-This lists extra steps you need to take for each version since 4.6.1.
+##[特殊版本](version-specific.md)
+这个列表包含一些额外的步骤帮助你从4.6.1版本升级。

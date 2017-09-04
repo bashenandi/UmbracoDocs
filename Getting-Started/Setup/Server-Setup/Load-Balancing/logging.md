@@ -1,24 +1,22 @@
-#Logging with load balancing
+# 负载均衡中的日志
 
-Since Umbraco is using log4net for logging there are various configurations that you can use to ensure logging is done the way that you'd like. 
-If you are using file based logs you'll want to ensure that your logs are named with file names that include the machine name, otherwise you'll get file locks. *(See below for details on how to do this)*
+自从Umbraco 使用 log4net 作为日志记录，有了一些特殊的配置，在确保日志正常运行的前提下，可以使用你喜欢的方式。如果你的基于文件方式记录，你应该确保你的日志文件名包含了机器名，否则你获取的文件会锁定。*(见下文详细说明如何解决这个问题)*
 
-Other options include changing your log4net setup to log to a centralized database - of course if your database cannot be accessed then no logging will occur so be aware of this.
+其他选择，包括改变你的 log4net设置，将日志记录到中央数据库-当然如果你没有数据操作权限则无法记录，你要意识到这一点。
 
-##Log4net file logging with machine name
+## 包含机器名的Log4net日志文件
 
-This describes how you can configure log4net to write log files that are named with the machine name.
+这些描述告诉你如何配置 log4net，在写入日志文件时，包含机器名。
 
-Simply update your log4net configuration's appender's file value as below:
+简单的更新你的 log4net配置文件 appender 值如下：
 
-	  <appender .... >
-	    <!--
-			THIS IS THAT VALUE THAT UMBRACO IS SHIPPED WITH THAT DOES NOT
-			INCLUDE THE MACHINE NAME IN THE FILE
+	<appender ....>
+		<!--
+			THIS IS THAT VALUE THAT UMBRACO IS SHIPPED WITH THAT DOES NOT INCLUDE THE MACHINE NAME IN THE FILE
 			<file value="App_Data\Logs\UmbracoTraceLog.txt" />
 		-->
-
+		
 		<!-- THIS IS THE NEW CHANGE TO HAVE A MACHINE NAME IN THE FILE NAME -->
-	    <file type="log4net.Util.PatternString" value="App_Data\Logs\UmbracoTraceLog.%property{log4net:HostName}.txt" />
-			    
-	  </appender>
+		<file type="log4net.Util.PatternString" 
+			value="App_Data\Logs\UmbracoTraceLog%property{log4net:HostName}.txt" />
+	</appender>

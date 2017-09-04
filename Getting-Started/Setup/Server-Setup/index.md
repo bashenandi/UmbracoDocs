@@ -1,14 +1,14 @@
-#Server setup
-*This section describes different ways of setting up servers for use with Umbraco*
+#服务器设置
+*这部分描述了使用 Umbraco 所需要设置服务器的不同方法*
 
 ##SSL/HTTPS
-We strongly encourage the use of HTTPS with Umbraco installations especially in production environments. Using HTTPS will greatly enhance the security of your website, see the [Security reference](../../../Reference/Security/index.md) for more information.
+我们强烈建议在安装 Umbraco ，尤其是生产环境中使用 HTTPS。使用 HTTPS 将大大提高网站的安全性，更多信息，查看[Security reference](../../../Reference/Security/index.md)。
 
-##[File & folder permissions](permissions.md)
-To ensure a stable and smoothly running umbraco installation, these permissions need to be set correctly.
+##[文件和目录权限](permissions.md)
+为了保证安装稳定顺利的进行，这些权限需要正确设置。
 
-##[Load Balanced setup](load-balancing.md)
-Information on how to deploy Umbraco in a Load Balanced scenario and other details to consider when settting up Umbraco for load balancing.
+##[负载均衡是指](load-balancing.md)
+将 Umbraco 部署到负载均衡环境的信息，以及其他一些细节信息。
 
-##[Running Umbraco on Azure Web Apps](azure-web-apps.md)
-Best practices for running Umbraco on Azure Web Apps
+##[在Azure Web Apps上运行 Umbraco](azure-web-apps.md)
+在Azure Web Apps上运行 Umbraco 的最佳实践

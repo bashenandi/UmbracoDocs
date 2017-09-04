@@ -1,41 +1,41 @@
-#File Storage with File Replication
+# 基于文件复制的文件存储
 
-_documentation about setting up load balanced environments using file replication_
+_文档是关于使用文件复制来设置负载均衡环境_
 
-##Replication techniques
+##复制技术
 
-A common way to replicate files on Windows Server is to use [DFS](http://msdn.microsoft.com/en-us/library/windows/desktop/bb540031(v=vs.85).aspx), which is included with Windows Server.
+在 Windows 服务器中常见的文件复制技术，是使用[DFS](http://msdn.microsoft.com/en-us/library/windows/desktop/bb540031(v=vs.85).aspx), 它包含在 Windows 服务版中。
 
-Additional DFS resources:
+附加的 DFS 资源:
 
 * [Implementing DFS Replication in Windows Server 2003](http://www.windowsnetworking.com/articles_tutorials/Implementing-DFS-Replication.html)
 * [Overview of DFS Replication in Windows Server 2008 R2](http://technet.microsoft.com/en-us/library/cc771058.aspx)
 * [Watch an intro to installing and working with DFS](http://www.youtube.com/watch?v=DYfBoUt2RVE)
 
-There are other alternatives for file replication out there, some free and some licensed. You'll need to decide which solution is best for your environment.
+还有其他一些文件复制的替代方案，一些是免费的一些是授权的。你需要根据自行选择选择更加适合你环境的解决方案。
 
-##Non-replicated files
+##非复制文件
 
-When deploying Umbraco in a load balanced scenario using file replication, it is important to ensure that not all files are replicated - otherwise you will experience file locking issues. Here are the folders and files that should not be replicated:
+当使用文件复制发布 Umbraco 到负载均衡环境是，有个很重要的问题是你要知道并不是所有文件都需要复制 - 否则，你将会遇到文件锁的问题。这里有一些文件和目录不能被复制：
 
 * ~/App_Data/TEMP/*
 * ~/App_Data/umbraco.config 
-	* Alternatively you can change the web.config entry to store this file inside of the ~/App_Data/TEMP folder using this
+	* 一个替代方案，是你可以修改 web.config 文件中如下的配置，存储这个文件到 ~/App_Data/TEMP 
 	
 			<add key="umbracoContentXML" value="~/App_Data/TEMP/umbraco.config" />
-	* Another alternative is to store the umbraco.config file in the local server's 'temp' folder. Achieve this by changing this configuration setting to 'true' in the web.config. The downside is that if you need to view this configuration file you'll have to find it in the temp files. Locating the file this way isn't always clear.
+	* 另外一个替代方案是存储 umbraco.config 文件到本地服务器的"temp"目录。实现这个，你只需将 web.config 文件中设置选项为 true。但是带来的问题是，如果你要查看这个文件，则不得不在临时文件中查找。由于文件很多，想找到并不是一直那么容易的。
 			
 			<add key="umbracoContentXMLUseLocalTemp" value="true" /> 
 * ~/App_Data/Logs/*
-	* This is **optional** and depends on how you want your logs configured (see below) 
+	* 这是**可选的**，同时取决于你想如何配置日志（看下面） 
 
-If for some reason your file replication solution doesn't allow you to not replicate specific files folders (which it should!!) then you can use an alternative approach by using virtual directories. *This is not the recommended setup but it is a viable alternative:*
+如果因为某些原因，你的文件复制方案，不允许你不复制某些文件或文件夹，你可以使用虚拟目录作为另一种方案来解决。*这不是推荐的配置方法，但这是一个可行的替代方案:*
 
-* Edit /web.config and change the umbracoContentXML to use ~/App_Data/TEMP/umbraco.config.
-* Copy the /App_Data/TEMP directory to each server, outside of any replication areas or to a unique folder for each server.
-* Create a virtual directory (not a virtual application) in the /App_Data folder, and name it TEMP. Point the virtual directory to the folder you created in step 2.
-* You may delete the /App_Data/TEMP folder from the file system - not IIS as this may delete the virtual directory - if you wish.
+* 编辑 /web.config 文件，修改 umbracoContentXML 的设置为 ~/App_Data/TEMP/umbraco.config。
+* 复制每台服务器上的 /App_Data/TEMP 目录，将其拷贝到位于文件复制方案之外的唯一文件夹中。
+* 在App_Data 目录中创建虚拟目录（不是虚拟应用），命名为 TEMP 。将虚拟目录指向到第二步创建的文件夹。
+* 你可以在文件系统中删除 /App_Data/TEMP 目录 - 注意不是在 IIS 中，否则会删除虚拟目录。
 
-##IIS Setup
+##IIS设置
 
-IIS configuration is pretty straightforward with file replication. IIS is just reading files from its own file system like a normal IIS website.
+文件复制环境中的IIS 的配置相当简单。IIS 只会读取本地文件系统，就像正常的 IIS 网站一样。
