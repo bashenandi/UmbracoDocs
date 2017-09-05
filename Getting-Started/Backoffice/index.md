@@ -1,82 +1,82 @@
-#BackOffice overview
-These items are common terms and concepts that are used throughout the Umbraco backoffice.
+# 后台概述
+这些条目在Umbraco 后台中是通用的术语和概念。
 
-###[Login screen](Login/)
-When you go to the backoffice for the first time, you're presented with the login screen.
-![Login screen](images/login.png "The login screen has a greeting, username/password field and optionally a 'Forgotten password' link.")
+### [登录界面](Login/)
+当你第一次进入后台，你会看到登录界面。
+![Login screen](images/login.png "屏幕中间有问候语, username/password 字段和复选框，还有一个忘记密码链接。")
 
 
-###[Section](Sections/)
-A section in Umbraco is where you do specific tasks related to that section. For example content, settings, developer. You can navigate between the different sections of the backoffice by clicking the corresponding icon in the section menu.
+### [区块](Sections/)
+Umbraco 区块是指一组相关的特殊任务组成的部分。例如内容、设置、开发。你可以在区块菜单中，点击相应的图标在不同区块之间跳转。
 
-![Sections](images/sections.jpg "The Section menu is the vertical menu located on the left side of the backoffice.")
-*The __Section menu__ is the vertical menu located on the left side of the backoffice.*
+![区块](images/sections.jpg "The Section menu is the vertical menu located on the left side of the backoffice.")
+*__区块菜单__是定位在后台左侧的菜单。*
 
-###Tree
-A tree is an hierarchical list of items related (and usually restricted) to a specific concept, which could be something like a content tree or a media tree. You can expand trees by clicking the down arrow <img src="images/expand-node.png" style="margin:0;width:15px" title="Expand a node in a tree" /> to the left of the node.
-[Read more..](../../Extending/Section-Trees/index.md)
-
+### 树
+树是与特定概念相关的（通常是受限关系）条目层次结构列表，它可能类似于内容树或媒体树。你可以点击节点左侧，向下的箭头<img src="images/expand-node.png" style="margin:0;width:15px" title="Expand a node in a tree" />展开树。[了解更多..](../../Extending/Section-Trees/index.md)
 ![Tree](images/tree.jpg "The content tree")
-*The content tree*
+*内容树*
 
-###Node
-A node is an item in a tree. The images and folders in the Media section are shown as nodes in the Media tree, page and content in the Content tree and so forth.
+###节点
+节点是树中的一个项目。Media 区块中的图片和目录显示为 Media 树中的节点，Content 区块中的页面和内容显示为 Content 树的节点诸如此类。
 
-###Dashboards
-A dashboard is the main view you are presented with when entering a section within the backoffice, and can be used to show valuable information to the users of the system.
+###控制台/仪表板
+仪表板是你在进入后台中的区块看到的主要视图，可以用来向用户显示一些系统的有价值信息。
 ![Dashboard](images/dashboard.jpg "Default dashboard in the content section")
-*Default dashboard in the content section*
-[Read more..](../../Extending/Dashboards/index.md)
+*默认显示的是Content区块的仪表板*
+[了解更多..](../../Extending/Dashboards/index.md)
 
-###Editor
-An editor is what you use to edit different items within the backoffice. There are editors specific to editing stylesheets, there are editors for editing Macros and so forth.
+### 编辑器
+编辑器用于在后台编辑不同的条目。这里有一些特殊的编辑器用于编辑样式表，有一些编辑器用于编辑宏等等。
 
-###Content
-Content are the pages and content in the Content section. Each item in the tree is called a Node.  Each node in the content tree exists out of different fields. Every content item (or Node) is defined by a Document Type.
-[Read more..](../Data/Defining-Content/)
+###内容
+内容是指在内容区块的页面和内容。树中的每一个条目都称之为节点。内容树中的每个节点都存在不同的字段。每一个内容条目（或节点）都是由文档类型所定义的。
+[了解更多..](../Data/Defining-Content/)
 
-###Document Type
-Document types define the types of pages/nodes that backoffice users can create in the content tree. Each document type contains different properties or fields.
-Each field has a specific data type e.g. text, number, ...
+###文档类型
+文档类型定义了后台用户可以在内容树中创建的页面/内容类型。每个文档类型都包含不同的属性或字段。每个字段都包含特定的数据类型，例如：文本、数字……
 
-###Properties
-Every document type has properties. These are the fields that the content editor is allowed to edit for the node.
+###属性
+每个文档类型都包含属性。这是内容编辑器中允许为节点编辑的字段。
 
-###Data Type
-Each document type property has a data type which defines the type of input of that property. Data types reference a Property Editor and are configured in the Umbraco backoffice in the developer section.  A datatype can be something very simple (textstring, number, true/false,...) or more complex (multi node tree picker, image cropper, ...)
-[Read more..](../Data/Data-Types/)
+###数据类型
+文档类型中的每一个属性都包含一个数据类型，它定义了该属性的输入类型。数据类型指向一个属性编辑器，在Umbraco后台的开发区块中可以进行配置。
 
-###[Property Editors](Property-Editors/)
-A property editor is a way to insert content into Umbraco. An example of a property editor is the Rich Text Editor. It may be confused with Data Types. Its possible to have many Rich Text Editor Data Types with different settings that all use the Rich Text Editor property editor.
+一个数据类型可以非常简单（textstring、number、true/false、……），或者比较复杂（multi node tree picker、image cropper、……）
+[了解更多..](../Data/Data-Types/)
 
-###Media
-Media items are used to store assets like images and video within the Media section and can be referenced from your content.
-[Read more..](../Data/Creating-Media/)
+###[属性编辑器](Property-Editors/)
+属性编辑器是向 Umbraco 插入内容的一种方式。富文本编辑器就是属性编辑器的一个实例。它可能会与数据类型混淆。可能有很多富文本编辑的数据类型使用了不同的设置，而他们都使用了富文本编辑类型的属性编辑器。
+
+###媒体
+Media 区块中的 Media 条目，用于存储类似于图片和视频一类的资源，并且可以从你的内容中引用它们。
+[了解更多..](../Data/Creating-Media/)
 
 
-###Media Type
-Media types are very similar to document types in Umbraco except they are specifically for media items in the media section.
+###媒体类型
+除了它是专门用于指定 Media 区块中的 media 条目之外，媒体类型与文档类型非常相似。
 
-###Member
-A member is someone who has access to signup, register and login into your **public website** and is not to be confused with User.
-[Read more..](../Data/Members/)
-###Member Type
-Similar to a Document type and a Media type. You are able to define custom properties to store on a member such as twitter username or website URL for example.
+###会员
+会员是指某个已经注册、登录并可以操作你的**公开网站**的人，不要与用户混淆
+[了解更多..](../Data/Members/)
 
-###Templates
-A template is where you define the HTML markup of your website. A layout is a common template that contains common markup such as the `<head>` section.
-[Read more](../Design/Templates/)
+###会员类型
+类似于文档类型和媒体类型。你可以定义一些自定义属性，用于存储会员的 twitter 账户、网站 URL 等。
 
-###Package
-A package is the Umbraco term for a module or plug-in used to extend Umbraco. Packages can be found in the [projects section of Our Umbraco](https://our.umbraco.org/projects/ "Projects on Our Umbraco").
+###模板
+模板是为你的网站定义 HTML 标记的地方。布局通常是通用的模板，包含一些通用的标记，类似于`<head>` 段落。
+[了解更多](../Design/Templates/)
 
-###Macros
-A macro is a reusable piece of functionality that you can re-use throughout your site. Macros can be configured with parameters and be inserted into a Rich Text Editor. You can define what macros are available for your editors to insert in to the rich text editor. When an editor inserts a macro into the rich text editor it will prompt them to fill out any of the defined parameters for the macro.
-[Read more..](../../Reference/Templating/Macros/)
+###包
+package 是指能够扩展 Umbraco的模块或者插件的Umbraco 术语。关于包可以在这里找到[Umbraco项目](https://our.umbraco.org/projects/ "Projects on Our Umbraco").
 
-###Macro Parameter Editor
-A parameter editor defines the usage of a property editor for use as a parameter for Macros.
-[Read more..](../../Extending/Macro-Parameter-Editors/)
+###宏
+宏是可重用的功能组件，它可以在你的整个站点中重复使用。宏可以配合参数配置，支持插入富文本编辑器。你可以定义哪些已有的宏可以在编辑器中使用。当编辑器中插入宏时，它会提示要输入已经定义好的参数。
+[了解更多..](../../Reference/Templating/Macros/)
 
-###User
-A user is someone who has access to the **Umbraco backoffice** and is not to be confused with Member. When Umbraco has been installed a user will automatically be generated with the login (email) an password entered during installing. Users can be created, edited and managed in the User section.
+###宏参数编辑
+参数编辑器定义属性编辑器的用法，作为宏的参数使用。
+[了解更多..](../../Extending/Macro-Parameter-Editors/)
+
+###用户
+用户是指可以操作**Umbraco后台**的人，不要与会员混淆。在安装 Umbraco 时，会使用输入的 login、email 和密码生成用户。用户可以在 User区块中创建、编辑以及管理。

@@ -1,31 +1,29 @@
-#Radiobutton List
+#单选按钮组
 
-`Returns: Prevalue ID`
+`返回值: 预设值 ID`
 
-Pretty much like the name indicates this Data type enables editors to choose from list of radiobutton
+正如其名称所表明的，这个属性编辑器允许编辑器从单选按钮列表中进行选择。
 
-##Data Type Definition Example
+##数据类型定义示例
 
 ![Radiobutton List Data Type Definition](images/wip.png)
 
-##Content Example 
+##内容示例 
 
 ![Radiobutton List Content](images/wip.png)
 
-##MVC View Example
+##MVC 视图示例
 
-###Typed:
+###类型:
 
-    @if (Model.Content.HasValue("miniFigure"))
-    {
-        var preValue = Umbraco.GetPreValueAsString(Model.Content.GetPropertyValue<int>("miniFigure"));
-        <p>@preValue</p>
-    }
+	@if (Model.Content.HasValue("miniFigure")){
+		var preValue = Umbraco.GetPreValueAsString(Model.Content.GetPropertyValue<int>("miniFigure"));
+		<p>@preValue</p>
+	}
 
-###Dynamic:                              
+###动态:                              
 
-    @if (CurrentPage.HasValue("miniFigure"))
-    {
-        var preValue = Umbraco.GetPreValueAsString(CurrentPage.miniFigure);
-        <p>@preValue</p>
-    }   
+	@if (CurrentPage.HasValue("miniFigure")){
+		var preValue = Umbraco.GetPreValueAsString(CurrentPage.miniFigure);
+		<p>@preValue</p>
+	}   

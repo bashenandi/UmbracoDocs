@@ -1,31 +1,30 @@
-#True/False
+# 是/非
 
-`Returns: Boolean`
+`返回值: Boolean`
 
-True/False is a simple checkbox which saves either 0 or 1, depending on the checkbox being checked or not.
+是/非是一个简单的复选框，保存值是0或1，这取决于你是否选取了。
 
-##Data Type Definition Example
+## 数据类型定义示例
 
 ![True/False Data Type Definition](images/True-False-DataType.png)
 
-##Content Example 
+## 内容示例 
 
 ![No Edit Content Example](images/True-False-Content.png)
 
-##MVC View Example - displays a list of links to child pages that are not hidden
+##MVC 视图示例 - 显示子页面中没有隐藏的链接列表
 
-###Typed:
+###类型:
 
 	@{
 		foreach (IPublishedContent page in Model.Content.Children){
-            if (!page.GetPropertyValue<bool>("umbracoNaviHide"))
-            {
+			if (!page.GetPropertyValue<bool>("umbracoNaviHide")){
 				<p>@page.Name</p>
 			}
 		}	
 	}
 
-###Dynamic: 
+###动态: 
 
 	@{
 		foreach (var page in CurrentPage.Children){

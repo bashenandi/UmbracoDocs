@@ -1,43 +1,41 @@
-#Multiple Textbox
+#多文本输入框
 
-`Returns: array of strings`
+`返回: 字符串数组`
 
-The Multiple Textbox property editor enables a content editor to make a list of text items. For best use with an unordered-list.
+多文本框属性编辑器允许在内容编辑器中生成一组文本条目的列表。最好使用无序列表。
 
-##Data Type Definition Example
+##数据类型定义示例
 
 ![Multiple Textbox Data Type Definition](images/wip.png)
 
-##Content Example 
+##内容示例 
 
 ![Multiple Textbox Content](images/wip.png)
 
-##MVC View Example
+##MVC 视图示例
 
 ###Typed:
-	
-    @{
-        if (Model.Content.GetPropertyValue<string[]>("keyFeatureList").Length > 0)
-        {
-            <ul>
-                @foreach (var item in Model.Content.GetPropertyValue<string[]>("keyFeatureList"))
-                {
-                    <li>@item</li>
-                }
-            </ul>
-        }
-    }
+
+
+	@{
+		if (Model.Content.GetPropertyValue<string[]>("keyFeatureList").Length > 0){
+			<ul>
+				@foreach (var item in Model.Content.GetPropertyValue<string[]>("keyFeatureList")){
+					<li>@item</li>
+				}
+			</ul>
+		}
+	}
 
 ###Dynamic:                              
 
-    @{
-        if (CurrentPage.keyFeatureList.Length > 0)
-        {
-            <ul>
-                @foreach (var item in CurrentPage.keyFeatureList)
-                {
-                    <li>@item</li>
-                }
-            </ul>
-        }
-    }
+
+	@{
+		if (CurrentPage.keyFeatureList.Length > 0){
+			<ul>
+				@foreach (var item in CurrentPage.keyFeatureList){
+					<li>@item</li>
+				}
+			</ul>
+		}
+	}

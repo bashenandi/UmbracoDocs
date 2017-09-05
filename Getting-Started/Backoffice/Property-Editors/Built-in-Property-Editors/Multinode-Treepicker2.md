@@ -1,58 +1,55 @@
-# Multinode Treepicker
+# 多节点树选取器
 
-`Alias: Umbraco.MultiNodeTreePicker2`
+`别名: Umbraco.MultiNodeTreePicker2`
 
-`Returns: IEnumerable<IPublishedContent>`
+`返回值: IEnumerable<IPublishedContent>`
 
-## Settings
+## 设置
 
-The mntp allows you to configure the type of tree to render, what part of the tree that should be rendered, and specifically for content, it allows you to select a dynamic root node based on the current document using the multinode tree picker. 
+多节点树选取器允许你配置呈现的树的类别，树中的哪部分是可以被显示的，对于内容来说，允许你使用多节点树选取器选择基于当前文档作为根节点的动态内容。
 
-**Node type:** set the type of node, root node of the tree, or query for the root node
+**节点类型：** 设置节点类型，树的根节点，或者从根节点的查询
 
-For querying for a root node, you can use dynamic placeholders in the xpath query, following the below sample queries 
+对于从根节点的查询蜡树哦，你可以在 xpath 中使用动态占位符，如下面的查询例子：
 
-	//get the first textpage below the current document
+	//从当前文档之下选择第一个 textpage
 	$current/textpage: current page or closest found ancestor
 	
-	//get a descendant of type news article somewhere below the parent
+	//在父级以下获取类型为 newsArticle的后代
 	$parent//newsArticle: parent page or closest found ancestor
 	
-	//go to the root the content tree
+	//前往内容树的根节点
 	$root
 	
-	//go the ancestor at @level=1 where your website root usually is.
+	//前往 @level=1 的祖先，通常是你的的网站根目录
 	$site: Ancestor node at level 1 
 
-It is important to notice that all placeholders above acts against published content only. So if you therefore try to fetch `$parent` of the the current document, then Umbraco will return that or its closest published ancestor. So in case parent is not published, it will try the parent of that parent, and so on.  
+很重要的一点是，所有的占位符仅适用于已经发布的内容。因此如果你从当前文档的`$parent`开始获取，Umbraco 会返回它以及距离它最近的已发布后代。在这个例子中，如果父级未发布，它会尝试查询父级的父级，诸如此类。
 
+**根据类别过滤条目:** 允许或不允许树节点包含的文档类别别名。
 
-**Filter out items with type:** allow or disallow tree nodes with a certain content type alias.
+输入`typeAlias,altTypeAlias`仅允许选择包含他们的节点。输入`!typeAlias,altTypeAlias`，则仅允许选择**不**包含他们的节点。
 
-Enter `typeAlias,altTypeAlias` to only allow selecting nodes with those alias'. Enter `!typeAlias,altTypeAlias` to only allow selecting nodes **not** with those alias'.
-
-**Minimum/maximum number of items:** set a limit on the amount of items allowed to be selected.
+**最小/最多条目:** 设置允许的最小和最大的条目数量。
  
- 
-**note:** the ability to query for the content trees root node was added in 7.0.3 
+**注意:** 允许内容树根节点的查询，从7.0.3版本才添加进来 
 
 
-## Data Type Definition Example
+## 数据类型定义示例
 
 ![Multinode Treepicker Data Type Definition](images/Multinode-Treepicker2-DataType.png)
 
-## Content Example 
+## 内容示例 
 
 ![Multinode Treepicker](images/Multinode-Treepicker2-Content.jpg)
 
-## MVC View Example
+## MVC 视图示例
 
-### Typed:
+### 类型:
 
-    @{
-        var typedMultiNodeTreePicker = Model.Content.GetPropertyValue<IEnumerable<IPublishedContent>>("featuredArticles");
-        foreach (var item in typedMultiNodeTreePicker)
-        {
-            <p>@item.Name</p>
-        }
-    }
+	@{
+		var typedMultiNodeTreePicker = Model.Content.GetPropertyValue<IEnumerable<IPublishedContent>>("featuredArticles");
+		foreach (var item in typedMultiNodeTreePicker){
+			<p>@item.Name</p>
+		}
+	}

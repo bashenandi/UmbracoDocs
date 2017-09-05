@@ -1,22 +1,21 @@
-#Textbox
+#文本框
 
-`Returns: String`
+`返回值: String`
 
-Textbox is a simple HTML input control for text
+文本框是用于简单文本的输入控件
 
-##Data Type Definition Example
+##数据类型定义示例
 
 ![Textbox Data Type Definition](images/Textbox-DataType.png)
 
-##Settings
 
-##Content Example 
+##内容示例 
 
 ![Textbox Content Example](images/Textbox-Content.png)
 
-##MVC View Example
+##MVC 视图示例
 
-###Typed:
+###类型:
 
 	@{
 	   if (Model.Content.HasValue("pageTitle")){
@@ -24,7 +23,7 @@ Textbox is a simple HTML input control for text
 	   } 
 	}
 
-###Dynamic: 
+###动态: 
 
 	@{       
 	   if (CurrentPage.HasValue("pageTitle")){

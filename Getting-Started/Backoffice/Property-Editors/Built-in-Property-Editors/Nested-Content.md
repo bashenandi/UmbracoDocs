@@ -1,15 +1,13 @@
-# Nested Content
+# 嵌套内容
 
-`Alias: Umbraco.NestedContent`
+`别名: Umbraco.NestedContent`
 
-`Returns: IEnumerable<IPublishedContent>` (or `IPublishedContent` depending on configuration)
-
-
-**Nested Content** is a new list editing property editor for Umbraco 7.7, using Document Types to define the list item schema. By using document-types, you have the benefit of an easy/reusable UI that you are familiar with and get to re-use all the standard data-types as field editors.
+`返回值: IEnumerable<IPublishedContent>` (或 `IPublishedContent` 取决于配置)
 
 
+**嵌套内容** 是 Umbraco 7.7新引入的一个列表编辑类型的属性编辑器，使用文档类型定义列表条目架构。通过使用文档类型，你获得了一个便捷/可重复使用的 UI，可以让你在字段编辑器中重复使用已有的可重复使用的标准数据类型。
 
-## Configuring Nested Content
+## 配置嵌套内容
 
 The **Nested Content** property editor is set-up/configured in the same way as any standard property editor, via the *Data Types* admin interface. To set-up your Nested Content property, create a new *Data Type* and select **Nested Content** from the list of available property editors.
 

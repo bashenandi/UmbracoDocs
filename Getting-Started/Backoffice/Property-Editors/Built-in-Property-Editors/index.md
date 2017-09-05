@@ -1,109 +1,98 @@
-# Built-in Umbraco v7+ Property Editors
+# Umbraco v7+ 内置属性编辑器
 
-This page contains a list of all the built-in Umbraco  v7+ property editors and a short description of what they do:
+本页包含了所有 Umbraco v7以上的内置属性编辑器清单，以及他们能做什么的简短描述：
 
-## [Checkbox list](CheckBox-List.md)
-Displays a list of preset values as a list of checkbox controls
+## [复选框列表](CheckBox-List.md)
+将预设值列表显示为复选框控件列表
 
-## Color Picker
-Adds a list of approved colours which can be selected by clicking.
+## 颜色选择
+添加可通过点击选择的可以显示的颜色列表
 
-## [Content Picker](Content-Picker2.md)
-The content picker allows the content editor to pick a specific node from the content structure.
+## [内容选取](Content-Picker2.md)
+内容选取允许内容编辑器从内容结构中选取特定的节点
 
-## [(Obsolete) Content Picker](Content-Picker.md)
-Made obsolete with the release of Umbraco v7.6 the content picker allows the content editor to pick a specific node from the content structure.
 
-## [Date](Date.md)
-Displays a calendar UI for selecting dates
+## [日期](Date.md)
+显示一个日历控件用于选择日期
 
-## [Date/Time](Date-Time.md)
-Displays a calendar UI for selecting dates and time
+## [日期/时间](Date-Time.md)
+显示一个日历控件用于选择日期和时间
 
-## [Dropdown list](DropDown-List.md)
-Displays a list of preset values. The value saved is a text value.
+## [下拉列表](DropDown-List.md)
+将预设值列表显示为下拉列表。这个值保存的是文本值
 
-## [Dropdown list, publishing keys](DropDown-List-Publishing-Keys.md)
-Displays a list of preset values as a list. The value saved is a prevalue ID
+## [下拉列表，公开密钥](DropDown-List-Publishing-Keys.md)
+将预设值列表显示为下拉列表。这个值保存的是预设值 ID
 
-## [Dropdown list multiple](DropDown-List-Multiple.md)
-Displays a list of preset values where multiple can be selected. The value saved is a CSV of the text values.
+## [多选下拉列表](DropDown-List-Multiple.md)
+将预设值列表显示为可以多选的下拉列表。这个值保存的是文本值
 
-## [Dropdown list multiple, publish keys](DropDown-List-Multiple-Publish-Keys.md)
-Displays a list of preset values where multiple can be selected. The value saved is a CSV of prevalue ids.
+## [多选下拉列表, 公开密钥](DropDown-List-Multiple-Publish-Keys.md)
+将预设值列表显示为可以多选的下拉列表。这个值保存的是 CSV 格式的预设值 id 列表
 
-## Email address
+## 邮件地址
 
-## File upload
-Adds an upload field, which allows documents or images to be uploaded to Umbraco
+## 文件上传
+添加一个文件上传字段，允许上传文档或图片到 Umbraco
 
-## Folder Browser
-Used mainly with container Media Types, the Folder Browser displays a list of thumbnail images.
+## 文件夹浏览
+主要用于媒体类型容器，文件夹浏览器显示缩略图列表。
 
-## [Grid Layout](Grid-Layout.md)
-New to v7.2, gives editors a grid layout editor which allows them to insert different types of content in a predefined layout.
+## [网格布局](Grid-Layout.md)
+v7.2版本新引入，给编辑者一个网格编辑器，允许他们在预定义布局中插入不同类型的内容。
 
-## [Image Cropper](Image-Cropper.md)
-Used to crop and resize images to predefined sizes. Available from V7.1
+## [图片裁剪](Image-Cropper.md)
+用于将图片裁剪和调整为预设值大小。v7.1以后版本可用
 
-## Label
-Label is a non-editable control, can only be used to display a pre-set text.
+## 标签
+标签是不可编辑的控件，仅用于显示预先设置的文本。
 
-## Legacy Media Picker
-The legacy media picker opens a simple dialogue to pick a specific media item from the media tree. The value saved is the selected media ID.
+## 传统媒体选取器
+传统媒体选取器会打开一个简单的对话框用于从媒体树中选取指定的媒体条目。保存值是选取的媒体的 ID。
 
-## List View
+## 列表视图
 
-## Macro container
+## 宏容器
 
-## Markdown editor
+## Markdown编辑器
 
-## [Media Picker](Media-Picker2.md)
-The media picker displays the current selected media and provides the option to open the mediaPicker dialog to select existing or upload new media files. There is a setting to enable multiple media items to be selected.
+## [媒体选取器](Media-Picker2.md)
+媒体选取器会显示当前选择的媒体文件，并且提供选项用于打开媒体选择对话框，选择已有的或者上传新的媒体文件。有一些设置，可以设置允许多选媒体的条目。
 
-## [(Obsolete) Media Picker](Media-Picker.md)
-Made obsolete with the release of Umbraco v7.6 the media picker displays the current selected media and provides the option to open the mediaPicker dialog to select existing or upload new media files. There is a setting to enable multiple media items to be selected.
+## 会员组选取器
 
-## Member Group Picker
+## [会员选取器](Member-Picker.md)
 
-## [Member Picker](Member-Picker.md)
+## [多节点树选取器](Multinode-Treepicker2.md)
+多节点树选取器数据类型，允许内容编辑器在内容树或者媒体树中选取多个节点。
 
-## [Multinode Treepicker](Multinode-Treepicker2.md)
-The multinode treepicker data type allows content editors to choose multiple nodes in the content or media trees.
+## [多文本框](Multiple-Textbox.md)
+多文本框属性编辑器允许在内容编辑器中生成一组文本条目的列表。
 
-## [(Obsolete) Multinode Treepicker](Multinode-Treepicker.md)
-Made obsolete with the release of Umbraco v7.6 the multinode treepicker data type allows content editors to choose multiple nodes in the content or media trees.
+## [嵌套的内容](Nested-Content.md)
+v7.7版本新引入，嵌套内容属性编辑器允许你为列表条目使用文档类型架构。
 
-## [Multiple Textbox](Multiple-Textbox.md)
-The Multiple Textbox property editor enables a content editor to make a list of text items
+## 数字
 
-## [Nested Content](Nested-Content.md)
-New to v7.7, the nested content property editor enables you to use Document Types as a schema for list items.
+## [单选按钮列表](RadioButton-List.md)
+正如其名称所表明的，这个属性编辑器允许编辑器从单选按钮列表中进行选择。
 
-## Numeric
+## [相关链接](Related-Links2.md)
+相关链接允许编辑器简易的添加链接数组。数组内任一元素可以是 Umbraco 内部链接或者外部 URLS。
 
-## [Radio button list](RadioButton-List.md)
-Pretty much like the name indicates this property editor enables editors to choose from list of radio buttons.
+## 富文本编辑器
 
-## [Related Links](Related-Links2.md)
-Related Links allows an editor to easily add an array of links. These can either be internal Umbraco pages or external URLs.
+## 幻灯片
 
-## [(Obsolete) Related Links](Related-Links.md)
-Made obsolete with the release of Umbraco v7.6 the related links editor allows an editor to easily add an array of links. These can either be internal Umbraco pages or external URLs.
+## 标签
 
-## Rich Text Editor
+## 文本域
+一个简单的文本域，用于输入文本
 
-## Slider
+## [文本框](Textbox.md)
+常规的 html 文本输入字段。
 
-## Tags
+## [是/否](True-False.md)
+一个简单的复选框，可以保存0或者1，这取决于复选框是否被选中。
 
-## Textarea
-A simple textarea control to input text.
-
-## [Textbox](Textbox.md)
-A normal html input text field.
-
-## [True/False](True-False.md)
-A simple checkbox which saves either 0 or 1, depending on the checkbox being checked or not.
-
-## User picker
+## 用户选取

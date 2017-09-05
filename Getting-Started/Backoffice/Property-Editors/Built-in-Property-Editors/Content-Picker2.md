@@ -1,25 +1,24 @@
-# Content Picker #
+# 内容选取器 #
 
-`Alias: Umbraco.ContentPicker2`
+`别名: Umbraco.ContentPicker2`
 
-`Returns: IPublishedContent`
+`返回: IPublishedContent`
 
-The content picker opens a panel to pick a specific page from the content structure. The value saved is the selected nodes UDI
+内容选取器打开一个面板，用于从内容结构中选择指定的页面。这个值保存的是选择节点的 UDI。
 
-## Data Type Definition Example
+## 数据类型定义示例
 
 ![Content Picker Data Type Definition](images/Content-Picker2-DataType.png)
 
-## Content Example 
+## 内容示例 
 
 ![Content Picker Content](images/Content-Picker2-Content.png)
 
-## Typed Example: ##
+## 类型示例: ##
 
-    @{
-        IPublishedContent typedContentPicker = Model.Content.GetPropertyValue<IPublishedContent>("featurePicker");
-        if (typedContentPicker != null)
-        {
-            <p>@typedContentPicker.Name</p>                                                
-        } 
-    }
+	@{
+		IPublishedContent typedContentPicker = Model.Content.GetPropertyValue<IPublishedContent>("featurePicker");
+		if (typedContentPicker != null){
+			<p>@typedContentPicker.Name</p>
+		}
+	}

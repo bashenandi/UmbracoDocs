@@ -1,7 +1,7 @@
-# Login screen
+# 登录界面
 
-## Greeting
-The login screen features a greeting, which you can personalize by changing the language file of your choice. For example for en-US you would add the following keys to: `~/Config/Lang/en-US.user.xml`
+## 问候
+登录界面具有问候功能，你可以个性化修改为你选择的语言。例如，对于 en-US，你可以添加下列 keys 到`~/Config/Lang/en-US.user.xml`文件：
 
     <area alias="login">
       <key alias="greeting0">Sunday greeting</key>
@@ -13,11 +13,10 @@ The login screen features a greeting, which you can personalize by changing the 
       <key alias="greeting6">Saturday greeting</key>
     </area>
 
-You can customize other text in the login screen as well, grab the default values from `~/Umbraco/Config/Lang/en.xml` and copy the keys you want to translate into your `~/Config/Lang/MYLANGUAGE.user.xml` file. 
+你也可以在登录界面中设置其他自定义文本，从`~/Umbraco/Config/Lang/en.xml`中找到默认值，复制到你想要翻译到的`~/Config/Lang/MYLANGUAGE.user.xml`文件。
 
-## Password reset
-
-The "Forgot password?" link allows your backoffice users to reset their password. For this feature to work properly you will need to configure an SMTP server in your web.config file and the "from" address needs to be specified. An example:
+## 密码重置
+"忘记密码？"连接允许你的后台用户重置他们的密码。想要使用这个功能，你需要在 web.config 文件中配置 SMTP 服务，并且指定"from"地址。例如：
 
     <system.net>
       <mailSettings>
@@ -27,10 +26,10 @@ The "Forgot password?" link allows your backoffice users to reset their password
       </mailSettings>
     </system.net>
 
-This feature can be turned off completely using the `allowPasswordReset` configuration, see: [/Documentation/Reference/Config/umbracoSettings/#security](/Reference/Config/umbracoSettings/#security) 
+这个功能可以通过 `allowPasswordReset` 配置进行关闭, 参见: [安全](/Reference/Config/umbracoSettings/#security) 
 
-## Background image
-You can customise the background image for the backoffice login screen. In `~/Config/umbracoSetting.config` find the `loginBackgroundImage`and change the path to the image you want to use.
+## 背景图片
+你可以自定义后台登录界面的背景图片。在 `~/Config/umbracoSetting.config` 中查找`loginBackgroundImage`，将其路径改为你想要使用的。
 
     <settings>
         <content>

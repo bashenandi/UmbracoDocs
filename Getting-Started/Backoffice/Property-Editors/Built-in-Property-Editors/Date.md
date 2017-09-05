@@ -1,24 +1,24 @@
-#DateTime
+# 日期
 
-`Returns: DateTime`
+`返回值: DateTime`
 
-Displays a calendar UI for selecting dates, the value saved is a standard datetime value.
+显示一个日历 UI 用于选择日期，这个值保存的是标准的 datetime 值。
 
-##Data Type Definition Example
+## 日期类型定义示例
 
 ![Data Type Definition Example](images/DateTime-DataType.png)
 
-##Content Example 
+## 内容示例 
 
 ![Content Example](images/Date-Time-Content.png)
 
-##MVC View Example - displays a datetime
+## MVC 视图实例 - 显示日期
 
-###Typed:
+###类型:
 
 	@(Model.Content.GetPropertyValue<DateTime>("datePicker").ToString("dd MM yyyy"))
 
-###Dynamic: 
+###动态: 
 
 	@{
 		@CurrentPage.datePicker.ToString("dd-MM-yyyy")

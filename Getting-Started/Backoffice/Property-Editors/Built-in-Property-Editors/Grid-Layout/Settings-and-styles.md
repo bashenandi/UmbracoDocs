@@ -1,37 +1,37 @@
-#Settings and styling
-A grid layout can also expose custom settings - such as data-attributes or styling options - on each cell or row. This allows editors to use a friendly UI to add configuration values to grid elements. When custom settings and styles are applied, they will by default be included in the grid html as either html attributes or inline styles.
+#设置和样式
+网格布局还可以公开自定义设置 - 比如数据属性或者样式选项 - 对于每个单元格和行都是如此。它们允许编辑器使用一些友好的 UI 添加一些配置值到网格元素。当应用了自定义设置和样式时，她们将被作为html 属性或者内联样式被包含在网格 html 中。
 
 ![Grid layouts](images/settings.png)
 
-These settings and styles must be configured by developers when setting up the grid layout data type.
+在设置网格布局数据类型时，这些设置和样式必须由开发人员配置。
 
-###Configuring a custom setting or style
-To add a setting, click the edit settings link. This will expand a dialog showing you the raw configuration data. This data is in the JSON format and will only save if its valid JSON.
+###配置自定义设置和样式
+为了增加设置，点击*Edit Settings*链接。会展开一个显示原始数据的对话框。这些数据是 JSON 格式的，并且在保存会验证 JSON 格式。
 
-The settings data could look like this, with an object for each setting:
+设置数据看起来大概是这样的，每项设置都是一个对象:
 
-    [
-      {
-        "label": "Class",
-        "description": "Set a css class",
-        "key": "class",
-        "view": "textstring",
-        "modifier": "col-sm-{0}",
-        "applyTo": "row|cell"
-      }
-    ]
+	[
+		{
+			"label": "Class",
+			"description": "Set a css class",
+			"key": "class",
+			"view": "textstring",
+			"modifier": "col-sm-{0}",
+			"applyTo": "row|cell"
+		}
+	]
 
-The different values are:
+这些值表示：
 
-- **label** : Field name displayed in the content editor UI
-- **description** : Descriptive text displayed in the content editor UI to guide the user
-- **key** : The key the entered setting value will be stored under.
-- **view** : The editor used to enter a setting value with.
-- **prevalues** : For views that need predefined values, e.g. the radiobuttonlist view.
-- **modifier (optional)** : A string formater to modify the output of the editor to prepend or append extra values.
-- **applyTo (optional)** : States whether the setting can be used on a cell or a row. If either not present or empty, the setting will be shown both on Rows and Cells.
+- **label** : 在内容编辑 UI 中显示的字段名
+- **description** : 在内容编辑UI 中显示的描述用于指导用户使用
+- **key** : 输入的值将根据 key 来存储
+- **view** : 用于给编辑器输入一个设定值
+- **prevalues** : 对于某些 views 需要预先定义的值，例如radiobuttonlist
+- **modifier (optional)** : 一个格式化字符串用于输出预先定义的值或者附加的额外值
+- **applyTo (optional)** : 此设置应用于行还是单元格。如果这个值不存在或者为空，此设置将被同时应用于行和单元格。
 
-**label** and **description** are straight-forward.
+**label** 和 **description** 最好描述清晰直接了当。
 
 **key** defines the alias the configuration is stored under and by default the alias of the attribute will also be the attribute on the rendered html element. In the example above any value entered in this settings editor will be rendered in the grid html as:
 

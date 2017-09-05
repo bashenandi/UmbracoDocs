@@ -1,37 +1,35 @@
-# Media Picker #
+# 媒体选取器 #
 
-`Alias: Umbraco.MediaPicker2`
+`别名: Umbraco.MediaPicker2`
 
-`Returns: IEnumerable<IPublishedContent>` or `IPublishedContent`
+`返回值: IEnumerable<IPublishedContent>` or `IPublishedContent`
 
-This property editors returns a single item if the "Pick multiple items" data type setting is disabled or a collection if it is enabled.
+这个属性编辑器，当数据类型设置"Pick multiple items"禁用时返回单独的条目，启用时返回一个集合。
 
-## Data Type Definition Example
+## 数据类型定义示例
 
 ![Media Picker Data Type Definition](images/Media-Picker2-DataType.png)
 
-## Content Example 
+## 内容示例 
 
 ![Media Picker Content](images/Media-Picker2-Content.png)
 
-## Typed Example (multiple enabled): ##
+## 类型示例 (启用多选): ##
 
-    @{
-        var typedMultiMediaPicker = Model.Content.GetPropertyValue<IEnumerable<IPublishedContent>>("sliders");
-        foreach (var item in typedMultiMediaPicker)
-        {
-            <img src="@item.Url" style="width:200px"/>
-        }
-    }
+	@{
+		var typedMultiMediaPicker = Model.Content.GetPropertyValue<IEnumerable<IPublishedContent>>("sliders");
+		foreach (var item in typedMultiMediaPicker){
+			<img src="@item.Url" style="width:200px"/>
+		}
+	}
 
 
-## Typed Example (multiple disabled): ##
+## 类型示例 (禁用多选): ##
 
-    @{
-        var typedMediaPickerSingle = Model.Content.GetPropertyValue<IPublishedContent>("featuredBanner");
-        if (typedMediaPickerSingle != null)
-        {
-            <p>@typedMediaPickerSingle.Url</p>
-            <img src="@typedMediaPickerSingle.Url" style="width:200px" alt="@typedMediaPickerSingle.GetPropertyValue("alt")" />
-        }
-    }      
+	@{
+		var typedMediaPickerSingle = Model.Content.GetPropertyValue<IPublishedContent>("featuredBanner");
+		if (typedMediaPickerSingle != null){
+			<p>@typedMediaPickerSingle.Url</p>
+			<img src="@typedMediaPickerSingle.Url" style="width:200px" alt="@typedMediaPickerSingle.GetPropertyValue("alt")" />
+		}
+	}      

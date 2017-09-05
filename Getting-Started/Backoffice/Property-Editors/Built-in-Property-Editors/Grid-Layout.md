@@ -1,28 +1,28 @@
-#Grid Layout
+# 网格布局
 
-`Returns: JSON`
+`返回值: JSON`
 
-Gives editors a grid layout editor which allows them to insert different types of content in a predefined layout
+给编辑器一个网格布局编辑器，允许他们在预定义的布局中插入不同类型的内容。
 
 ![Grid layouts](Grid-Layout/images/editor.png)
 
-##[What are Grid Layouts](Grid-Layout/What-Are-Grid-Layouts.md)
-The basic concept of Grid Layouts
+##[什么是网格布局](Grid-Layout/What-Are-Grid-Layouts.md)
+网格布局基础概念。
 
-##[Configuring the Grid Layout datatype](Grid-Layout/configuring-the-grid-layout-datatype.md)
-How to setup your Grid Layout datatype
+##[配置网格布局数据类型](Grid-Layout/configuring-the-grid-layout-datatype.md)
+如何配置你的网格布局数据类型。
 
-##[Settings and styling](Grid-Layout/Settings-and-styles.md)
-Add settings and styles
+##[设置和样式](Grid-Layout/Settings-and-styles.md)
+添加设置和样式。
 
-##[Grid editors](Grid-Layout/grid-editors.md)
-Explanation of default Grid editors and how to customise them
+##[网格编辑器](Grid-Layout/grid-editors.md)
+默认网格编辑器说明以及如何自定义它们。
 
-##[Build your own Grid editor](Grid-Layout/build-your-own-editor.md)
-Build your own Grid editor from the ground up
+##[建立你自己的网格编辑器](Grid-Layout/build-your-own-editor.md)
+从基础开始建立你的网格编辑器。
 
-##[Render Grid in template](Grid-Layout/Render-Grid-In-Template.md)
-Render content created with Grid Layouts in your templates
+##[在模板中输出网格](Grid-Layout/Render-Grid-In-Template.md)
+在你的模板中利用网格布局输出创建的内容。
 
-##[Grid Layout Best Practices](Grid-Layout/Grid-Layout-Best-Practices.md)
-General guidelines when contemplating Grid Layout implementation.
+##[网格布局最佳实践](Grid-Layout/Grid-Layout-Best-Practices.md)
+使用网格布局时需要考虑的一般准则。

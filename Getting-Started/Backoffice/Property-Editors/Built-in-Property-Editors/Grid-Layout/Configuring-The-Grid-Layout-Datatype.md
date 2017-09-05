@@ -1,28 +1,26 @@
-#Configuring the Grid Layout data type
-A grid layout contains multiple configuration options to allow developers to tailor the grid to a very specific site design.
-Configuring the layout can be divided into 2 overall parts:
+#配置网格布局数据类型
+网格布局包含多个配置项，允许开发者搭建出附和特定网站设计要求的网格结构。配置布局主要分为两个整体部分：
 
-##Layouts
-A layout is the general grid "container", it contains one or more sections which content editors can use to insert pre-configured **rows**. There are 2 main usage scenarios of layouts:
+##布局
+布局是指常规网格中的"容器"，它包含一个或者多个区块，内容编辑器可以用来插入多个预先设置的**rows**。一般的场景主要有两种布局方式：
 
-1. a single column layout which to the content editor will act like a full page canvas to insert elements on
-2. a multiple column layout with a main content body, and one or more sidebar columns to insert lists or other sidebar widgets on.
+1. 单列布局，看起来就像是一个完整的页面画布，可以在其中插入元素
+2. 多列布局，包含一个主要的内容区域，以及一个或者多个边栏列，可以插入列表或者其他窗口小部件
 
 ![Grid layout scenarios](images/Grid-layout-scenarios.jpg)
 
-You can however configure as many layouts and layout sections as you wish, each section in the layout must be given a width in columns, so editors gets an accurate preview of their layout.
+您可以按照您的意愿配置多个布局和布局区块，布局中的每个区块必须给定列宽度，这样编辑器就可以准确地预览它们的布局。
 
 ![Grid layouts](images/layouts.png)
 
-##Row configurations
-A row in the grid editor contains one or more cells, which divide the row into areas where editors can enter content. So a row is merely a container of areas to insert content into. When you add a new row, you are asked to give it a name, then define cells inside the row by clicking the "+" icon. Each cell has a default width set to 4, but by clicking the inserted cell you can control its width.
-
-It is possible to setup configurable attributes(class, rel, href) and inline styling on rows.
+##行配置
+网格编辑器中的行包含一个或多个单元格，它们将行分割为多个区域将内容置于其中。因此，行仅仅是将内容插入到区域中的容器。当你添加一个新行时，你需要给它一个名字，然后点击"+"的图标，为其添加单元格。每个单元格宽度默认设置为4，但是在点击新增单元格时，你可以设置它的宽度。
+它可以设置一些配置属性（class、rel、ref 等），也支持在行上的内联样式。
 
 ![Grid layouts](images/rows.png)
 
-You can add as many cells as you like. If they overflow the total width of the row, they will simply be arranged after each other horizontally as you'd expect in a grid system.
+只要你喜欢，你可以添加多个单元格。如果它们的总宽度超出了行的宽度，它们会按照网格系统的机制简单的水平堆叠下来。
 
 ![Grid layouts](images/cells.png)
 
-Each cell can by default contain any type of editor such as simple textstring editors, imagespicker, embedded media or Umbraco macros. To override this behavior, uncheck the **allow all editors** option and you can specify which editors will be available for the row. 
+每个单元格都可以包含任何默认类型的编辑器，包括文本编辑器，图片选取器，嵌入式媒体和 Umbraco 宏。如果想覆盖这个行为，取消勾选**allow all editors**选项，并且你可以指定哪些编辑器可以添加到单元格中。

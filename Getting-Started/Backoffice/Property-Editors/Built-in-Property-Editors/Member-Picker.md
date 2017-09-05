@@ -1,34 +1,34 @@
-#Member Picker
+# 会员选取器
 
-`Returns: Member ID`
+`返回: 会员 ID`
 
-The member picker opens a panel to pick a specific member from the member section. The value saved is the selected member ID.
+会员选取器会打开面板，从会员区块中选取特定的会员。这个值保存的是选中会员的 ID。
 
-##Data Type Definition Example
+## 数据类型定义示例
 
 ![Media Picker Data Type Definition](images/Member-Picker-DataType.png)
 
-##Content Example 
+## 内容示例
 
 ![Memebr Picker Content](images/Member-Picker-Content.png)
 
-##MVC View Example
+##MVC 视图示例
 
-###Typed:
+###类型:
 
 	@{
 		if(Model.Content.HasValue("author")){
 			var member = Umbraco.TypedMember(Model.Content.GetPropertyValue<int>("author"));
-				@member.Name
+			@member.Name
 		}
 	}
 
-###Dynamic:                              
+###动态:                              
 
 	@{
 		if(CurrentPage.HasValue("author")){
 			var member = Umbraco.TypedMember(CurrentPage.author);
-				@member.Name
+			@member.Name
 		}
 	}
 	

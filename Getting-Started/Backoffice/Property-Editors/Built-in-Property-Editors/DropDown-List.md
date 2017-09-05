@@ -1,41 +1,41 @@
-#Dropdown List
+# 下拉列表
 
-`Returns: String`
+`返回值: String`
 
-Displays a list of preset values. The value saved is a text value.
+根据预设值显示列表。这个值保存的是文本值。
 
-##Settings
+## 设置
 
-###Prevalues
-You can add, edit & delete the data prevalues rendered within the dropdown list.
+###预设值
+你可以添加、编辑和删除预设值的数据，以显示在下拉列表中。
 
-##Data Type Definition Example
+##数据类型定义示例
 
 ![Dropdown List Data Type Definition](images/Dropdown-List-DataType.png)
 
-##Content Example 
+##内容示例 
 
 ![Downdown List Content](images/Dropdown-List-Content.png)
 
-##MVC View Example to output selected value
+##MVC 视图示例输出已选的值
 
-###Typed:
+###类型:
 
     @if (Model.Content.HasValue("superHero"))
     {
         <p>@Model.Content.GetPropertyValue("superHero")</p>
     }
 
-###Dynamic:     
+###动态:     
                          
     @if (CurrentPage.HasValue("superHero"))
     {
         <p>@CurrentPage.superHero</p>
     }    
 
-##MVC View Example list all nodes which have a certain item selected in the dropdown list
+##MVC 视图示例列出所有包含下拉列表选中值的节点列表
 
-###Typed:
+###类型:
 
     @{
         var valueToMatch = "SuperMan";
@@ -57,7 +57,7 @@ You can add, edit & delete the data prevalues rendered within the dropdown list.
         }
     }
 
-###Dynamic:                             
+###动态:                             
 
     @{
 		var valueToMatch = "SuperMan";

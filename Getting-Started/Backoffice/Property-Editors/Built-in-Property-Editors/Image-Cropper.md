@@ -1,65 +1,60 @@
-# Image Cropper
+# 图片裁剪
 
-`Returns: JSON`
+`返回值: JSON`
 
-Returns a path to an image, along with information about focal point and available crops
+返回图像的路径，以及有关焦点和裁剪的信息。
 
-## Settings
+## 设置
 
-### Prevalues
-You can add, edit & delete crop presets the cropper UI can use.
+### 预设值
+你可以添加、编辑和删除可以使用的裁剪 UI 设置项。
 
-## Data Type Definition Example
+## 数据类型定义示例
 
 ![Image Cropper Data Type Definition](images/Image-Cropper/datatype.png)
 
-## Content Example 
+## 内容示例 
+提供上传图片的 UI，设置图片上的焦点，使用预设的裁剪属性进行裁剪和缩放。所以默认情况下，裁剪框中的图片只显示基础的焦点，和已有的特殊裁剪，如果他们存在的话。
 
-Provides a UI to upload an image, set a focal point on the image, and optionally crop and scale the image to predefined crops.
-So by default, images in the cropper will be shown based on a set focal point, and only use specific crops if they are available.
+裁剪有三个步骤：
 
-The cropper comes in 3 modes:
+- 上传图片
+- 设置焦点
+- 裁剪图片为预设裁剪值
 
-- Uploading an image
-- Setting a focal point
-- Cropping the image to predefined crops
-
-### Uploading images
-The editor exposes a simple drop area for files. Click it to upload an image.
+### 裁剪图片
+编辑器会显示一个简单的文件拖拽区域。点击上传图片。
 ![Image Cropper Upload](images/Image-Cropper/upload.png)
 
-### Set focal point
-By default, the cropper allows the editor to set a focal point on the uploaded image.
-Below the image, all the preset crops are shown to give the editor a preview of what
-the image will look like to the end user. 
+### 设置焦点
+默认情况下，裁剪器允许编辑器在上传图片上设置焦点。
+在下图中，所有预设的裁剪值，都会给编辑器提供预览图片，显示出呈现给最终用户的样子。
 
 ![Image Cropper Focal point](images/Image-Cropper/focalpoint.png)
 
-### Crop and resize
-If needed, the editor can crop the image to specific crop presets, to ensure the right part and size of the image
-is shown for a specific crop.
+### 裁剪和缩放
+如果需要的话，编辑器可以将图片裁剪为特定的预设尺寸，确认正确的区域和尺寸会显示特定的裁剪尺寸。
 
 ![Image Cropper Crop](images/Image-Cropper/crop.png)
 
 
-## Sample code
+## 示例代码
 
-Image Cropper comes with a simple to use API to generate crop urls, or you can access its raw data directly as a
-dynamic object. 
+图片裁剪，提供了一个简单的 API 用于生成裁剪图片的 URL，或者你可以直接操作原始数据指向为动态对象。
 
-In Umbraco v7.3.5 a UrlHelper Extension method was introduced to replace the IPublishedContent extension methods.
+在 Umbraco v7.3.5中，UrlHelper扩展方法替代了 IPublishedContent 扩展方法。
 
-### MVC View Example to output a "banner" crop from a cropper property with the alias "image"
+### MVC 视图示例，从别名"image"属性中获取裁剪对象，并输出 "banner"裁剪值
 
-#### Typed (Umbraco v7.3.5+):
+#### 类型 (Umbraco v7.3.5+):
 
     <img src="@Url.GetCropUrl(Model.Content, "image", "banner")" />
 
-#### Typed (pre Umbraco v7.3.5):
+#### 类型 (低于 Umbraco v7.3.5):
 
     <img src="@Model.Content.GetCropUrl("image", "banner")" />
 
-#### Dynamic:
+#### 动态:
     
     //show the crop preset "banner"
     <img src="@CurrentPage.GetCropUrl("image", "banner")" />
@@ -67,27 +62,27 @@ In Umbraco v7.3.5 a UrlHelper Extension method was introduced to replace the IPu
     //or from specific node:
     <img src="@Umbraco.Content(1234).GetCropUrl("image", "banner")" />
 
-### MVC View Example to output create custom crops - in this case forcing a 300 x 400 px image
+### MVC 视图示例输出创建的指定尺寸裁剪图 - 在这里是一张 300 x 400 px 的图片
 
-#### Typed (Umbraco v7.3.5+):
+#### 类型 (Umbraco v7.3.5+):
     
 	@if (Model.Content.HasValue("image"))
     {
         <img src="@Url.GetCropUrl(Model.Content, propertyAlias: "image", height: 300, width: 400)" />
     }
 
-#### Typed (pre Umbraco v7.3.5):
+#### 类型 (pre Umbraco v7.3.5):
     
     @if (Model.Content.HasValue("image"))
     {
         <img src="@Model.Content.GetCropUrl(propertyAlias: "image", height: 300, width: 400)" />
     }
 
-### Media example to output a "banner" crop from a cropper property with alias "umbracoFile"
+### Media 示例 - 从属性别名"umbracoFile"中输出"banner"裁剪
 
-The cropped URL can also be found for media in a similar way:
+媒体对象的裁剪结果 URL 可以用类似的方法获得：
 
-#### Typed (Umbraco v7.3.5+):
+#### 类型 (Umbraco v7.3.5+):
     
     @{
         var mediaItem = Umbraco.TypedMedia(1234);
@@ -97,20 +92,20 @@ The cropped URL can also be found for media in a similar way:
         }
     }
 
-#### Typed (pre Umbraco v7.3.5):
+#### 类型 (pre Umbraco v7.3.5):
 
     @Umbraco.TypedMedia(1234).GetCropUrl("banner")
 
-#### Dynamic:
+#### 动态:
 
     @Umbraco.Media(1234).GetCropUrl("banner")
 
 
-### CSS background example to output a "banner" crop from a cropper property with alias "umbracoFile"
+### CSS 背景示例 - 从属性别名"umbracoFile"中输出"banner"裁剪
 
-From Umbraco v7.3.5 there is an optional parameter "htmlEncode" which you and specify as false so that the Url is not Html encoded
+从Umbraco v7.3.5 开始有一个选填参数"htmlEncode"，你可以指定为 false，则 Url 不会被 Html encode。
 
-#### Typed (Umbraco v7.3.5+):
+#### 类型 (Umbraco v7.3.5+):
 
     @{
         var mediaItem = Umbraco.TypedMedia(1234);
@@ -124,69 +119,65 @@ From Umbraco v7.3.5 there is an optional parameter "htmlEncode" which you and sp
         }
     }
 
-### Data returned
+### 数据返回值
 
-The cropper returns a dynamic object, based on a json structure like this: 
+裁剪对象返回一个动态对象，基于 json 格式，类似于：
 
-                            
-    {
-      "focalPoint": {
-        "left": 0.23049645390070922,
-        "top": 0.27215189873417722
-      },
-      "src": "/media/SampleImages/1063/pic01.jpg",
-      "crops": [
-        {
-          "alias": "banner",
-          "width": 800,
-          "height": 90
-        },
-        {
-          "alias": "highrise",
-          "width": 80,
-          "height": 400
-        },
-        {
-          "alias": "thumb",
-          "width": 90,
-          "height": 90
-        }
-      ]
-    }
+	{
+		"focalPoint": {
+			"left": 0.23049645390070922,
+			"top": 0.27215189873417722
+		},
+		"src": "/media/SampleImages/1063/pic01.jpg",
+		"crops": [
+			{
+				"alias": "banner",
+				"width": 800,
+				"height": 90
+			},
+			{
+				"alias": "highrise",
+				"width": 80,
+				"height": 400
+			},
+			{
+				"alias": "thumb",
+				"width": 90,
+				"height": 90
+			}
+		]
+	}
 
-So you can access each property directly using dynamics:
+所以通过动态操作属性直接获取：
 
     <img src='@CurrentPage.image.src'/>
 
-Or iterate through them:
-                       
-    @foreach(var crop in CurrentPage.image.crops){
-        <img src="@CurrentPage.GetCropUrl("image", crop.alias)">    
-    }     
+或者遍历它们：
 
+	@foreach(var crop in CurrentPage.image.crops){
+		<img src="@CurrentPage.GetCropUrl("image", crop.alias)">
+	}
 
-## Powered by ImageProcessor
-[ImageProcessor](http://imageprocessor.org/) is an amazing project for modifying and processing images in a simple an efficient manner.
+## ImageProcessor
+[ImageProcessor](http://imageprocessor.org/)是一个神奇的项目，使用简单，但是可以高效的编辑处理图片。
 
-We bundle this library in Umbraco 7.1+ and you can therefore take full advantage of all its features out-of-the-box, like sharping, blurring, cropping, rotating and so.
+我们在 Umbraco 7.1以上的版本引用了它，所以你可以开箱即用，使用它的全部功能，例如：sharping、blurring、cropping、rotating等等。
 
-### MVC View Example on how to blur a crop
+### MVC 视图示例 - 如何模糊裁剪对象
 
-#### Typed (Umbraco v7.3.5+):
+#### 类型 (Umbraco v7.3.5+):
 
     <img src="@Url.GetCropUrl(Model.Content, propertyAlias: "image", cropAlias: "banner", useCropDimensions:true, furtherOptions: "&blur=11&sigma=1.5&threshold=10")" />
 
-#### Dynamic:
+#### 动态:
 
     <img src='@CurrentPage.GetCropUrl("image", "banner")&blur=11&sigma=1.5&threshold=10' />
 
-Using ImageProcessors built-in [gaussianblur](http://imageprocessor.org/imageprocessor-web/imageprocessingmodule/gaussianblur/)    
+使用 ImageProcessors 内置功能 [gaussianblur](http://imageprocessor.org/imageprocessor-web/imageprocessingmodule/gaussianblur/)    
 
-## Upload property replacement
+## 上传属性替代品
 
-You can replace an upload property with a cropper, existing images will keep returning their current path and work unmodified with the cropper 
-applied. The old image will even be available in the cropper, so you can modify it if you ever need to. 
+你可以使用裁剪替代上传属性，已有的图片依旧返回当前路径，应用裁剪后的修改。旧的图片在裁剪器中是可用的，因此如果需要的话你可以修改它们。
 
-However, be aware that a cropper returns a dynamic object when saved, so if you perform any sort of string modifications on your upload property value, 
-you will most likely see some errors in your templates / macros.
+然而，要知道裁剪器在保存时返回的时动态对象，所以如果你的上传属性中修改了排序或者字符串属性，可能会导致在模板/宏中发生一些错误。
 

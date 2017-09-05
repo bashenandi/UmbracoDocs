@@ -1,13 +1,13 @@
-# Dropdown List, Publishing Keys
+# 下拉列表, 公开键值
 
-`Returns: Int`
+`返回值: Int`
 
-Displays a list of preset values. The value saved is the prevalue id.
+根据预设值返回列表。保存值为选中值的 id。
 
-## Settings
+## 设置
 
-### Prevalues
-You can add, edit & delete the data prevalues rendered within the dropdown list.
+### 预设值
+你可以添加、编辑和删除预设值的数据，以显示在下拉列表中。
 
 ## Data Type Definition Example
 
@@ -17,9 +17,9 @@ You can add, edit & delete the data prevalues rendered within the dropdown list.
 
 ![Downdown List Content](images/Dropdown-List-Keys-Content.png)
 
-## MVC View Example to output selected value
+## MVC 视图示例输出选中值
 
-### Typed:
+### 类型:
 
     @if (Model.Content.HasValue("character"))
     {        
@@ -27,7 +27,7 @@ You can add, edit & delete the data prevalues rendered within the dropdown list.
         <p>@preValue</p>
     }
 
-### Dynamic:     
+### 动态:     
                          
     @if (CurrentPage.HasValue("character"))
     {
@@ -35,9 +35,9 @@ You can add, edit & delete the data prevalues rendered within the dropdown list.
         <p>@preValue</p>        
     }    
 
-## MVC View Example list all nodes which have a certain item selected in the dropdown list
+## MVC 视图示例列出所有包含下拉列表选中值的节点列表
 
-### Typed:
+### 类型:
 
     @{
         var valueToMatch = 31;
@@ -59,7 +59,7 @@ You can add, edit & delete the data prevalues rendered within the dropdown list.
         }
     }
 
-### Dynamic:                             
+### 动态:                             
 
     @{
 		var valueToMatch = 31;
