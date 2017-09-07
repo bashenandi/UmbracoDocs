@@ -1,18 +1,16 @@
-#Working with stylesheets and javascript
+#使用样式表和脚本
 
-##Bundling & Minification for JavaScript and CSS
+##打包 &amp; 压缩 JS 和 CSS
+你当然可以使用任何你喜欢的工具来打包 &amp; 压缩，但是 Umbraco 自带的ClientDependency框架不需要额外做什么事情就可以实现运行时打包 &amp; 压缩。
 
-You can of course use whatever tools you are comfortable with for bundling & minification but it's worth 
-noting that Umbraco ships with the ClientDependency Framework which offers simple runtime bundling & minification.
-
-You can bundle and minify as follows in a view template file.
+你可以在视图文件中像下面一样打包 &amp; 压缩。
 
 	@using ClientDependency.Core.Mvc
 	@using ClientDependency.Core
 	@{
 		Html.RequiresJs("~/scripts/Script1.js", 1);
 		Html.RequiresJs("~/scripts/Script2.js", 2);
-
+		
 		Html.RequiresCss("~/css/style.css");
 	}
 	<html>
@@ -20,5 +18,5 @@ You can bundle and minify as follows in a view template file.
 		@Html.RenderCssHere()
 		@Html.RenderJsHere()
 	</head>
-	
-Full details of the ClientDependency Framework can be found here: [http://github.com/Shandem/ClientDependency](http://github.com/Shandem/ClientDependency)	
+
+ClientDependency框架的详细信息可以在这里找到：[http://github.com/Shandem/ClientDependency](http://github.com/Shandem/ClientDependency)	

@@ -1,13 +1,13 @@
-#Design
+#设计
 
-###[Templates](Templates/)
-Creating, managing and reusing templates in Umbraco
+##[模板](Templates/)
+在 Umbraco 中创建，管理和重用模板
 
-##[Rendering content](Rendering-Content/)
-How to query and render published content
+##[输出内容](Rendering-Content/)
+如何查询输出发布的内容
 
-##[Rendering media](Rendering-Media/)
-How to query and render media items
+##[输出媒体](Rendering-Media/)
+如何查询输出媒体
 
-##[Stylesheets and javascript](Stylesheets-Javascript/)
-Working with css and javascript in Umbraco's templates
+##[样式表和脚本](Stylesheets-Javascript/)
+在 Umbraco 的模板中使用 css 和 javascript

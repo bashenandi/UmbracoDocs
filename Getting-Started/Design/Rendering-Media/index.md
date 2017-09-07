@@ -1,40 +1,36 @@
-#Rendering media
+#输出媒体
 
-_Templates can access items in the Media library, to assist in displaying rich content like galleries_
+_模板可以操作媒体库中的条目，从而实现一些丰富的内容，例如相册_
 
-##Rendering a single media item
-A media node is not just a file, but a collection of fields, such width, height and the path to the stored file.
+##输出单个媒体条目
+一个媒体节点不只是一个文件，而是字段的集合，例如 width，height 和存储文件的路径。
 
-A standard image in the media library is based on the Mediatype `image` which provides a number of standard values - if you want to add more, simply edit the media type under **settings**.
+媒体库中的一个标准图片是基于媒体类型`image`的，提供了一些标准的值 - 如果你想添加更多，在 **settings** 下面编辑媒体类型。
 
-    @{
-        var mediaItem = Umbraco.Media(1234);
-        var height = mediaItem.UmbracoHeight;
-        var file = mediaItem.UmbracoFile;
-    }
+	@{
+		var mediaItem = Umbraco.Media(1234);
+		var height = mediaItem.UmbracoHeight;
+		var file = mediaItem.UmbracoFile;
+	}
+	<img src="@file" height="@height" />
 
-    <img src="@file" height="@height" />
+##输出单个媒体的裁剪图片
+如果媒体类型使用了 Image Cropper 替代了上传字段(umbracoFile)，你可以通过`GetCropUrl`方法，引用至裁剪器别名，来获取裁剪图片。
 
-##Rendering media item with Image Cropper
-If the Image Cropper is used as the upload field (umbracoFile) on a media type you can get the cropped image by calling the `GetCropUrl` function and referencing a crop alias.
+	@{
+		var mediaItem = Umbraco.Media(1234);
+		var croppedUrl = Url.GetCropUrl(mediaItem, "cropAlias");
+	}
+	<img src="@croppedUrl" />
 
+如果你想要原始图片，而不是裁剪图片。
 
-    @{
-        var mediaItem = Umbraco.Media(1234);
-        var croppedUrl = Url.GetCropUrl(mediaItem, "cropAlias");
-    }
+	@{
+		var mediaItem = Umbraco.Media(1234);
+		var file = mediaItem.umbracoFile.src;
+	}
+	<img src="@file" />
 
-    <img src="@croppedUrl" />
-
-If you want the original, uncropped image.
-
-    @{
-      var mediaItem = Umbraco.Media(1234);
-      var file = mediaItem.umbracoFile.src;
-    }
-
-    <img src="@file" />
-
-###More information
-- [Media Picker](../../Backoffice/Property-Editors/Built-in-Property-Editors/Media-Picker.md)
-- [Image Cropper](../../Backoffice/Property-Editors/Built-in-Property-Editors/Image-Cropper.md)
+###更多信息
+- [媒体选取器](../../Backoffice/Property-Editors/Built-in-Property-Editors/Media-Picker.md)
+- [图片裁剪](../../Backoffice/Property-Editors/Built-in-Property-Editors/Image-Cropper.md)

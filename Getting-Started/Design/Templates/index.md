@@ -1,117 +1,116 @@
-# Templates
+# 模板
 
-_Templating in Umbraco builds on the concept of Razor Views from asp.net MVC - if you already know this, then you are ready to create your first template - if not, this is a quick and handy guide._
-
-## Creating your first template
-By default all document types should have a template attached - but in case you need an alternative template or a new one, you can create one:
-
-Open the settings section inside the Umbraco backoffice and right-click the **templates** folder. then choose **create**. Enter a template name and click the create button. You will now see the default template markup in the backoffice template editor
-
-![Created template](images/create-template.png)
+_Umbraco 中的模板，是从 asp.net MVC 中的 Razor 视图之上的概念 - 如果你已经掌握这些内容，那就准备创建你的第一个模板吧 - 如果没有掌握，这也是一个快捷方便的指南。 _
 
 
-## Allowing a template on a document type
-To use a template on a document, you must first allow it on the content's type. Open the document type you want to use the template and check the template under "allowed templates"
+## 创建你的第一个模板
+默认情况下，所有的文档类型都会有一个附属的模板 - 但在本例中，你需要一个可替换的模板或一个新的，你可以创建一个：
 
-![Allowing template](images/allow-template.png)
+在 Umbraco 后台打开设置区块，右击 **templates** 文件夹后选择 __ create__ 。输入模板的名字并点击 create 按钮。你会看到默认的模板编辑已经在后台的模板编辑器中了
 
-
-## Inheriting a master template
-A template can inherit content from a master template by using the asp.net views Layout feature. Lets say we have a template called **masterview**, containing the following html:
-
-    @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
-    @{
-        Layout = null;
-    }
-    <!DOCTYPE html>
-    <html lang="en">
-        <body>
-    		<h1>Hello world</h1>
-            @RenderBody()
-        </body>
-    </html>
-
-We then create a new template called **textpage** and in the template editor, under the properties tab, sets its master template to the template called masterview:
-
-![Inherit template](images/inherit-template.png)
-
-This changes the `Layout`value in the template markup, so **textpage** looks like this:
-
-    @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
-    @{
-        Layout = "MasterView.cshtml";
-    }
-    <p>My content</p>
-
-When a page using the textpage template renders, the final html will be merged together replacing the `@renderBody()` placeholder and produce the following:
-
-    @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
-    @{
-        Layout = null;
-    }
-    <!DOCTYPE html>
-    <html lang="en">
-        <body>
-    		<h1>Hello world</h1>
-            <p>My content</p>
-        </body>
-    </html>
-
-## Template Sections
-What's good to know, is that you are not limited to a single section. Template sections allow child templates that inherit the master layout template to insert HTML code up into the main layout template. For example a child template inserting code into the `<head>` tag of the master template.
-
-You can do this by using named sections. Add named sections to your master template with the following code:
-
-    @RenderSection("SectionName")
-
-For instance, if you want to be able to add HTML to your `<head>` tags write:
-
-    @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
-    @{
-        Layout = null;
-    }
-
-    <html>
-        <head>
-            <title>Title</title>
-            @RenderSection("Head")
-        </head>
-
-        <body>
-        </body>
-    </html>
-
-By default, when defining a section it is required. To make the section optional, simply add  `required:false`.
-
-    @RenderSection("Head", required: false)
-
- On your child page call `@section Head {}` and then type your markup that will be pushed into the Master Template.  
+![创建模板](images/create-template.png)
 
 
-## Injecting partial template
-Another way to reuse html is to use partials - which are small reusable views which can be injected into another view.
+## 允许文档类型使用模板
+要让文档使用模板，你必须首先允许内容的类型使用它。打开文档类型中想要使用这个模板的文档，然后在"template"标签下的"allowed templates"中添加选择
 
-Like templates, create a partial, by clicking "partial views" and selecting create - you can then optionally use a pre-made template.
+![允许模板](images/allow-template.png)
 
-![Create partial](images/create-partial.png)
 
-the created partial can now be injected into any template by using the `@Html.Partial()` method like so:
+## 继承一个主模板
+通过使用 asp.net 的视图特性，模板可以从主模板中继承内容。假设我们有一个叫**MasterView**的模板，包含下面的 html：
 
-    @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
-    @{
-        Layout = "MasterView.cshtml";
-    }
+	@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+	@{
+		Layout = null;
+	}
+	<!DOCTYPE html>
+	<html lang="en">
+		<body>
+			<h1>Hello world</h1>
+			@RenderBody()
+		</body>
+	</html>
 
-    <h1>My new page</h1>
-    @Html.Partial("a-new-view")
+然后我们创建一个叫**textpage**的新模板，然后进入模板编辑器，在**properties**标签页中，设置它的 *Master template* 为**MasterView** ：
 
-### Find More information:
+![继承模板](images/inherit-template.png)
 
-- [Basic Razor syntax](basic-razor-syntax.md)
-- [Rendering content](../Rendering-Content/)
+这实际上是改变了模板中的`Layout`，所以 **textpage** 看起来是这样的：
 
-### Tutorials
-- [Creating a basic website with Umbraco](../../../Tutorials/Creating-Basic-Site/)
+	@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+	@{
+		Layout = "MasterView.cshtml";
+	}
+	<p>My content</p>
 
-### [Umbraco.TV](http://umbraco.tv)
-- [Chapter: Templating](http://umbraco.tv/videos/umbraco-v7/implementor/fundamentals/templating/introduction/)
+当一个页面使用textpage输出时，最终的 html 会合并替换`@renderBody()`占位符，最终结果为：
+
+	@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+	@{
+		Layout = null;
+	}
+	<!DOCTYPE html>
+	<html lang="en">
+		<body>
+			<h1>Hello world</h1>
+			<p>My content</p>
+		</body>
+	</html>
+
+## 模板区块
+要知道的是，你并不局限于只能使用一个区块。模板区块允许继承自主模板布局的子模板，可以插入一些 html 代码到主模板布局中。例如子模板插入一些代码到主模板的`<head>`标签中。
+
+你可以通过使用命名区块来实现。使用如下的代码在主模板中添加命名区块：
+
+	@RenderSection("SectionName")
+
+例如，如果你想添加 HTML 标签到你的`<head>`标签，编写：
+
+	@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+	@{
+		Layout = null;
+	}
+	
+	<html>
+		<head>
+			<title>Title</title>
+			@RenderSection("Head")
+		</head>
+		
+		<body>
+		</body>
+	</html>
+
+默认情况下，当定义一个区块时它是必填的。将区块设置为可选，请添加`required:false`。
+
+	@RenderSection("Head", required: false)
+
+在你的子页面中调用`@section Head {}`，然后输入你的标记，它就会显示在主模板中。
+
+
+## 注入局部视图
+另外一个重用 html 的方法是适应局部视图 - 这是一种很小的可重用视图，可以注入到其他视图中。
+
+像模板一样，创建局部视图，通过点击"partial views"然后选择"create" - 你还可以选择预定义模板。
+
+![创建局部视图](images/create-partial.png)
+
+创建好的局部视图，可以通过使用`@Html.Partial()`方法注入到任何模板中，像这样：
+
+	@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+	@{
+		Layout = "MasterView.cshtml";
+	}
+	
+	<h1>My new page</h1>
+	@Html.Partial("a-new-view")
+
+### 更多信息:
+
+- [基本Razor语法](basic-razor-syntax.md)
+- [输出内容](../Rendering-Content/)
+
+### 教程
+- [使用 Umbraco 创建一个基础网站](../../../Tutorials/Creating-Basic-Site/)
+

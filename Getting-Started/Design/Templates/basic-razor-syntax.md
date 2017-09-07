@@ -1,8 +1,10 @@
-#Basic Razor Syntax
-_Shows how to perform common logical tasks in Razor like if/else, foreach loops, switch statements and using the @ character to separate code and markup._
+#Razor 基本语法
+_显示如何使用 Razor 的常见逻辑任务，类似 if/else,foreach 循环,switch 语句和使用 @ 符号分隔代码和标记。_
 
-##The @ symbol
-The @ symbol is used in Razor initiate code, and tell the compiler where to start interpreting code, instead of just return the contents of the file as text. Using a single character for this separation, results in cleaner, compact code which is easier to read.
+##@ 符号
+@符号用于 Razor 的初始代码中，告诉编辑器从哪里开始编辑代码，而不只是将文件的内容作为文本返回。
+
+使用单个字符做这种分离，会使代码更加简洁、紧凑，更便于阅读。
 
 	@*Writing a value inside a html element *@
 
@@ -20,8 +22,8 @@ The @ symbol is used in Razor initiate code, and tell the compiler where to star
 		<li>@item.Name</li>
 	}
 
-##Embedding comments in razor
-Commenting your code is important, use comments to explain what the code does. `@* *@` indicates a comment, which will not be visible in the rendered output.
+##Razor中的嵌入式注释
+注释你的代码是非常重要的，用注释解释代码的作用。`@* *@`标示出了一段注释，它不会在输出结果中可见。
 
 	@*Here we check if the name is equal to foobar*@
 	@if(Model.Content.Name == "foobar"){
@@ -32,7 +34,7 @@ Commenting your code is important, use comments to explain what the code does. `
 	}
 
 ##If/else
-If/else statements performs one task if a condition is true, and another is the condition is not true
+If/else 语句，当条件为真时执行一个任务，条件为非真时执行另一个任务
 
 	@if(Model.Name == "home"){
 		<p>This is the homepage!</p>
@@ -44,15 +46,15 @@ If/else statements performs one task if a condition is true, and another is the 
 		<p>this ia NOT a textpage</p>
 	}
 
-##Foreach loops
-A foreach loop goes through a collection of items, typically a collection of pages and performs an action for each item
+##Foreach 循环
+Foreach 通过条目的集合进行循环，通常是一个网页的集合，然后对每一项执行方法。
 
 	@foreach(var item in Model.Content.Children){
 		<p>The item name is: @Item.Name</p>
 	}
 
-## Switch block
-A Switch block is used when testing a large number of conditions
+## Switch 块
+当条件比较多的时候，使用 Switch 块进行判断
 
 	@switch(Model.Content.WeekDay){
 	case "Monday":
@@ -69,6 +71,6 @@ A Switch block is used when testing a large number of conditions
 		break;
 	}
 
-###More information
-- [More examples](../../../Reference/Templating/Mvc/examples)
-- [Querying](../../../Reference/Querying)
+###更多信息
+- [更多例子](../../../Reference/Templating/Mvc/examples)
+- [查询](../../../Reference/Querying)
