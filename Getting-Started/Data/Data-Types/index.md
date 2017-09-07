@@ -1,42 +1,39 @@
-#Data-Types
-*A Data Type defines the type of input for a property. So when adding a property (on Document Types, Media Types and Members) when selecting the Type you are selecting a Data Type. There are a number of preconfigured Data Types available in Umbraco and more can be added in the Developer section.*
+#数据类型
+*一个数据类型定义了一个属性的输入类型。所以在你添加属性（在文档类型、媒体类型和会员中）时，当你选择了一种类型，就是选择了一个数据类型。在 Umbraco 中已有一些预先设定好的数据类型，也可以在开发区块中添加更多。*
 
-##What is a data type?
-A Data Type can be something very simple (textstring, number, true/false,...) or more complex (multi node tree picker, image cropper, Grid Layout).
+##什么是数据类型？
+一个数据类型可以非常简单（textstring, number, true/false,...），也可以非常复杂(multi node tree picker, image cropper, Grid Layout)。
 
-The Data type references a Property Editor and if the Property Editor has settings these are configured on the Data Type. This means you can have multiple Data Types referencing the same Property Editor.
+数据类型引用自属性编辑器，如果属性编辑器包含一些设置也会被配置在数据类型中。这意味着你可以有多个数据类型引用自同样的属性编辑器。
 
-An example of this could be to have two dropdown Data Types both referencing the same dropdown Property Editor. One configured to show a list of cities, the other a list of countries.
+一个例子是，可以有两个下拉列表数据类型都引用自同样的下拉列表属性编辑器。一个配置为城市列表，另外一个为州列表。
 
-##Creating a new Data-Type
-To create a new Data Type go to the Developer section and click the menu icon to the right of __Data-Types__ and select __Create__. Name the Data Type, we'll call it "Dropdown Cities".
+##创建新的数据类型
+创建新的数据类型要前往开发区块，点击 __Data-Types__ 右边的菜单图标，然后选择 __Create__ 。命名数据类型，我们称之为"Dropdown Cities"。
 
-![Dropdown List](images/Data-Types-Create.jpg)
+![下拉列表](images/Data-Types-Create.jpg)
 
-* __Property Editor:__ This is where you pick the Property Editor that our *Dropdown Cities* Data Type will be referencing. Pick the __Dropdown List__ and now you will see the configuration options that are available for a Data Type referencing the Dropdown List Property Editor.
+* __Property Editor:__ 这是你为我们创建的 *Dropdown Cities* 数据类型选择指向的属性编辑器的地方。选择 __Dropdown List__ 你会看到数据类型引用的下拉列表属性编辑器中一些可用的配置项。
 
-* __Property Editor Alias__
-The alias of the Property Editor being used.
+* __Property Editor Alias__ 使用的属性编辑器别名。
 
-* __Add prevalue:__ Here you can add prevalues to this Data Type by entering the value you want into the input field and pressing the __add__ button. For the "Dropdown Cities" list this could be:
+* __Add prevalue:__ 这里你可以通过在输入框中输入你想要的值然后点击 __add__ 按钮给你的数据类型添加预设值。对于 "Dropdown Cities" 列表可以是：
     * London
     * Paris
     * Berlin
 
-When you're happy with the list press Save and it is now possible to select this Data Type for a property on Document Types, Media Types and Members. This will then create a dropdown list for the editor to choose from and save the choice as a string.
+当你结束了列表输入后，点击 __Save__ 按钮，现在你就可以在文档类型，媒体类型和会员中，为属性选择这个数据类型。这将创建一个下拉列表供编辑器选择，并将该选项保存为字符。
 
-##Customizing Data-Types
-To customize an existing Data Type go to the __Developer__ section, expand the __Data-Types__ node and select the Data Type you want to edit.
+##自定义数据类型
+要自定义已有的数据类型，前往  __Developer__ ，展开 __Data-Types__ 节点，选择想要编辑的数据类型。
 
-Aside from the Data Types that are available out of the box there are some additional Property Editors to choose from such as the __Slider__ and __Macro Container__.
+除了数据类型之外，还有些可用的额外属性编辑器用于 __Slider__ 和 __Macro Container__ 。
 
-###More information
-* [List of available Data types](default-data-types.md)
-* [Property Editors](../../Backoffice/Property-Editors/)
+###更多信息
+* [可用数据类型列表](default-data-types.md)
+* [属性编辑器](../../Backoffice/Property-Editors/)
 
-###Related Services
-* [DataTypeService](../../../Reference/Management/Services/DataTypeService.md)
+###相关服务
+* [数据类型服务](../../../Reference/Management/Services/DataTypeService.md)
 
-###Umbraco.tv
-* [Episode: Data Types](http://umbraco.tv/videos/umbraco-v7/implementor/fundamentals/document-types/data-types/)
-* [Episode: Customizing Data Types](http://umbraco.tv/videos/umbraco-v7/implementor/fundamentals/document-types/customizing-data-types/)
+

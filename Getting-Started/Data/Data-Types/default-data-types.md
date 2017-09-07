@@ -1,61 +1,56 @@
-#Default Data Types#
-
-Here's a list of some of the default Data Type's that come installed with Umbraco. There are plenty more that you can create based on the installed [Property Editors](../../Backoffice/Property-Editors/).
+# 默认数据类型#
+这里是 Umbraco 默认安装的一些数据类型列表。你也基于安装的基本[属性编辑器](../../Backoffice/Property-Editors/)，创建更多。
 
 ####Approved Color####
-Adds a list of approved colours which can be selected by clicking. The approved colours need to be added
-as hex values (without the #) in the prevalues field. i.e. cccccc
+添加了一些可用的颜色列表可以通过点击选择。可用颜色需要添加16进制值到预设值字段（不带#号）。例如，cccccc
+
 ####Checkbox list####
-Displays a list of preset values as a list of checkbox controls. The preset values are modified in the developer
-section under "data types" / checkbox list where new items can be added. The value saved is a comma-separated
-string of prevalue IDs, which is easiliest processed with xslt. (umbraco.library:GetPrevalue())
+将预先设置的值列表显示为复选框控件列表。修改预设值在开发区块下面的"数据类型/checkbox list"添加新条目。值保存为逗号分隔的预设值 ID 字符串，也可以很容易的使用 xslt操作(umbraco.library:GetPrevalue())。
+
 ####Content picker####
-The content picker opens a simple modal to pick a specific page from the content structure.
-The value saved is the selected page's ID. This ID can be used in xslt with umbraco.library:GetXmlNodeById(ID)
-to get the page's content
+内容选取器打开一个简单的模态窗口，在内容结构中选取特定的页面。这个值会保存选中页面的 ID。这个 ID 可以在 xslt 中使用umbraco.library:GetXmlNodeById(ID)来获取页面内容。
+
 ####Date picker with time####
-Displays a calendar UI for selecting dates and time, the value saved is a standard dateTime value
+显示一个日历 UI 用于选择日期和时间，值会保存为标准的日期时间值。
+
 ####Date picker####
-Displays a calendar UI for selecting dates and time, the value saved is a standard dateTime value,
-but with no time information.
+显示一个日历 UI 用于选择日期和时间，值会保存为标准的日期时间值，但是不会有时间信息。
+
 ####Dropdown multiple####
-Displays a list of preset values as a list where multiple values can be selected. The preset values are
-modified in the developer section under "data types" / Dropdown multple where new items can be added.
-The value saved is a commasepareted string of prevalue IDs, which is easiliest processed with xslt.
-(umbraco.library:GetPrevalue())
+将预先设置的值列表显示为可以多选的下拉列表。修改预设值在开发区块下面的"数据类型/ dropdown multple"添加新条目。值保存为逗号分隔的预设值 ID 字符串，也可以很容易的使用 xslt操作(umbraco.library:GetPrevalue())。
+
 ####Dropdown####
-Displays a list of preset values as a list where only a single can be selected.
-The preset values are modified in the developer section under "data types" / Dropdown multple where
-new items can be added. The value saved is the selected value as a string.
+将预先设置的值列表显示为只能选择一项的下拉列表。修改预设值在开发区块下面的"数据类型/ dropdown multple"添加新条目。值保存为逗号分隔的预设值 ID 字符串，也可以很容易的使用 xslt操作(umbraco.library:GetPrevalue())。
+
 ####Folder Browser####
-Used mainly with container Media Types, the Folder Browser displays a list of thumbnail images. Every Media item contained within the folder that has a generated thumbnail will be listed.
+主要用于媒体类型的容器，文件夹浏览显示为缩略图的列表。每个包含在文件夹中的媒体条目都会生成一个缩略图用于列表显示。
+
 ####Label####
-Is a non-editable control, can only be used to display a present text. It can also be used in the
-media section to load in values related to the node, such as width, height and file size.
+是一个不可编辑的控件，仅能用于显示已有值。它可以用于在媒体区块加载节点的相关值，例如 width，height 和 file size 等。
+
 ####Media Picker####
-The content picker opens a simple modal to pick a specific media item from the media tree.
-The value saved is the selected media node ID. This ID can be used in xslt with
-umbraco.library:GetMedia(ID) to get the media items xml data
+媒体选取器打开一个简单的模态窗口，在媒体树中选取特定的媒体条目。这个值会保存选中媒体节点的 ID。这个 ID 可以在 xslt 中使用umbraco.library: GetMedia(ID)来获取媒体条目的 xml 数据。
+
 ####Member Picker####
-Displays a simple dropdown with all available members in. A single member can be selected.
-The value saved is the ID of the member
+显示简单的下拉列表包含所有的已有会员。可以有一个会员被选中。该值会保存会员的 ID。
+
 ####Numeric####
-A simple textbox to input a numeric value.
+简单的文本框用于输入数字。
+
 ####Radiobox####
-this Data type enables editors to choose from list of radiobuttons. Options for the Radiobox need to be set in the Developer section by adding prevalues to the Data type
+这个数据类型允许编辑器从单选按钮组中选择。单选组选项需要去开发区块通过给数据类型添加预设值。
+
 ####Related Links####
-This datatype allows an editor to easily add an array of links. These can either be internal Umbraco pages or external URLs.
+这个数据类型允许编辑者简单的添加链接数组。可以包含内部或外部链接。
+
 ####Richtext Editor####
-The TinyMCE based wysiwyg editor. This is the standard editor used to edit any larger amount of text. The editor has a lot of settings, which can be changed under the developer section in "data types" / Richtext editor. The editor also supports TinyMCE plugins which can be controlled in the configuration file located at /config/tinyMce.config
+TinyMCE 基于wysiwyg编辑器。这是用来编辑大量文本的标准编辑器。编辑器有很多的设置，可以在开发区块下面的数据类型/Richtext editor 中更改它们。编辑器还支持 TinyMCE 的插件，可以在位于/config/tinyMce.config的配置文件中，控制它们。
 
-In the default settings some tags such as bullet list can be used. If you want to use other tags like h1 or h2, you need to add stylesheets.
+在默认设置中，可以使用一些标签，如标点列表。如果你想使用其他标签，例如如H1或H2，你需要添加样式表。
 
-Create child stylesheets for each tag(h1 or h2) under a base one.
-Go to "Back office->Developer->Data Types->Richtext editor" and associate rich text editor with the base.
-Also turn on "styleselect" in the toolbar section.
-You can find a new button in the toolbar of the content editor.
+在基本样式中为每个标签（h1或 h2）创建子样式表。前往"Back office->Developer->Data Types->Richtext editor"，关联基本的富文本编辑器。还要在工具栏部分，开启"styleselect"。在内容编辑时你可以在工具栏中找到新的按钮。
 
-An example of the style sheet tree is as follows.
+一个样式表树的例子如下：
 
 <pre>
 Stylesheets
@@ -68,16 +63,23 @@ Stylesheets
 </pre>
 
 ####Tags####
-A textbox that allows you to use use multiple tags on a docType - This is what is used on Blog4Umbraco and is perfect if you need to categorise data.  You can specify a TAG Group when creating new versions of this datatype, in case you need to use TAGS on different sections of your site (i.e  News, Article, Events).
+标签类型允许你给一个文档类型赋予多个标签 - 这通常用于博客和你希望完美的归类数据。当你创建数据类型时，可以指定标签组，你可以给网站的不同板块使用标签（例如新闻，文章，活动等）。
+
 ####Textbox multiple####
-A simple textarea control to import text
+简单文本域空间用于输入文本
+
 ####Textstring####
-A normal html input text field
+普通的 html 文本输入字段
+
 ####True/False####
-A simple checkbox which saves either 0 or 1, depending on the checkbox being checked or not. A common use for instance is to create a property with the special alias 'umbracoNaviHide' and the Data-Type True/False to enable editors to hide nodes from appearing in a navigation menu.
+简单的复选框，保存为0还是1，取决于复选框是否选取。一个常见的例子是，创建一个属性，指定别名为'umbracoNaviHide'数据类型为 True/False，这允许编辑器从导航菜单中隐藏节点。
+
 ####Upload####
-Adds an upload field, which allows documents or images to be uploaded to umbraco. This does nto add them to the media library, they are simply added to the document data.
+添加一个上传字段，可以允许上传文档或图片到 Umbraco 中。但这并不会将它们添加到媒体库，只是简单的添加到文档数据中。
+
 ####Multiple Textstring####
-The Multiple Textstring data-type enables a content editor to make a list of text items. For best use with an unordered-list.
+多文本框属性编辑器允许在内容编辑器中生成一组文本条目的列表。最好用于无序的文本输入。
+
 ####Slider####
-The Slider data-type makes use of the jQuery UI Slider plugin; which makes selected elements into sliders. The slider can be moved with the mouse or the arrow keys.
+Slider 数据类型使用了 jQuery UI Slider 插件。可以给 slider 选择元素。可以使用鼠标或者方向键来移动slider。
+

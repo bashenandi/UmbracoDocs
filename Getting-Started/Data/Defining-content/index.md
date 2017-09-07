@@ -1,85 +1,85 @@
-#Defining content
+#定义内容
 
-*Here you'll find an explanation of how content is defined and quick guide for your first go at it (based on an empty installation).*
+*这里你可以找到如何定义内容和第一次如何开始的快速指南说明(基于空白的安装)。*
 
-Before a piece of content can be created it needs to be defined. That is why, when opening a blank installation of Umbraco, it is not possible to create content in the __Content__ section. All content needs a blueprint that holds information about what kind of data can be stored on the content node, which editors are used, how it is organized, where in the structure it is allowed and so forth. This blueprint or definition is called a Document Type.
+在创建一块内容之前，需要先定义它。当你打开一个空白的 Umbraco 安装程序，它无法在_Content_区块创建内容，这是为什么？所有内容都需要一个蓝图结构来知晓这个内容节点可以存储什么类型的数据，有什么编辑器可以使用，如何组织它们，允许什么样的结构等等。这个蓝图或者定义，称之为文档类型。
 
-##What is a Document Type?
-In it's most basic form a document type is a form containing fieldsets (or tabs) where you can apply rules about where the content can be created, which template(s) are allowed, backoffice icon and so forth.
+##什么是文档类型?
+文档类型作为一个表单容器字段集合（或者标签页），其中包含很多基础的表单，你可以定制规则来约束什么样的内容可以被创建，可以允许使用什么样的模板，后台图标等等。
 
-Document Types can define entire pages or more limited content that can be reused on other nodes ie. a SEO tab. This means that you are in complete control of what type of content can be created where.
+文档类型能够定义整个页面或者局部内容，用于在其他节点中重用，例如 SEO 标签。这意味这你可以完全控制什么类型的内容可以被创建在哪里。
 
-#####Properties
-Each field on a Document Type is called a property. A property is given a name, an alias (used to output the properties content in a template) and an editor. The editor determines what type of data the property will store and the input method. There are a wide range of editors available out of the box (textstring, Rich text, media picker and so forth) and you can customize and add additional editors.
+#####属性
+文档类型中的每个字段称之为属性。属性需要一个名称，一个别名（用于在模板中输出属性内容）和一个编辑器。编辑器决定了这个属性存储什么样的数据以及输入方式。这里有大量的编辑器可以使用（文本框，富文本，媒体选择等等），并且你也可以定制他们，还可以添加附加的编辑器。
 
-Some editors require configuration, a configured editor is saved as a Data Type and can be re-used for multiple properties and document types. These can be seen in the __Developer__ section under __Data Types__.
+有些编辑器需要配置后才能使用，一个配置好的编辑器会被保存为一个数据类型，它可以在多个属性和多个文档类型中使用。这些可以在__开发区块__下面的__数据类型看到__。
 
-##Creating a Document Type
-A Document Type is created in the settings section using the Document Type editor.
+##创建一个文档类型
+文档类型使用文档类型编辑器创建在__设置__区块中。
 
-Go to the __Settings__ section in the backoffice. On the __Document Types__ node click the menu icon (•••) to bring up the context menu. Here choose __Document Type__. This will create a new Document Type with a template (can be found under __Templates__ in the __Settings__ sections) that will be assigned as the default template for the document type.
+前往后台的__设置__区块。在__文档类型__节点上点击菜单图标(•••)展开上下文菜单。这里选择__文档类型__。这会创建一个带模板（可以在__设置__区块下的__模板__中找到）的文档类型，同时指派它为这个文档类型的默认模板。
 
-![Creating a Document Type](images/Document-Type-Create.jpg)
-_You can also choose to create a Document Type without a template and create folders to organize your Document Types._
+![创建文档类型](images/Document-Type-Create.jpg)
+_你也可以选择创建一个不带模板的文档类型和创建一个目录来组织你的文档类型。_
 
-###Defining the root node
-First we're prompted to give the Document Type a name. This first Document Type will be the root node for our content, name it "Home".
+###定义根节点
+首先我们要给文档类型一个名字。这第一个文档类型，会成为我们所有内容的根节点，所以命名为"Home"。
 
-![Naming a Document Type](images/Document-Type-Name.jpg)
-_Notice that the alias of the Document TYpe is automatically generated based on the name. If you want to change the alias simply click the "lock" icon._
+![文档类型命名](images/Document-Type-Name.jpg)
+_注意，文档类型的别名会基于名字自动生成。如果你想修改这个别名，点击旁边的"锁"图标。_
 
-Having a root node makes it easy to query content as you know everything will be under the root node.
+有了一个根节点，会让内容查询变得更加简单，你要知道所有内容都应该在根节点的下面。
 
-To set an icon for the Document Type click the document icon in the top left corner. This will open the icon select dialog. Search for _Home_ and select the icon. This icon will be used in the content tree, choosing appropriate icons for your content nodes is a good way to give editors a better overview of the content tree.
+为了给文档类型设置一个图标，需要点击左上角的文档图标。这会打开一个图标选择对话框。搜索_Home_并且选择这个图标。这个图标会被是用在内容树中，为你的内容节点选择一个合适的图标，会在内容树的呈现上给编辑者更好的体验。
 
-![Choosing an icon for the Document Type](images/Document-Type-Choosing-Icon.jpg)
+![给文档类型选择图标](images/Document-Type-Choosing-Icon.jpg)
 
-Go to the __Permissions__ tab and tic the __Yes - allow content of this type in the root__ checkbox and save the Document Type by clicking save in the bottom right corner.
+前往__权限__标签，勾选__Yes - allow content of this type in the root__复选框，然后点击右下角的保存按钮保存这个文档类型。
 
-![Allow at root](images/Document-Type-Allow-At-Root.jpg)
+![允许在根节点](images/Document-Type-Allow-At-Root.jpg)
 
-###Creating the root node
-Now go to the __Content section__, click on the menu icon next to __Content__ and Select the Home Document Type. We'll name it "Home" and click the __Save and Publish__ button.
+###创建根节点
+现在前去__内容__区块，点击__内容__上菜单图标，选择"Home"文档类型。我们给它命名为"Home"，然后点击__Save and Publish__按钮。
 
-![First content created](images/Document-Type-Root-Node-Created.jpg)
+![创建了第一个内容](images/Document-Type-Root-Node-Created.jpg)
 
-As we haven't created our own properties all we can see on the "Home" node is the Properties tab which contains the default properties that are available on all content in Umbraco.
+由于我们并没有创建任何属性，因为我们能够看到的只有"Home"节点的Properties标签页，它包含了Umbraco 中所有内容包含的默认属性。
 
-Let's add some properties of our own.
+现在我们去添加一些属性。
 
-###Tabs and properties
-Go to the __Settings section__, expand __Document Types__ by clicking the arrow to the left and select the __Home__ Document Type.
+###标签页和属性
+前去__设置__区块，点击左侧的箭头展开__文档类型__，然后选择其中的__Home__文档类型。
 
-####Adding tabs
-Before we start adding properties to the Document Type we need to create a tab to hold the property.
+####添加标签页
+在我们开始给文档类型添加属性之前，我们需要先创建一个标签页来容纳这些属性。
 
-Click __Add new tab__ and name the tab "Content".
+点击 __Add new tab__ ，为其命名"Content"。
 
-![Creating tabs](images/Document-Type-Create-Tab.jpg)
-_If you have multiple tabs and/or properties you can order them with drag and drop or by entering a numeric sort order value. This is done by clicking __Reorder__._
+![创建标签页](images/Document-Type-Create-Tab.jpg)
+_如果你有多个标签包含一个或多个属性，你可以通过拖拽或者直接输入数字来进行这些排序。你需要点击**Reorder**来完成这些。_
 
-####Adding properties
-Now that we have created a tab we can start adding properties. Let's add a Rich Text editor to the Content tab.
+####添加属性
+现在我们创建好了标签页之后，就能开始添加属性了。让我们在 Content 标签页中添加一个富文本编辑器。
 
-Click the __Add property__ link in the Content tab. This opens the property settings dialog. Here you can set the meta data for each property (name, alias, description), choose which data type/property editor to use and add validation if needed.
+点击Content 标签页中的__Add property__链接。会打开属性设置对话框。这里你可以给每个属性设置元数据（name,alias,description），选择一个数据类型/属性编辑器使用，如果需要还可以添加数据验证。
 
-Give the property a name, the name will be shown to the editor so make relevant and easy to understand. Notice the alias is automatically generated based on the name. We'll name this "Body Text".
+给属性起一个名字，这个名字会在编辑器中显示，因此要有一定相关性或易于理解。注意别名会基于名字自动生成。我们将其命名为 "Body Text"。
 
-![Adding a property](images/Document-Type-Adding-Properties.jpg)
+![添加属性](images/Document-Type-Adding-Properties.jpg)
 
-#####Keyboard Shortcuts
-Keyboard shortcuts are available when you are working with the Document Type editor. To see which shortcuts are available simply click <kbd>ALT</kbd> + <kbd>SHIFT</kbd> + <kbd>K</kbd>:
+#####键盘快捷键
+当你在文档类型编辑器中操作时，有一些键盘快捷键可供使用。同时按下<kbd>ALT</kbd> + <kbd>SHIFT</kbd> + <kbd>K</kbd>查看可供使用的快捷键：
 
-![Keyboard Shortcuts](images/Document-Type-Keyboard-Shortcuts.jpg?width=400)
+![键盘快捷键](images/Document-Type-Keyboard-Shortcuts.jpg?width=400)
 
-#####Property editors
-Clicking __Add editor__ will open the Select editor dialog. Here you can choose between all the __Available editors__ (this will create a new configuration) or __Reuse__ already configured editors. To make it easier to find what you need use the search field to filter by typing "Rich". Filtering will display configured properties first (under Reuse) and all available editors under that.
+#####属性编辑器
+点击__Add editor__会打开_Select editor_对话框。在这里你可以在__Available editors__（这会创建一个新的配置）中选择所有的，或者在__Reuse__中选择所有已经配置好的编辑器。为了是其更加容易查找，你可以使用在搜索框中输入"Rich"来进行过滤。过滤器首先会显示已配置的属性（在 Reuse 下面）和之后的可用编辑器。
 
-Select the __Rich Text editor__ under Available editors.
+在可用编辑器下面选择__Rich Text editor__。
 
-![Choosing the Rich Text editor](images/Document-Type-Rich-Text-Property.jpg)
+![选择富文本编辑器](images/Document-Type-Rich-Text-Property.jpg)
 
-This will let you configure the editor settings - the Rich Text editor for this property. Notice that the name of the Data Type (_Home - Body Text - Rich Text editor_) is based on the name of the Document Type, the name of the property and the property editor. Let's rename it to "Simple Rich Text editor" and only select the most necessary options.
+这里会给你一些配置用于设置编辑器 - 这就是富文本编辑器的属性。注意数据类型的名字（_Home - Body Text - Rich Text editor_）是基于文档类型的名字，属性的名字和属性编辑器的名字。让我们将其重命名为"Simple Rich Text editor"并且仅选择一些必要的选项。
 
 * _bold_
 * _italic_
@@ -88,40 +88,37 @@ This will let you configure the editor settings - the Rich Text editor for this 
 * _link_
 * _umbMediaPicker_
 
-When you are happy with the settings click __Submit__.
+当你完成这些设置后，点击__Submit__。
 
-Checking the __Mandatory__ checkbox makes the property mandatory and the content cannot be saved if no value is entered (into the Richtext editor in this case). You have the option to add additional validation by adding a regular expression in the __Validation__ field.
+勾选__Mandatory__复选框会使属性成为必填项，如果没有输入值则内容不能保存（在这里是指输入到 Richtext）。你还有一个选择，是在__Validation__添加正则表达式，用于额外的验证。
 
-Submit the property and save the Document Type. If you go to the __Content section__ and click on the Home node you will now se the Content tab with the Body Text property.
+提交属性设置并且保存文档类型。如果你再次前去__内容__区块，并且点击 Home 节点，应该会看到包含了 _Body Text_ 属性的 _Content_ 标签页。
 
-###Defining child nodes
-Next up we'll create a simple text page Document Type that will be used for subpages on the site.
+###定义子节点
+下一步，我们创建一个简单文本页面的文档类型，用于网站的子页面使用。
 
-Go back to the __Settings section__ and create a new Document Type and name it "Text Page". Add a tab called "Content"
-and this time we'll add two properties. First make a property called summary using the __Textarea__ editor and secondly create a property called "Body Text" and reuse the __Simple Rich Text Editor__ Data Type.
+返回 __Settings__ 区块，创建一个新的文档类型，命名为"Text Page"。添加一个标签页称之为"Content"，这次我们添加两个属性。先添加一个名为"Summary"的属性使用 __Textarea__ 编辑器，再添加一个属性称为"Body Text"，再次使用 __Simple Rich Text Editor__ 数据类型。
 
-###Creating child nodes
-Before we can create a Text Page in the __Content__ section, we need to allow the Text Page Document Type to be created as a child node to the Home node. Select the Home Document Type and go to the __Permissions__ tab. Click __Add child__ and select Text Page.
+###创建子节点
+为了能够在 __内容__ 区块创建 _Text Page_ ，我们需要允许 _Text Page_ 文档类型可以作为 _Home_ 节点的子节点被创建。选择 _Home_ 文档类型，然后打开 __Permissions__ 标签页。点击 __Add child__ 选择 _Text Page_ 。
 
-![Allowing child nodes](images/Document-Type-Allow-Child-Node.jpg)
+![允许的子节点](images/Document-Type-Allow-Child-Node.jpg)
 
-Go to the __Content__ section and click the menu icon (•••) next to the *Home* node and select the Text page Document Type. We'll name the page "About us". We now have a very basic content structure.
+前去 __内容__ 区块然后点击 *Home* 节点上的菜单图标(•••)，然后选择 *Text Page* 文档类型。我们把这个页面命名为"About us"。现在我们就有了一个非常基础的内容结构。
 
-![Basic content structure](images/Document-Type-Child-Node-Created.jpg)
+![基础内容结构](images/Document-Type-Child-Node-Created.jpg)
 
-Document Types are very flexible and can be used in a myriad of ways from defining a piece of reusable content or an entire page, to acting as a container or repository.
+文档类型的使用非常灵活，从定义可重用的区块到整个页面，有非常多的使用方法，还可以充当容器或存储仓库。
 
-###More information
-- [Rendering Content](../../Design/Rendering-Content/)
-- [Customizing Data Types](../Data-Types/index.md)
 
-###Related Services
-- [ContentService](../../../Reference/Management/Services/ContentService.md)
-- [ContentTypeService](../../../Reference/Management/Services/ContentTypeService.md)
+###更多信息
+- [输出内容](../../Design/Rendering-Content/)
+- [定制数据类型](../Data-Types/index.md)
 
-###Tutorials
-- [Creating a basic website with Umbraco](../../../Tutorials/Creating-Basic-Site/)
+###相关服务
+- [内容服务](../../../Reference/Management/Services/ContentService.md)
+- [内容类型服务](../../../Reference/Management/Services/ContentTypeService.md)
 
-###[Umbraco TV](http://umbraco.tv)
-- [Chapter: Document Types](http://umbraco.tv/videos/umbraco-v7/implementor/fundamentals/document-types/what-is-a-document-type/)
-- [Chapter: Creating content](http://umbraco.tv/videos/umbraco-v7/content-editor/basics/creating-content/)
+###教程
+- [用 Umbraco 创建一个基础网站](../../../Tutorials/Creating-Basic-Site/)
+

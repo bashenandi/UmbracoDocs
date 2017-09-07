@@ -1,12 +1,13 @@
-#Members
-*Members are used for registering and authenticating external users of an Umbraco installation (ie. forum members, intranet users and so forth). Unlike with Document Types and Media Types everything is done in the Members section both defining and creating, and editing members. This guide will explain how to define and create members in the backoffice. If you want to work with members using the service APIs, links can be found at the end of document*
+#会员
 
-There is a default Member Type that can be used to create members. You can of course customize it to fit your needs or create your own from scratch.
+*会员用于网站注册以及一些外部扩展安装包（例如：论坛用户，内网用户等等）。不同于文档类型和媒体类型，会员区块已经完成了会员的定义和创建，也可以编辑会员。本指南讲述了如何在后台定义和创建用户。如果你想通过服务 APIs 来操作会员，在文档底部可以找到链接。*
 
-##Creating a member
-Go to __Members__ section, click the menu icon next to __Members__ in the member tree and select __Member__. Members have a number mandatory properties. So aside from filling out the name you will need to fill out  __Login__, __Email__ and __Password__ on the __Properties__ tab before the member can be saved.
+这里有默认的会员类型可以用于创建会员。当然你也可以自定义它，来适用于你自己的需求。
 
-There is also a number of default properties on the __Membership__ tab:
+##创建会员
+前往 __会员__ 区块，点击会员树中 __Members__ 的菜单按钮之后选择 __Member__ 。会员有一些必填的属性。所以除了名字之外你还需要在 __Properties__ 标签页之中填写： __Login__, __Email__ and __Password__ 才可以保存。
+
+在 __Membership__ 标签页中还有一些默认的属性：
 
 - umbracoMemberComments
 - umbracoMemberFailedPasswordAttempts
@@ -16,93 +17,90 @@ There is also a number of default properties on the __Membership__ tab:
 - umbracoMemberLastLogin
 - umbracoMemberLastPasswordChangeDate
 
-Once the member is created and saved you can access it by expanding the members tree and click __All Members__ to get a list view (with real time search) or select the member type to filter by, by selecting it in the Members tree.
+一旦成员创建并保存后，你可以通过展开会员树中的 __All Members__ 获取列表视图（可以实时搜索），或者在会员树中通过选择会员类型进行过滤。
 
-##Creating a Member Type
-You can create your own Member Types and add properties and tabs just as with Document Types.
+##创建会员类型
+你可以创建你自己的会员类型，并且添加标签页和属性，类似于文档类型。
 
-Go to the __Members__ section, click the menu icon next to __Member Types__ and select __Create__. Name the new Member Type and click the __Create__ button.
+前往 __Members__ 区块，点击会员树中 __Member Types__ 的菜单按钮之后选择 __Create__ 。命名新的会员类型之后点击 __Create__ 按钮。
 
-You are now taken to the Member Type editor that is used to define and edit the Memeber Type. It consists of three tabs: __Info__, __Generic Properties__ and __Tabs__.
+现在你会看到会员类型编辑器用来定义和编辑会员类型。它包含三个标签页： __Info__, __Generic Properties__ 和 __Tabs__ 。
 
-###Info
-![Members Info tab](images/Members-Info.jpg)
-Shows basic information about the Member Type and settings for custom properties.
+###信息
+![会员信息页](images/Members-Info.jpg)
+显示关于会员类型的基础信息和自定义属性设置。
 
-__Name:__ The name of the Member Type shown in the Member Type tree and when users create a new member.
+__Name:__ 会员类型的名字会显示在会员树中和用户创建新的会员时。
 
-__Alias:__ Used to Reference the Member Type in code.
+__Alias:__ 用于在代码中引用会员类型。
 
-__Icon:__ The icon is shown in the Members list view. If the are more than one Member Type choosing different icons will help identify members easily.
+__Icon:__ 显示在会员列表视图中的图标。如果有超过一个的会员类型都选择不同的图标，会有利于你简便的识别会员。
 
-__Description:__ The description is shown when creating a new member.
+__Description:__ 描述显示在创建会员的时候。
 
-__Property settings:__ If properties are added to the Member Type you can control frontend access to the property:
+__Property settings:__ 如果会员类型添加了属性，你可以在前端控制操作这些属性：
 
-  - __Member can edit:__ A logged in member can edit this property.
-  - __Show on profile:__ The property will show on the profile for member that is logged in.
+  - __Member can edit:__ 登录成员可以编辑这个属性。
+  - __Show on profile:__ 成员登录后可以显示在个人资料中。
 
-###Generic Properties
-![Genric properties tab](images/Members-Generic-Properties.jpg)
-Create. edit and organize properties for this Member Type.
+###通用属性
+![通用属性标签](images/Members-Generic-Properties.jpg)
+为媒体类型创建、编辑和组织属性。
 
-#####Adding properties
-To add a property to the Member Type select __Click here to add new property__.
+#####添加属性
+想要给会员类型添加属性选择  __Click here to add new property__ 。
 
-__Name:__ The name  of the property.
+__Name:__ 属性名称。
 
-__Alias:__ Used to reference the property in your templates.
+__Alias:__ 在模板中引用这个属性。
 
-__Type:__ Selecting the type will decide the input method for this property. Ie *Richtext editor*, *Date Picker*, *Image Cropper* and so forth. You can edit or create new types in the __Developer Section__ under the __Data Type__ node.
+__Type:__ 选择的类型将决定此属性的输入方法。例如 *Richtext editor*, *Date Picker*, *Image Cropper* 等等。你可以在 __Developer Section__ 下面的 __Data Type__ 创建或编辑新的类型。
 
-__Tab:__ Place the property on a tab. Additional tabs can be created on the __Tabs__ tab. If the property is placed on the Generic Properties tab it will show on the Properties tab in the content view.
+__Tab:__ 属性显示的标签页。额外的标签页可以在 __Tabs__ 标签页中创建。如果这个属性被设置为*Generic Properties*，那么它在内容视图中会被显示在*Properties*标签页中。
 
-__Mandatory:__ Making the property mandatory means the content cannot be created/saved if the property has no value.
+__Mandatory:__ 要求属性必填，意味着如果这个属性没有值，是不能创建并保存的。
 
-__Validation:__ Add a regular expression to validate the property upon save.
+__Validation:__ 添加一个正则表达式，在保存是验证这个属性。
 
-__Description:__ The description will be displayed below the property name when creating/editing the member. A good description is important to the editing experience.
+__Description:__ 当创建/编辑会员时，描述会显示在属性名字的下方。好的描述对编辑者会有很重要的帮助。
 
-#####Organizing properties
-Organize properties with drag and drop. If multiple tabs exists it is possible to drag properties between the different tabs.
+#####组织属性
+通过拖放来组织管理属性。如果有多个标签页，可以在不同的标签页之间拖放属性。
 
-###Tabs
-![Members Tabs tab](images/Members-Tabs.jpg)
-A new tab is created by entering a name into the input field and pressing the __New tab__ button.
+###标签
+![会员标签标签页](images/Members-Tabs.jpg)
+通过在输入框中输入名字然后点击  __New tab__ 按钮来创建一个新的标签页。
 
-#####Name and sort order
-Renaming a tab is done simply by changing the name in the input field and saving the Document Type. To change the order of tabs use the drag and drop handle to the left or enter a numeric value in the second input field. Tabs will be displayed from left (lowest value) to right (highest value) in the content section.
+#####名字和排序
+重名一个标签页就像文档类型一样，在输入框中更改名字就可以完成。改变标签页的排序可以通过拖拽左侧或者在第二个输入框中输入数字。在内容区块中，标签从左（低的数值）向右（高的数值）显示。
 
-##Creating Member Groups
-Member Groups defines roles for your members that can be used for role based protection. A member can be in multiple groups.
+##创建会员组
+成员组可以为你的成员定义角色，从而实现基于角色的保护。一个成员可以属于不同的组。
 
-![Creating a Member Group](images/Member-Groups-Create.jpg)
+![创建会员组](images/Member-Groups-Create.jpg)
 
-To create a new Member Group click the menu icon next __Member Groups__ node in the Members section. Choose __Create__, name the group and save the group.
+要创建一个新的会员组，在会员区块中点击  __Member Groups__ 节点，选择 __Create__ ，命名并且保存组。
 
-###Assigning a Member Group
-To assign a member to a specific group find the member you wish to assign and go to the __Properties__ tab. Under the Member Group property there are two columns:
+###分配会员组
+要分配会员到指定的会员组，先找到想要分配的会员，前往 __Properties__ 标签。在 *Member Group* 属性下面，有两列：
 
-![Assigning a Member Group](images/Member-Groups-Assign.jpg)
+![指派会员组](images/Member-Groups-Assign.jpg)
 
-__NOT A MEMBER OF GROUP(S):__ Lists all the groups that the member is not a part of. To assign a group to the member simply click it and it will move to the other column.
+__NOT A MEMBER OF GROUP(S):__ 列出所有不包含该会员的组。指派会员到一个组，只需要点击它，就会移动到另一列。
 
-__MEMBER OF GROUP(S):__ Lists all the groups that the member is part of. To remove the member from a group simply click it and it will move to the other column.
+__MEMBER OF GROUP(S):__ 列出所有包含该会员的组。从某个组里删除会员，只要点击该组，就会移动到另一列。
 
-#Technical
-As a developer you are able to leverage your website easily when you build on the members section of Umbraco.  
-Although the member section is by default in the Umbraco backoffice.  You will have some work to implement it on the front end of your website.
-The members come from a custom Asp.net membership provider.  While the member groups are coming from a custom Role provider. Both are defined in the web.config.
-You can find out more about the services methods in the reference section of the documentation by following the links below .
+#技巧
+作为一个开发者，基于 Umbraco 的会员区块进行构建时，可以使你的网站更有优势。
 
-###More information
-- [Customizing Data Types](../Data-Types/)
+虽然会员板块默认是在 Umbraco 的后台。你应该做些工作在你的网站前端实现它。会员由 ASP.NET 提供的membership自定义而成。会员组由自定义的角色提供。它们都在 web.config 中定义。你可以通过下面的链接，在文档的参考部分，找到更多相关的服务方法。
 
-###Related Services
-- [MemberService](../../../Reference/Management/Services/MemberService.md)
-- [MemberType Service](../../../Reference/Management/Services/MemberTypeService.md)
-- [MemberGroup Service](../../../Reference/Management/Services/MemberGroupService.md)
+###更多信息
+- [自定义数据类型](../Data-Types/)
 
-###[Umbraco.TV](http://umbraco.tv)
-- [Chapter: Members](http://umbraco.tv/videos/umbraco-v7/content-editor/administrative-content/members/what-is-a-member/)
-- Member API chapter *(Coming soon)*
+###相关服务
+- [会员服务](../../../Reference/Management/Services/MemberService.md)
+- [会员类型服务](../../../Reference/Management/Services/MemberTypeService.md)
+- [会员组服务](../../../Reference/Management/Services/MemberGroupService.md)
+
+

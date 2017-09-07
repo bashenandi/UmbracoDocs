@@ -1,18 +1,18 @@
-#Data
-*This section focuses on how to create data using the Umbraco backoffice.*
+#数据
+*这部分内容聚焦在如何使用 Umbraco 后台创建数据。*
 
-There are three kinds of content in Umbraco. Your normal website content that exists in the content section. Media content such as images, videos and PDFs can be stored in the Media section. Finally members, used for user profiles and frontend authentication are in the Members section.
+在 Umbraco 中有三个种类的内容。你正常的网站内容位于 Content 区块。媒体内容，包含图片、视频和 PDFs 等都存储在 Media 区块。最后是会员，用于用户个人资料和前端授权都包含在 Members 区块。
 
-A fundamental principle in Umbraco is that all content types have a definition (Document Types, Media Types, Member Types). These definitions are highly customizable, meaning you can add properties and have complete control over how the data is organized.
+一个基本原则是在 Umbraco 中的所有内容类型都有一个定义（文档类型，媒体类型，会员类型）。这些定义是高度可定制的，这意味着你可以添加任意属性并且完全控制数据的组织形式。
 
-##[Defining Content](Defining-content/)
-Defining Documents Types, adding properties and creating content.
+##[定义内容](Defining-content/)
+定义文档类型，添加属性和创建内容。
 
-##[Creating Media](Creating-Media/)
-Defining Media Types and uploading files to the media section, using upload fields and image cropper.
+##[创建媒体](Creating-Media/)
+定义媒体类型和上传文件到 Media 区块，使用上传字段和图片裁剪。
 
-##[Creating Members](Members/)
-Defining Member Types and creating members for authentication and user profiles
+##[创建会员](Members/)
+定义会员类型和创建会员用于授权和用户个人资料。
 
-##[Customizing Data Types](Data-Types/)
-Creating and editing Data Types.
+##[自定义数据类型](Data-Types/)
+创建和编辑数据类型。

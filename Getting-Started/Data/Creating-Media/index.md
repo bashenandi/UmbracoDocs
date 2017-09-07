@@ -1,63 +1,64 @@
-#Creating media
-Media in Umbraco is handled in much the same way as content. Instead of defining Document Types you define Media Types that act as the base for media items. Unlike with normal content there are a three default Media Types:
+#创建媒体
+Umbraco 中的媒体处理和内容的处理方式差不多。只不过为媒体条目定义的不是文档类型，而是媒体类型。不同于一般的内容，有三种默认的媒体类型：
 
 - Folder
 - Image
 - File
 
-The __Folder__ Media Type is a container for organizing media items in the media tree. The __Image__ Media Type is used for uploading and storing images and the __File__ Media Type is used to upload and store other files in the Media section. This means you don't have to define your own Media Types to start using the section. You've already got the tools for organizing and uploading media.
+__Folder__ 媒体类型是在媒体树中组织媒体条目的容器。 __Image__ 媒体类型用于上传和存储图片类型的文件到媒体区块， __File__ 媒体类型用于上传和存储其他类型的文件到媒体区块中。这意味着你不必定义你自己的媒体类型就可以开始使用这部分。你已经有了组织和上传媒体的工具。
 
-###Creating a folder
-It is always a good idea to start by creating a folder for Media items. Make sure to name your folders in a way that makes it easy for editors to upload files and images in the right place.
+###创建文件夹
+在开始之前为媒体条目创建一个文件夹一直是一个好习惯。确保你文件夹的名字简单易懂，可以帮助编辑者上传文件和图片到正确的地方。
 
-To create a media folder go to the __Media section__ and click the menu icon to the right of __Media__, alternatively you can right click the __Media__ node and choose create. This will bring up the create dialogue. Pick the __Folder__, enter a name and press __save__.
+创建媒体文件夹，要前往 __媒体__ 区块然后点击 __媒体__ 节点右边的菜单图标，你还可以右击 __媒体__ 节点然后选择创建。接着会打开创建对话框。选择 __Folder__ ，输入一个名字然后点击 __save__ 。
 
-###Uploading images and files
-There are a couple different ways to do this. You can use the context menu as when creating a folder. Click the menu icon next to the folder and choose __Image__ or __File__, enter a name for your media item and click the __Choose File__ button.
+###上传图片和文件
+有几种不同的方式来做这件事。你可以像创建目录一样使用上下文菜单。点击目录的菜单图标之后选择 __Image__ 或者 __File__ ，为你的媒体条目输入名字后点击 __Choose File__ 按钮。
 
-An easier way to do it is to simply drag and drop the file to the upload area. Umbraco will automatically detect if it is an image or a file and create a media item in the folder. You can even drop entire folders (with subfolders) and the folder and file structure will be recreated. Alternatively you can click __- or click here to choose files__ and get a standard OS file picker dialog.
+一个更简单的方式是拖拽文件到上传区域。如果是文件或图片，Umbraco 会自动检测到并在目录中创建媒体条目。你甚至可以拖拽整个目录（包含子目录），文件夹和文件结构将被重建。你还可以点击 __- or click here to choose files__ ，通过标准的 OS 文件选取对话框来上传。
 
-The default __Image__ Media Type has 5 properties that will be populated once the the image is uploaded. These are __Upload Image__, __Width__, __Height__, __Size__ and __Type__ and can be viewed in the __Media__ section and accessed in your templates.
+当图片文件上传时，默认的 __Image__ 媒体类型会自动填充5个属性。他们是： __Upload Image__, __Width__, __Height__, __Size__ and __Type__ ，可以在 __媒体__ 区块中浏览和在模板中操作。
 
-###Organizing and editing media items
-The default view for the media section is a card view that let's you preview the images and files.
+###组合和编辑媒体条目
+媒体区块的默认视图是卡片视图，可以让你预览图片和文件。
 
-![Media Section - Cardview](images/Creating-Media-Cardview.jpg)
+![媒体区块 - 卡片视图](images/Creating-Media-Cardview.jpg)
 
-You can select multiple media items and do bulk operations (delete/move) by clicking the image. To edit properties on a media item simply click the blue bar at the bottom of the item.
+你可以通过点击图片选择多个媒体条目，并进行批量操作（删除/移动）。可以通过点击条目底部的蓝条来编辑媒体条目的属性。
 
-![Edit media item](images/Creating-Media-Edit.jpg?width=200px)
+![编辑媒体条目](images/Creating-Media-Edit.jpg?width=200px)
 
-You can switch to a list view by clicking the view toggle next to the search field and selecting the listview.
+你可以通过点击视图切换选择列表视图来切换到列表的显示方式，切换按钮右侧是搜索框。
 
-![Media Section - List view](images/Creating-Media-Listview.jpg)
+![媒体区块 - 列表视图](images/Creating-Media-Listview.jpg)
 
-###Using media items in content
-By adding a __Media Picker__ property to a Document Type the editor will have the ability to select media items in the __Content__ section.
+###在内容中使用媒体条目
+通过将一个 __Media Picker__ 属性添加到文档类型，编辑器就可以在 __内容__ 区块中选择媒体条目。
 
-_TIP: The __Upload File__ property on the images use the Image Cropper Data Type. If crops are added to this you can adjust the individual crops on the media item and access them in templates. You can add crops by editing the Upload File property on the Image media type in the Settings section or in the Developer section under Data Types._
+_提示：图片的 **Upload File** 属性使用了图片裁剪数据类型(Image Cropper Data Type)。如果添加了裁剪起，你可以指定媒体条目上使用的裁剪数据并且在模板中操作他们。通过设置区块的图片媒体类型或者开发区块下面的数据类型，你可以编辑上传文件属性添加裁剪器。_
 
-##Creating a Media Type
-You can create your own Media Types and add tabs, properties, and control the structure of the Media tree just as with Document Types. This means you can store information that is specific to the media on the media item itself.
+##创建媒体类型
+你可以创建你自己的媒体类型，和标签页、属性和控制媒体树中的结构，如同文档类型一样。这意味着你可以在媒体条目中存储特定的媒体信息。
 
-A Media Type is created in the __Settings__ section using the Media Type editor.
+媒体类型在 __设置__ 区块中，使用媒体类型编辑器创建。
 
-Go to the __Settings__ section. On the __Media Types__ node click the menu icon (or right click the node) to bring up the context menu. Here you can choose between creating a media type or a folder.
+前往 __设置__ 区块。在 __Media Types__ 上点击菜单图标（或者右击节点）打开上下文菜单。这里你可以在创建媒体类型和目录之间选择。
 
-_TIP: Having different folders for different media types makes it possible to restrict where media items can be created. Only allowing PDF uploads in a certain folder or employee images in another makes it easier for editors to keep the Media section organized._
+_提示：针对不同的媒体类型使用不同的文件夹，可以限制媒体项目的创建位置。例如仅允许PDF上传到某个文件夹而员工图片上传到另一个位置，这样对编辑人员来说更容易保持媒体部分的组织性。_ 
 
-Choose __New Media Type__. This will open the Media Type editor. It is basically the same editor used for creating Document Types, the difference is that Media Types define items for Media section and you do not have the ability to assign a template for the Media Type.  
+选择 __New Media Type__ 打开媒体类型编辑器。它和创建文档类型的编辑器基本一样，不同之处在于对于媒体区块来说，有不同的媒体类型定义条目，以及你不能给媒体类型指定可用的模板。  
 
-![Creating a Media Type](images/Creating-Media-Create-740.jpg)
-Name the Media Type "Employee Image". Choose an icon (user) by clicking the icon to the left of the name.
+![创建媒体类型](images/Creating-Media-Create-740.jpg)
 
-####Adding tabs
-Before we start adding properties to the Media Type we need to create a tab to put these on.
+将媒体类型命名为"Employee Image"。通过点击名称左边的图标，选择一个图标（用户图标）。
 
-Go to the __Tabs__ tab and create a tab called "Image".
+####添加标签页
+在我们开始给媒体类别添加属性之前，需要先创建标签页容纳它们。
 
-####Adding properties
-We need to add the same properties as on the default __Image__ Media Type. These are:
+点击 __Add new tab__ 创建一个名为"Image"的标签。
+
+####添加属性
+我们需要添加一些类似于默认的 __Image__ 媒体类型的属性。他们是：
 
 - umbracoFile
 - umbracoWidth
@@ -65,51 +66,52 @@ We need to add the same properties as on the default __Image__ Media Type. These
 - umbracoBytes
 - umbracoExtension
 
-On the Image tab click __Add new property__. Name it "Upload image" and change the alias to "umbracoFile".
+在 Image 标签中点击 __Add new property__ 。命名为 "Uplaod image"，更改别名为"umbracoFile"。
 
-Click __Add editor__, search for "cropper" and choose __Image cropper__ under __Available editors__. This will create a new Image Cropper Data Type. The name of the new Data Type type is a bit long so rename it to "Employee Image Cropper".
+点击 __Add editor__ ，搜索 "cropper"并且选择 __Available editors__ 下面的 __Image cropper__ 。这样会创建一个新的图片裁剪数据类型(Image Cropper Data Type)。默认生成的数据类型名字较长，将其改为"Employee Image Cropper"。
 
-Add two new crops called "Thumbnail" (200px x 350px) and "wideThumbnail" (350px x 200px).
+添加两个新的裁剪器，名为"Thumbnail" (200px x 350px) 和 "wideThumbnail" (350px x 200px)。
 
-![Defining crops](images/Creating-Media-Crops-740.jpg)
+![定义裁剪器](images/Creating-Media-Crops-740.jpg)
 
-Name the remaining four properties "Width", "Height", "Size" and "Type" and give them the aliases seen above. They should all use the __Label__ editor. As mentioned before these properties will automatically be populated once an image has been uploaded.
+剩下的四个属性分别命名为："Width", "Height", "Size" 和 "Type"，同时如下图一样修改他们的别名。它们全都使用 __Label__ 编辑器。如前所述，这些属性将在图像上传后自动填充。
 
-![Adding properties](images/Creating-Media-Properties-740.jpg)
+![添加属性](images/Creating-Media-Properties-740.jpg)
 
-###Defining a Media Type folder
-Next up we'll create a folder to hold the employee images. We could use the existing __Folder__ Media Type but that would mean editors can upload employee images to any folder of that type. If we create a folder specifically for employee images there is only one place to put them thus making it easier to have an organized Media section.
+###定义媒体类型文件夹
+下一步我们创建一个目录容纳employee图片。我们可以使用已经存在的 __Folder__ 媒体类型，但是这也意味着编辑者可能将 employee 图片上传到其他任何地方。如果我们专门为employee图像创建一个文件夹，那么将只有一个地方存放它们，从而使媒体区块的组织变得更加容易。
 
-####Structure and inheritance
-Go back to the __Settings__ and create a new Media Type and name it "Employee Images". Select the folder icon by clicking the icon to the left of the name.
+####结构和继承
+返回 __设置__ 区块，创建一个新的媒体类型命名为"Employee Images"。通过点击名称左边的图标，选择文件夹图标。
 
-We want the same basic functionality (same properties and tabs) as the __Folder__ Media type and that can be achieved by clicking __Compositions__ and selecting the __Folder__ Media Type. Now Employee images will inherit tabs and properties from the Folder Media Type.
+我们希望它具备类似于 __Folder__ 一样的基本功能（例如属性、标签页），可以通过点击 __Compositions__ 然后选择 __Folder__ 媒体类型来实现。现在"Employee images"继承了*Foler*媒体类型的标签页和属性。
 
-![Compositons](images/Creating-Media-Compositions.jpg)
+![组成](images/Creating-Media-Compositions.jpg)
 
-Finally we need to allow the employee images in our new folder. Go to the __Permissions__ tab. Click __Add child__ under __Employee images__.
+最后我们需要设置允许employee图片创建在新目录中。前去 __Permissions__ 标签。点击 __Employee images__ 下面的  __Add child__ 。
 
-![Permissions](images/Creating-Media-Permissions.jpg)
+![权限](images/Creating-Media-Permissions.jpg)
 
-All that is left to do is to define where the folder can be created. We want to create the folder in the root of the Media section so select the __Allow at root__ option at the top of the Permission tab.
+剩下要做的就是定义文件夹可以在哪里被创建。我们想在媒体区块的根下面创建文件夹，因此勾选 *Permission* 标签中 __Allow at root__ 选项来设置。
 
-####Creating the folder and media items
-Go to the __Media__ section and click the menu icon next to Media and select the __Employee images__ folder. Name it "Employee Images" and click create.
+####创建文件夹和媒体条目
 
-To start uploading images to the folder click the menu icon on the __Employee images__ node or use the __Create__ button in the content view and select __Employee image__.
+前去 __Media__ 区块，点击媒体节点的菜单图标，接下来选择 __Employee images__ 文件夹。命名为 "Employee Images" 点击创建。
 
-![Uploading Media](images/Creating-Media-Upload-740.jpg)
+开始上传文件到目录，可以通过点击 __Employee images__ 节点上的菜单图标或者在内容视图中使用 __Create__ 按钮，然后选择 __Employee image__ 进行上传。
 
-*Remember you can uncheck the __Allow at root__ option on the __Employee images__ Media Type to prevent editors from creating multiple folders of this type. This will not affect created folders, just disable the creation of new ones*
+![上传媒体](images/Creating-Media-Upload-740.jpg)
 
-####Cropping the images
-![Cropping images](images/Creating-Media-Cropping-740.jpg)
+*记住你可以取消 __Employee images__ 媒体类型的 __Allow at root__ 属性来防止编辑者创建多个该类型的目录。这只会禁止创建一个新，而不会影响到已经创建的目录*
 
-If you select an image that has been uploaded to this folder you'll see the full image and the two crops we have defined below. Moving the blue focal point on the on the image will update the crops to focus accordingly. You can also edit the individual crops by selecting them and moving the image or adjust the slider to zoom.
+####裁剪图片
+![裁剪图片](images/Creating-Media-Cropping-740.jpg)
 
-###More information
-- [Rendering Media](../../Design/Rendering-Media/)
-- [Customizing Data Types](../Data-Types/index.md)
+如果你选择了一张图片并将它们上传到了目录中，你会看到完整的图片和两个我们之前定义了的裁剪图片。在图片上移动蓝色的焦点，会根据焦点区域更新裁剪图。你还可以通过选择并移动图像或者调整滑块缩放来编辑单个裁剪图。
 
-###Related Services
-- [MediaService](../../../Reference/Management/Services/MediaService.md)
+###更多信息
+- [输出媒体](../../Design/Rendering-Media/)
+- [个性化数据类型](../Data-Types/index.md)
+
+###相关服务
+- [媒体服务](../../../Reference/Management/Services/MediaService.md)
