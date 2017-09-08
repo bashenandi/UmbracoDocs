@@ -1,13 +1,14 @@
-#Creating forms
-Creating forms requires that you know your way around .NET MVC. So if you are familiar with adding view models, views and controllers you are ready to make your first form.
+#创建表单
+创建表单需要.NET MVC 的知识体系。因此如果你熟悉了添加视图模型，视图和控制器，你已经准备好创建你的第一个表单了。
 
-*You can also use [Umbraco forms](https://umbraco.com/products/umbraco-forms/). It lets you and/or your editors create and handle forms in the backoffice. This includes setting up validation, redirecting and storing and sending form data. Great UI, easily extendable and supported by Umbraco HQ.*
+*你也可以使用[Umbraco forms](https://umbraco.com/products/umbraco-forms/)。它可以使你和你的编辑人员在后台创建和处理表单。 这包含了验证，跳转和存储和发送表单数据。优秀的 UI，易于扩展并且被 Umbraco HQ 所支持。*
 
+在这个示例中，我们会创建一个基本的联系表单包含：name，email 和message 字段。
 In this example we'll create a basic contact form contain name, email and message field.
 
-###Creating the view model
-First we're going to create the model for the contact form by adding a new class to the `/Models` folder. Lets's call it `ContactFormViewModel.cs`
-
+###创建视图模型
+首先我们通过添加一个新类到`/Models`来为联系表单创建模型。我们称它为： `ContactFormViewModel.cs`
+	
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -22,12 +23,12 @@ First we're going to create the model for the contact form by adding a new class
         }
     }
 
-Build your solution after adding the model.
+在添加模型后生成你的解决方案。
 
-###Creating the view
-Next we add the view for the form to the `/View/Partials` folder. Because we've added the model and build the solution we can add it as a strongly typed view.
+###创建视图
+接下来我们为表单添加一个视图到`/View/Partials`目录。因为我们已经添加了模型并构建了解决方案，所以我们可以将它添加为强类型视图。
 
-The view can be built with standard with standard MVC helpers:
+视图可以使用标准的 MVC helper 进行构建：
 
     @model MyFirstForm.Models.ContactFormViewModel
 
@@ -44,8 +45,8 @@ The view can be built with standard with standard MVC helpers:
         <input type="submit" name="Submit" value="Submit" />
     }
 
-###Adding the controller
-Finally we're going to add the controller. Simply add a controller to the `/Controllers` folder, name it `ContactController` and make sure to use an __empty MVC controller__ as the template.
+###添加控制器
+最后我们前去添加控制器。添加一个控制器类到`/Controllers`，命名为`ContactController `，并且确保使用了 __empty MVC controller__  视图。
 
 
     using MyFirstForm.Models;
@@ -66,17 +67,17 @@ Finally we're going to add the controller. Simply add a controller to the `/Cont
                 if (!ModelState.IsValid)
                     return CurrentUmbracoPage();
 
-                /// Work with form data here
+                /// 在这里使用表单数据做些什么
 
                 return RedirectToCurrentUmbracoPage();
             }
         }
     }
 
-If the model state is invalid `CurrentUmbracoPage()` will send the user back to the form. If valid you can work with the form data (e.g. sending an email to site admin) and them `RedirectToCurrentUmbracoPage();`
+如果模型状态为无效，`CurrentUmbracoPage() `会使用户返回到表单。如果验证有效，你可以使用表单数据做些什么（例如发送邮件给网站管理员），并且会`RedirectToCurrentUmbracoPage();`
 
-##Adding the form to a template
-You can add the form to a template by rendering the partial view:
+##将表单添加到模板
+你可以通过输出局部视图把表单添加到模板中：
 
     @using MyFirstForm.Models;
 
@@ -84,13 +85,13 @@ You can add the form to a template by rendering the partial view:
         Html.RenderPartial("~/Views/Partials/ContactForm.cshtml", new ContactFormViewModel());
     }
 
-##Adding the form through the backoffice
-To add the form to your site we'll make a macro. This also makes it possible to let editors add the form to a page using the richtext editor.
+##通过后台添加表单
+把表单添加到网站我们可以使用宏。这也可以让编辑者使用富文本编辑器将表单添加到页面成为可能。
 
-####Creating a macro
-Go to the developer section and right click the menu icon on the __Partial Views Macro Files__ node. Name the macro *Contact Form*, select an empty snippet and leave the __Create Macro__ checkbox checked.
+####创建宏
+前往开发区块，右击 __Partial Views Macro Files__ 节点的菜单标签。将宏命名为 *Contact Form*，选择一个空的片段，并且使 __Create Macro__ 复选框选中。
 
-In the partial view we're going to render our contact form using the view model we created earlier.
+在局部视图中，我们使用视图模型来输出之前创建的联系表单。
 
     @inherits Umbraco.Web.Macros.PartialViewMacroPage
 
@@ -101,16 +102,15 @@ In the partial view we're going to render our contact form using the view model 
     }
 
 
-####Adding the macro
-Last thing to do before we can add the form to a page is to allow the macro in a richtext editor.
-Select the expand the __Macros__ node and select the __Contact Form__ Macro. Check the to boxes under __Editor Settings__.
+####添加宏
+在能够添加表单到页面中，还要做最后一件事，就是允许在富文本中允许宏。选择并展开 __Macros__ 节点后选择 __Contact Form__ 宏。勾选 __Editor Settings__ 下面的复选框。
 
-Now you can add the form to a page that has a rich text editor.
+现在你就可以包含富文本编辑器的页面中插入表单了。
 
-###More information
+###更多信息
 - [Surface Controllers](../../../Reference/Routing/surface-controllers.md)
 - [Custom controllers](../../../Reference/Routing/custom-controllers.md)
 - [Routing](../../../Reference/Routing/)
 
-###Umbraco TV
-- [Chapter: Surface Controllers](http://umbraco.tv/videos/umbraco-v7/developer/fundamentals/surface-controllers/)
+
+

@@ -1,10 +1,10 @@
-#Code
+#代码
 
-###[Using Umbracos Service APIs](Umbraco-Services/)
-Create and update entities in Umbraco from code
+###[使用 Umbraco 服务 APIs](Umbraco-Services/)
+通过代码在 Umbraco 中创建和修改实体
 
-###[Subscribing to events](Subscribing-To-Events/)
-Using events to modify content or run custom code
+###[订阅事件](Subscribing-To-Events/)
+使用事件修改内容或者运行自定义代码
 
-###[Creating Forms](Creating-Forms/)
-Create, submit and handle HTML forms with controllers
+###[创建表单](Creating-Forms/)
+使用控制器创建，提交和处理 HTML 表单

@@ -1,41 +1,39 @@
-# Subscribing to events
-Subscribing to events allows you to execute custom code on a  number of events both before and after the event occurs. All you need to follow this guide is an Umbraco installation with some content, e.g. the Fanoe starter kit.
+# 订阅事件
 
-### Subscribing to an event
-Let's add a string of text to the log when a document is publish.
+订阅事件允许你在一批事件发生前和后执行你自己定义的代码。你需要准备一些 Umbraco 安装好的内容，跟着下面的指导操作。例如Fanoe 初学者工具包。
 
-We'll start by adding a new class to the project. Call it *LogWhenPublished*. The events are found in the core services so add `using Umbraco.Core;` and then we need to inherit from the application event handler `: ApplicationEventHandler`
+### 订阅到一个事件
+让我们在文档发布时，添加一段文本字符串到日志中。
 
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
-    using Umbraco.Core;
+首先我们要添加一个新的类到项目中。称之为 *LogWhenPublished*。事件在核心服务中，所以添加引用`using Umbraco.Core;`，然后我们需要继承application事件处理器`: ApplicationEventHandler`
 
-    public class LogWhenPublished : ApplicationEventHandler
-    {
-        ///Here we'll subscribe to an event
-    }
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Web;
+	using Umbraco.Core;
+	
+	public class LogWhenPublished : ApplicationEventHandler{
+		///Here we'll subscribe to an event
+	}
 
-First thing to do in our *LogWhenPublished* class is to override `ApplicationStarted` and then subscribe to an event in `Umbraco.Core.Services.Contentservice.Published`.
+第一件要做的事是在*LogWhenPublished*中重写`ApplicationStarted`，然后订阅事件到到`Umbraco.Core.Services.Contentservice.Published`。
 
-    protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
-    {
-        Umbraco.Core.Services.ContentService.Published += ContentService_Published;
-    }
+	protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext){
+		Umbraco.Core.Services.ContentService.Published += ContentService_Published;
+	}
 
-To execute your custom code add the following (if you are using Visual Studio you can easily add the next bit of code by hitting tab twice after `+=` in the previous code block) :
+执行你的自定义代码还需要添加（如果你使用 VS，你可以通过在代码段中的`+=`后面连按两次tab 键键很容易的添加下面的代码）：
 
-    void ContentService_Published(Umbraco.Core.Publishing.IPublishingStrategy sender, Umbraco.Core.Events.PublishEventArgs<Umbraco.Core.Models.IContent> e)
-    {
-        // Your custom code goes here
-    }
+	void ContentService_Published(Umbraco.Core.Publishing.IPublishingStrategy sender, Umbraco.Core.Events.PublishEventArgs<Umbraco.Core.Models.IContent> e){
+		// Your custom code goes here
+	}
 
-Let's check if it works by adding a message to the log when the event occurs. We'll use the LogHelper for this, so add `using Umbraco.Core.Logging;` and then :
+现在来检查一下，当事件发生时，它会添加一段消息到日志中。我们使用 LogHelper 来做这些，所以添加 `using Umbraco.Core.Logging;` 然后添加：
 
-    LogHelper.Info(typeof(LogWhenPublished), "Something has been published");
+	LogHelper.Info(typeof(LogWhenPublished), "Something has been published");
 
-The entire class should look like this:
+整个类看起来如下：
 
     using System;
     using System.Collections.Generic;
@@ -58,15 +56,12 @@ The entire class should look like this:
         }
     }
 
-Go to the backoffice and publish a piece of content. Now open tracelog.txt located in `App-Data/Logs/`, scroll to the bottom of the document and there you should find the log entry.
+前往后台发布一些内容。现在打开`App-Data/Logs/`目录中的tracelog.txt，滚动到文档底部，可以找到输入的日志。
 
-![Message in tracelog.txt](images/log-message.png)
+![跟踪日志中的信息](images/log-message.png)
 
-### Before and after
-As you can see our custom code has been executed when we published a piece of content. Actually it executed after the item was published because we used the `Published` event. If you want to run code before publishing, use `Publishing`. The same goes for most other events so `Saving` : `Saved`, `Copying` : `Copied` and so forth.
+### 之前和之后
+你可以看到当我们发布了一些内容时我们的自定义代码会执行。事实上执行是在发布之后是因为我们使用的是`Published`事件。如果我们想要在发布前执行代码，使用`Publishing `。其他类似的方法还有：`Saving` ， `Saved`， `Copying` ， `Copied`等等。
 
-### More information
-- [Events Reference](../../../Reference/Events/)
-
-### Umbraco TV
-- [Chapter: Events](http://umbraco.tv/videos/umbraco-v7/developer/extending/events/)
+### 更多信息
+- [事件参考](../../../Reference/Events/)
