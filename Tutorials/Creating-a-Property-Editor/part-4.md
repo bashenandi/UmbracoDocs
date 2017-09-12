@@ -1,19 +1,19 @@
-#Tutorial - Adding server-side data to a property editor
+#教程 - 添加服务端数据到属性编辑器
 
-##Overview
-In this tutorial we will add a server-side API controller, which will query a custom table in the Umbraco database, and then return the data to a simple angular controller + view.
+##概述
+这篇教程中我们会添加一个服务端 API 控制器，它会从 Umbraco 数据库中查询自定义表，并且返回数据到简单的 angular 控制器和视图。
 
-The end result will be a person-list, populated from a custom table. When clicked it will store the ID of the selected person.
+最终结果是用自定义表中的数据填充一个用户列表。当点击它时，会存储选择的用户 ID。
 
-##Setup the database
-First thing we need is some data; below is a simple SQL Script for creating a `people` table with some random data in it. You could also use [http://generatedata.com](http://generatedata.com) for larger amounts of data:
+##设置数据库
+首先我们需要一些数据；下面是一个简单的脚本，用于创建`people`，再插入一些随机数据。你也可以使用[http://generatedata.com](http://generatedata.com)生成一些海量数据：
 
 	CREATE TABLE people (
-	    id INTEGER NOT NULL IDENTITY(1, 1),
-	    name VARCHAR(255) NULL,
-	    town VARCHAR(255) NULL,
-	    country VARCHAR(100) NULL,
-	    PRIMARY KEY (id)
+		id INTEGER NOT NULL IDENTITY(1, 1),
+		name VARCHAR(255) NULL,
+		town VARCHAR(255) NULL,
+		country VARCHAR(100) NULL,
+		PRIMARY KEY (id)
 	);
 	GO
 
@@ -26,12 +26,12 @@ First thing we need is some data; below is a simple SQL Script for creating a `p
 	INSERT INTO people(name,town,country) VALUES('Aimee Sampson','Hawera','Antigua and Barbuda');
 
 
-##Setup ApiController routes
-Next we need to define an `ApiController` to expose a server-side route which our application will use to fetch the data.
+##设置 ApiController 路由
+接下来我们定义一个`ApiController`用于暴露服务端路由，用来查询数据。
 
-For this, we will create a file at: `/App_Code/PersonApiController.cs`. It must be in `App_Code` since we want our app to compile it on start. Alternatively, you can just add it to a normal .NET project and compile it into a DLL as usual.
+为此，我们创建`/App_Code/PersonApiController.cs`文件。如果想应用启动时编译它，它必须在`App_Code`文件夹中。一个替代方案，你可以添加它到常规的.NET 项目中，编译为 DLL 供使用。
 
-In the `PersonApiController.cs` file, add: 
+在`PersonApiController.cs`文件中, 添加： 
 
 	using System;
 	using System.Collections.Generic;
@@ -51,12 +51,12 @@ In the `PersonApiController.cs` file, add:
 	    }
 	}
 
-This is a very basic API controller which inherits from `UmbracoAuthorizedJsonController` this specific class will only return JSON data, and only to requests which are authorized to access the backoffice.
+这是一个非常基础的 API 控制器，继承自`UmbracoAuthorizedJsonController `，这是一个特殊的类，仅返回 JSON 数据，并且仅能响应后台授权用户发起的请求。
 
-##Setup the GetAll() method
-Now that we have a controller, we need to create a method, which can return a collection of people, which our editor will use. 
+##设置 GetAll() 方法
+现在我们有了一个控制器，还需要创建一个方法，可以返回 people 的集合，用于编辑器的显示。
 
-So first of all, we add a `Person` class to the `My.Controllers` namespace:
+为此我们要先创建一个`Person `类，在`My.Controllers`命名空间中：
 
 	public class Person
 	{
@@ -66,56 +66,57 @@ So first of all, we add a `Person` class to the `My.Controllers` namespace:
 	    public string Country { get; set; }
 	}
 
-We will use this class to map our table data to a C# class, which we can return as JSON later. 
+我们使用这个类映射我们表里的数据，稍后我们可以返回JSON 格式的数据。
 
-Now we need the `GetAll()` method which returns a collection of people, insert this inside the `PersonApiController` class:
+现在我们需要一个方法，返回 people 的集合，添加这些到`PersonApiController `类中：
 
 	public IEnumerable<Person> GetAll()
 	{
 		
 	}
 
-Inside the `GetAll()` method, we now write a bit of code, that connects to the database, creates a query and returns the data, mapped to the `Person` class above: 
+在`GetAll ()`方法中，写入少量的代码，用于连接到数据库，创建查询和返回数据，映射为上面的`Person`类：
 
-	//get the database
+	/* 获取数据库连接 */
 	var db = UmbracoContext.Application.DatabaseContext.Database;
-	//build a query to select everything the people table
+	
+	/* 创建查询从 people 表中获取所有内容 */
 	var query = new Sql().Select("*").From("people");
-	//fetch data from DB with the query and map to Person object
+	
+	/* 通过查询从 DB 中获取数据，并映射为 Person 对象 */
 	return db.Fetch<Person>(query);
 
-We are now done with the server-side of things, with the file saved in App_Code you can now open the URL: `/umbraco/backoffice/My/PersonApi/GetAll`.
+现在我们完成了服务端的内容，你可以通过`/umbraco/backoffice/My/PersonApi/GetAll`访问这个文件。注意必须是登录后台之后。
 
-This will return our JSON data.
+This will return our JSON data.（错误！实际这里只会返回空白，407错误）
 
-##Create a Person Resource 
-Now that we have the server-side in place, and a URL to call, we will setup a service to retrieve our data. As an Umbraco-specific convention, we call these services a *resource*, so we always have an indication of what services fetch data from the DB.
+##创建 Person 资源 
+现在我们有了服务端，一个调用的 URL，我们还要配置一个服务来检索这些数据。作为一个特殊的 Umbraco 转换器，我们叫这些服务为*resource*，可以使用这些服务来从 DB 中获取数据。
 
-Create a new file as `person.resource.js` and add: 
+创建一个新的 js 文件`person.resource.js`，贴入下面的代码：
 
-	//adds the resource to umbraco.resources module:
+	/* 添加资源到 umbraco.resources 模块*/
 	angular.module('umbraco.resources').factory('personResource', 
 		function($q, $http, umbRequestHelper) {
-		    //the factory object returned
-		    return {
-		        //this calls the ApiController we setup earlier
-		        getAll: function () {
-			    return umbRequestHelper.resourcePromise(
-			    	$http.get("backoffice/My/PersonApi/GetAll"),
-				"Failed to retrieve all Person data");
-		        }
-		    };
+			/* 工厂对象返回 */
+			return {
+				/* 这里调用我们之前创建的ApiController */
+				getAll: function () {
+					return umbRequestHelper.resourcePromise($http.get("backoffice/My/PersonApi/GetAll"),
+					"Failed to retrieve all Person data");
+				}
+			};
 		}
 	); 
 
-This uses the standard angular factory pattern, so we can now inject this into any of our controllers under the name `personResource`.
+这里使用的是标准的 angular 工厂模式，因此我们现在可以注入`personResource`下面的方法到任何的控制器中。
 
-The `getAll()` method returns a promise from an `$http.get` call, which handles calling the URL, and will return the data when it's ready. You'll notice that the `$http.get` method is wapped inside `umbRequestHelper.resourcePromise`, the `umbRequestHelper.resourcePromise` will automatically handle any 500 errors for you which is why the 2nd string parameter is there - it defines the error message displayed.
+`getAll()`方法从`$http.get`调用中返回一个promise，用来处理调用 URL，当其准备好时返回数据。你应该注意到`$http.get`方法包含在`umbRequestHelper.resourcePromise`中，后者会自动处理任何500错误，这就是第二个参数的用处 - 它定义了发生错误时显示的信息。
 
-##Create the view and controller
-We will now finally setup a new view and controller, which follows previous tutorials, so you can refer to those for more details: 
+##创建视图和控制器
+现在我们再创建一个视图和控制器，依照前面的教程，您可以参考它们来获取更多细节： 
 
-####the view:
+####视图:
 
 	<div ng-controller="My.PersonPickerController">
 		<ul>
@@ -125,7 +126,7 @@ We will now finally setup a new view and controller, which follows previous tuto
 		</ul>
 	</div>
 
-####The controller:
+####控制器:
 	
 	angular.module("umbraco")
 		.controller("My.PersonPickerController", function($scope, personResource){
@@ -134,22 +135,22 @@ We will now finally setup a new view and controller, which follows previous tuto
 			});
 		});
 
-##The flow
-So with all these bits in place, all you need to do is register the property editor in a package.manifest - have a look at the first tutorial in this series. You will need to tell the package to load both your `personpicker.controller.js` and the `person.resource.js` file on app start.
+##工作流
+这里的所有都做完之后，你需要将其注册到属性编辑器的包装清单中 - 请看这个系列的第一篇教程。你需要告诉包，在应用启动时需要同时载入`personpicker.controller.js`和`person.resource.js`。
 
-With this, the entire flow is: 
+有了这个，整体的流程就是：
 
-1. the view renders a list of people with a controller
-2. the controller asks the personResource for data
-3. the personResource returns a Promise and asks the my/PersonAPI ApiController
-4. The ApiController queries the database, which returns the data as strongly typed Person objects
-5. the ApiController returns those `Person` objects as JSON to the resource
-6. the resource resolve the Promise
-7. the controller populates the view
+1. 视图用控制器返回的数据输出 people 列表
+2. 控制器请求personResource 获取数据
+3. personResource返回一个Promise，向my/PersonAPI ApiController请求数据
+4. ApiController查询数据库，返回Person强类型数据对象
+5. ApiController 已 JSON 格式返回`Person`对象 给前端资源
+6. 前端资源解析Promise
+7. 控制器填充视图
 
-Easy huh? - honestly tho, there is a good amount of things to keep track of, but each component is tiny and flexible. 
+容易吗？- 老实说，这里有很多东西需要持续跟踪，但是每个组件都很小而且很灵活。
 
-##Wrap-up
-The important part of the above is the way you create an `ApiController` call to the database for your own data, and finally expose the data to angular as a service using `$http`.
+##总结
+上面最重要的部分是创建`ApiController`调用数据库获取你自己的数据，最终通过`$http`服务暴露这些数据给 angular。
 
-For simplicity, you could also have skipped the service part, and just called `$http` directly in your controller, but by having your data in a service, it becomes a reusable resource for your entire application.
+为了简化，你也可以跳过服务部分，直接在控制器中调用`$http`查询数据，但是服务来获取数据，可以在整个应用中重用资源。

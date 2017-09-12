@@ -1,78 +1,71 @@
-# Introduction 
+# 介绍 
+跟随"创建基础网站"教程提供的一步一步介绍信息，从静态的 HTML，CSS 和 JS 文件开始构建你的 Umbraco 网站。它可以让你将任何网站"模板"安装到新的 Umbraco 中以及如何在 Umbraco 管理你需要的内容。 
 
-The following sections of the "Creating a Basic Site" tutorial provide step by step instructions through an Umbraco website build starting from a set of flat HTML, CSS and JS files. It will allow you to take any website "template" and install it into a fresh Umbraco and wire up the sections that need content managing in Umbraco.  
+# **你需要准备的**
 
-# **What You’ll Need**
+通过 demo 在 Umbraco 创建一个网站，你需要先准备以下内容：
 
-To take you through a demo of installing a basic site in Umbraco you need the following:
+*    一个清洁的，空白的 Umbraco 安装 – 比如不能安装新手网站包，查看下面的内容注意在运行安装向导时要怎么做。使用最新版的 7.x 下载包。跟着[安装文档](/)操作。
+*    这个指导教程使用了一个初始包 - 一个 HTML5，响应式网站模板[https://github.com/verekia/initializr-template/archive/master.zip](https://github.com/verekia/initializr-template/archive/master.zip)，或者你自己有，可以使用你自己的静态 HTML 文件。
 
-*    A clean, empty installation of Umbraco – e.g. no starter site installed, see the notes below what to do when running through the installation wizard. Use the latest main 7.X download. Follow the installation steps in the documentation [http://our.umbraco.org/documentation/Installation](http://our.umbraco.org/documentation/Installation)  
-*    The tutorial instructions uses a copy of Initializr – a HTML5, responsive website template. [https://github.com/verekia/initializr-template/archive/master.zip](https://github.com/verekia/initializr-template/archive/master.zip) or, if you prefer, you can use your own flat HTML files.
+# **入门**
 
-# **Getting Started**
+## 安装一个空白的 Umbraco
 
-## Installing an Empty Umbraco
+这个指导不会包含完整的安装步骤 - 具体请前往[安装文档](/)查看。当您看到第一个浮窗时，点击  **_customize_** ，然后填入你的MS SQL 空白数据库认证信息或者选择 CE 版本数据库，在最后的屏幕中点击 “**_No thanks I do not want to use a starter website_**”。
+ 
+![Umbraco 安装浮窗](images/figure-1-installation-splash-screen.png)
 
-This guide doesn’t cover the installation of Umbraco – follow the instructions in http://our.umbraco.org/documentation/Installation. When you see the first splash screen click **_customize_** – either fill in your MS SQL blank DB credentials or use the CE option – then on the final screen use the “**_No thanks I do not want to use a starter website_**”. 
+
+*图 1 - 安装浮窗 - 注意定制链接*
+
+![安装新手包](images/figure-2-no-starter-website.png)
+
+*图 2 - Install a starter website - No Thanks!*
+
+
+
+## 检查你安装的是空白 Umbraco
+
+当你访问你的主机地址（http://localhost 或者你设置的任意地址），你会看到 Umbraco 空白页面界面。
 
  
-![Umbraco Installation Splash Screen](images/figure-1-installation-splash-screen.png)
+![这是正确的 - 我们有一个空白的 Umbraco 网站](images/figure-3-empty-umbraco-install.png)
 
 
-*Figure 1 - Installation Splash Screen - note the Customize link*
+*图 3 - 这是正确的 – 我们有了一个空白的Umbraco 网站!*
 
-
-
-![Install a starter website](images/figure-2-no-starter-website.png)
-
-
-*Figure 2 - Install a starter website - No Thanks!*
-
-
-
-## Checking you have an Empty Umbraco Install
-
-When you hit your local host address (http://localhost or whatever you’ve set up) you should see the Umbraco empty page screen. 
+如果你看到了 Umbraco 新手包网站，表示你错过了**_No thanks I do not want to use a starter website_**选项。  
 
  
-![This is correct – we have a blank, empty Umbraco website](images/figure-3-empty-umbraco-install.png)
+![你不该看到这个!](images/figure-4-should-not-see-this.png)
 
 
-*Figure 3 - This is correct – we have a blank, empty Umbraco website!*
-
-If you can see the Umbraco Starter kit site you’ve missed the option to install Umbraco with no starter site.  
-
- 
-![You should NOT see this!](images/figure-4-should-not-see-this.png)
+*图 4- 你不该看到这个画面!*
 
 
-*Figure 4- You should NOT see this!*
+如果你看到了这个新手包，你需要重新安装 Umbraco - 如果你是手工安装的，你需要删除本地主机网站服务目录中的所有文件，复制 Umbraco 压缩包内容备份到这里，然后再次在浏览器中访问 localhost 地址。
 
 
-You need to reinstall Umbraco if you can see the starter kit – if you did a manual install you can delete all files in the directory where your local host is being served from, copy the Umbraco zip contents back in and then hit localhost in your browser.  
+## 准备初始的模板网站
 
-
-## Preparing the Initializr Template Site 
-
-Now unzip the Initializr contents to a folder onto your desktop (or a place of your choosing).  Now open the **_index.html_** from this directory in your preferred browser to see the template – you can see it’s full of lovely filler text with dummy links. We’re going to turn this into a fully fledged, Umbraco-powered site! 
+现在解压缩初始包，把内容放在桌面的某个目录中（或者你选择的其他地方）。现在从这个目录中打开 **_index.html_** 到你的默认浏览器中会看到这个模板 - 你能看到一些填充了友好信息的文本以及假的链接。我们要把它变为一个Umbraco 管理的网站！
 
  
-![The Initializr Template](images/figure-5-initializr-template.png)
+![初始模板](images/figure-5-initializr-template.png)
 
 
-*Figure 5 - The Initializr Template*
+*图 5 - 初始化模板*
 
-
-Log into your Umbraco installation (e.g. go to http://localhost/umbraco in your browser).  You should be faced with an empty Umbraco installation – but where to start!?
-
+登录到 Umbraco（在浏览器键入http://localhost/umbraco）。你会看到一个空白脸的 Umbraco - 我们该如何开始！？
  
-![A barren, empty Umbraco installation](images/figure-6-umbraco-empty.png)
+![没有内容的, 空白 Umbraco 安装](images/figure-6-umbraco-empty.png)
 
 
-*Figure 6 - A barren, empty Umbraco installation*
+*图 6 - 没有内容的空白 Umbraco*
 
 ---
 
-## Next - [Creating Your First Document Type](Document-Types.md)
-How to create Document Types and what they do.
+## 下一步 - [创建你的第一个文档类型](Document-Types.md)
+如何创建文档类型以及它们做什么。
 

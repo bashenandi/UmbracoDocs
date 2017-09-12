@@ -1,55 +1,48 @@
-# Tutorial - Creating a Custom Dashboard
+# 教程 - 创建自定义控制台
 
-## Overview
+## 概述
+这篇教程让你一步一步在 Umbraco 中完成一个简单的自定义控制台。
 
-This guide takes you through the steps to setup a simple Custom Dashboard in Umbraco. 
+### 什么是控制台?
 
-### What is a Dashboard?
-
-A tab on the right-hand side of a section eg. the Redirect Url Management dashboard in the Content section:
+区块右手边的标签，例如：内容区块的"Redirect Url Management"控制台：
 
 ![Redirect Url Management Dashboard](images/whatisadashboard.jpg)
 
-### Why?
+### 为什么?
+当你搭建一个 Umbraco 站点时，提供一个自定义的控制台用于欢迎编辑者、提供关于网站的信息、提供一些有帮助的通用功能会被认为是比较好的做法。本指导会教你创建一个自定义'Welcome Message'控制台的基础，以及如何使用 Angular 提供更多的功能...
 
-It is generally considered good practice when you build an Umbraco site to provide a custom dashboard to welcome your editors and provide information about the site and/or provide a helpful gateway to common functionality the editors will use.
-This guide will show the basics of creating a custom 'Welcome Message' dashboard and then show how you can go a little further to provide interaction using AngularJS...
+所有我们要进行的步骤:
 
-So all the steps we will go through:
+- 安装一个控制台插件
+- 编写基本的欢迎信息视图
+- 配置自定义欢迎控制台并显示
+- 添加样式
+- 添加 AngularJS 控制器
+- 在欢迎信息中显示当前用户的名字
+- 显示当前用户的最近更新
+- 创建一个快捷键用于添加博客回复
+- 你可以做任何事情...
 
-- Setting up the dashboard plugin
-- Writing a basic Welcome Message view
-- Configure the Custom Welcome Dashboard to be displayed.
-- Adding styles
-- Adding an AngularJS controller
-- Display the current user's name in our welcome message
-- Display the current user's recent updates
-- Create a shortcut button to add a new blog post
-- You can do anything...
-
-### Prerequisites
-This tutorial uses AngularJS with Umbraco, so it does not cover AngularJS itself, there are tons of resources on that already here:
+### 先决条件
+这是关于如何在 Umbraco 中使用 AngularJS，因此并不包含 AngularJS 自身的内容，这里已经为你准备了一些资源：
 
 - [egghead.io](http://www.egghead.io/)
 - [angularjs.org/tutorial](http://docs.angularjs.org/tutorial)
 - [Tekpub](http://tekpub.com/products/angular)
 
-There are a lot of parallels with Creating a Property Editor, the tutorial '[Creating a Property Editor Tutorial](../../Tutorials/creating-a-property-editor/index.md)' is very much worth a read through too.
+这里与创建属性编辑器比较类似，教程'[创建一个属性编辑器教程](../../Tutorials/creating-a-property-editor/index.md)'。
 
-### The end result
+### 最终结果
+在教程的结尾，我们会有一个友好的欢迎控制台，可以显示当前用户最近操作网站的记录列表。
 
-At the end of this guide, we should have a friendly welcoming dashboard displaying a list of the editor's recent site updates.
+## 安装一个插件
+第一件事我们必须在网站的'/App_Plugins'文件夹中创建一个新的文件夹。我们叫它'CustomWelcomeDashboard'。
 
-## Setting up a plugin
+## 创建控制台视图
+接下来我们在这个文件中创建一个 HTML 文件，命名为'WelcomeDashboard.html'，这个 html 文件包含一些 html 文档片段，不需要&lt;html&gt;&lt;head&gt;&lt;body&gt;。
 
-The first thing we must do is create a new folder inside our site's '/App_Plugins' folder. We will call it
-'CustomWelcomeDashboard'
-
-## Creating the dashboard view
-
-Next we will create a HTML file inside this folder called 'WelcomeDashboard.html' the html file will contain a fragment of a html document and so does not need &lt;html&gt;&lt;head&gt;&lt;body&gt; entities.
-
-Add the following html to the WelcomeDashboard.html
+添加下面的 html 到WelcomeDashboard.html
 
     <div class="welcome-dashboard">
         <h1>Welcome to Umbraco</h1>
@@ -57,11 +50,10 @@ Add the following html to the WelcomeDashboard.html
         <p>You can put anything here...</p>
     </div>
 
-## Configuring the dashboard to appear
+## 配置控制台的呈现
+从你网站的/config文件夹中打开dashboard.config文件[控制台配置解释在这里...](../../Extending/Dashboards/index.md)。
 
-Open up your dashboard.config file from the /config folder of your site. [Explanation of the Dashboard Config settings are here...](../../Extending/Dashboards/index.md)
-
-Add the following section:
+添加下面的部分：
 
     <section alias="Custom Welcome Dashboard">
         <access>
@@ -77,164 +69,163 @@ Add the following section:
         </tab>
     </section>
 
-So the terminology here gets a bit muddled but we're creating a 'Section' (but this is not the same 'Section' as the 'Content Section' - which inside this config file is referred to as an 'Area'), this is specifically a 'Dashboard Section' that you can use to group your dashboard tabs and controls together.
+这里的术语会有些混乱，但是我们已经创建了一个"Section"（但是这不同于'Content Section'的 section - 这在这个配置文件中引用为"Area"），这是一个特殊的"仪表板区块"，你可以用来将控制台分组和控制显示。
 
-The above configuration is effectively saying:
+上面的配置事实上说的是：
 
-> "Add a tab called 'Welcome' to the 'Content' area/section of the Umbraco site, use the WelcomeDashboard.html as the content (view) of the dashboard and don't allow 'translators' to see it!"
+> "添加一个名为'Welcome'的标签到 Umbraco 网站的'Content' 区域/区块，使用WelcomeDashboard.html文件作为控制台的视图，同时不允许'translators'看到它！ "
 
-*__Note:__ The order in which the tab will appear in the Umbraco Backoffice depends on its position in the dashboard.config file, so to make our Custom Welcome message the first Tab the editors sees in the content section, make sure the above configuration is the 'first' section configuration in the dashboard.config file.*
+*__注意:__ 标签在 Umbraco 后台中的顺序，依赖于它在 dashboard.config 文件中的位置，因此想要我们的自定义欢迎消息是编辑者在 Content 区块中默认看到的第一个，确保上面的配置是dashboard.config文件中的'第一个'区块配置。*
 
-*__Note:__ You can specify multiple controls to appear on a particular tab, and multiple tabs in a particular section.*
+*__注意:__ 你可以指定多个控制视图呈现在一个标签中，和多个标签在同一个区块中。*
 
-*__Note:__ You can remove existing dashboards, and control who gets to see them by updating the other configuration sections in the Dashboard.config file*
+*__注意:__ 你可以删除已有的控制台，通过更新Dashboard.config文件中的其他配置区块来控制谁能看到它们。*
 
-### The Result
+### 结果
 
 ![Custom Dashboard Welcome Message](images/welcomemessage.jpg)
 
-## Adding a bit of style
+## 添加一些样式
 
-Congratulations! job done - no actually no, this is just the starting point the dashboard can be styled as you want it to be with CSS, but there are a couple of further steps to undertake be able to apply a custom stylesheet to the dashboard:
+恭喜你！完成了 - 但这并不是真正意义的完成，这只是控制台的起点，你需要的是带有样式的，接下来还有几步操作，才能将自定义的样式表表添加到控制台中：
 
-We need to add something called a package.manifest file to our CustomWelcomeDashboard folder
+我们需要在CustomWelcomeDashboard文件中创建package.manifest并写入一些东西
 
-*__Note:__ This file allows Umbraco to load other resources to use with your HTML view - it is just a file - named by convention 'package.manifest' and will contain the configuration of the resources to load in JSON format*
+*__注意:__ 这个文件允许 Umbraco 载入一些其他资源供你的 HTML 视图使用 - 按照约定名为'package.manifest'，包含资源的配置信息，通过JSON 格式加载*
 
-When Umbraco loads the dashboard it will look for this file in the same folder as your HTML view (remember the dashboard config points to the html view) and use the manifest to load the additional resources, eg CSS and JS files.
+当 Umbraco 载入控制台时，会在和 HTML 视图相同的目录中查找这个文件（记住控制台配置指向的 html 视图），并且使用清单载入附加的资源，例如 CSS 和 JS 文件。
 
-This manifest file is simpler to the one you would create for a [custom property editor](../../Extending/Property-Editors/package-manifest.md)
+这个清单文件非常类似于你要创建[属性编辑器](../../Extending/Property-Editors/package-manifest.md)的文件。
 
-Inside this package manifest we add a bit of JSON to describe the dashboard's required javascript and stylesheet resources:
+在包装清单中加入一些 JSON 来描述控制台需要的脚本和样式表资源：
 
-    {
-        "javascript":[
-            /*javascript files listed here*/
-        ],
-	    "css": [
-            /*list of stylesheets appear here:*/
-            "~/app_plugins/CustomWelcomeDashboard/customwelcomedashboard.css"
-	    ]
-    }
+	{
+		"javascript":[
+			/*脚本文件列表在这里*/
+		],
+		"css": [
+			/* 样式表文件在这里 */
+			"~/app_plugins/CustomWelcomeDashboard/customwelcomedashboard.css"
+		]
+	}
 
-Now create a stylesheet in our CustomWelcomeDashboard folder called 'customwelcomedashboard.css', and add some styles, I don't know perhaps a bit of purple:
+现在在CustomWelcomeDashboard文件夹中创建'customwelcomedashboard.css'，再添加一些样式：
 
-    .welcome-dashboard h1 {
-        font-size:4em;
-        color:purple;
-    }
+	.welcome-dashboard h1 {
+		font-size:4em;
+		color:purple;
+	}
 
-This stylesheet will now be loaded and applied to your dashboard. Add images and html markup as required:
+这个样式表现在会被加载并且应用于你的控制台。再添加一些需要的图片和 html 标记：
 
 ![Custom Dashboard Welcome Message With styles...](images/welcomemessagewithstyles.jpg)
 
-*__Note:__ One caveat is the package.manifest file is loaded into memory when Umbraco starts up, so if you are adding a new stylesheet or javascript file you will need to start and stop your application for it to be loaded.*
+*__注意:__ 在 Umbraco 启动时，会将清单文件加载到内存中，因此如果你添加了新的样式表和脚本文件，你必须重启你的应用来加载它们。*
 
-Hopefully, now you can see the potential of what you could provide to an editor as a basic welcome dashboard when they log in to Umbraco.
+如果一切正常，你会看到你提供给编辑者当他们登录到 Umbraco 看到的基础默认欢迎控制台。
 
-## Adding functionality
+## 添加功能
 
-We can add functionality to the dashboard by associating an AngularJS controller with the HTML view.
+我们可以通过联合 AngularJS 控制器和 HTML 视图来给控制台增加一些功能。
 
-Let's add a new file to the CustomWelcomeDashboard folder called 'customwelcomedashboard.controller.js' where our controller code will live.
+让我们在CustomWelcomeDashboard文件夹中，创建一个新文件'customwelcomedashboard.controller.js'，控制器代码就在这里。
 
-We register this AngularJS controller to the Umbraco Angular module: 
+我们把这个 AngularJS 控制器注册到 Umbraco Angular 模块：
 
-    angular.module("umbraco").controller("CustomWelcomeDashboardController", function ($scope) {
+	angular.module("umbraco").controller("CustomWelcomeDashboardController", function ($scope) {
         var vm = this;
         alert('hello world');
     });
 
-In our html view, we update the outer div to wire up to the controller to the view:
+在 html 视图视图中，更改外层的 div为控制器：
 
-    <div class="welcome-dashboard" ng-controller="CustomWelcomeDashboardController as vm">
+	<div class="welcome-dashboard" ng-controller="CustomWelcomeDashboardController as vm">
 
-*__Note:__ The use of vm (short for view model) to enable communication between the view and the controller*
+*__注意:__ 使用 vm（view model 的缩写）可以在视图和控制器之间通讯*
 
-Finally, we need to update the package.manifest file to load the additional controller js file when the dashboard is displayed:
+最后我们要更新包装清单文件package.manifest，在控制台显示时，载入额外的控制器js 文件：
 
-    {
-        "javascript":[
-            /*any comma delimited list of javascript files appear here*/
-            "~/app_plugins/CustomWelcomeDashboard/customwelcomedashboard.controller.js"
-        ],
-        "css": [
-            /*a comma delimited list of stylesheets appear here:*/
-            "~/app_plugins/CustomWelcomeDashboard/customwelcomedashboard.css"
-        ]
-    }
+	{
+		"javascript":[
+			/*any comma delimited list of javascript files appear here*/
+			"~/app_plugins/CustomWelcomeDashboard/customwelcomedashboard.controller.js"
+		],
+		"css": [
+			/*a comma delimited list of stylesheets appear here:*/
+			"~/app_plugins/CustomWelcomeDashboard/customwelcomedashboard.css"
+		]
+	}
 
-If all is setup fine we should now receive the 'Hello world' alert every time the dashboard is reloaded in the content section of Umbraco, not very helpful, yet.
+如果这些都配置正确，当我们在 Umbraco 的内容区块再次打开控制台时，每次都会收到'Hello world'的提示信息，这很不友好。
 
-### Going further - Umbraco Angular Services and Directives
+### 进一步 - Umbraco Angular 服务和指令
 
-Umbraco has a fine selection of angular directives, resources and services that you can use in your custom property editors and dashboards, the details are here: https://our.umbraco.org/apidocs/ui/#/api
+Umbraco 有很多 angular 指令，资源和服务，你可以在你的自定义属性编辑器和控制台中使用它们，具体信息可以在这里查看：https://our.umbraco.org/apidocs/ui/#/api
 
-For this example it would be nice to welcome the editor by name (Umbraco is a place where everybody knows your name...), to achieve this we can use the **userService** here to customise our dashboard welcome message and increase friendliness:
+在这个示例中，只是先友好的显示编辑者的名字（Umbrazo 有可以每个登陆者看到名字的地方……），为了实现这些我们需要使用**userService**，定制控制台欢迎信息来增加友好度：
 
-We inject the **userService** into our AngularJS controller like so:
+我们像下面这个把**userService**注入到AAngularJS控制器：
 
-    angular.module("umbraco").controller("CustomWelcomeDashboardController", function ($scope,userService) {
+	angular.module("umbraco").controller("CustomWelcomeDashboardController", function ($scope,userService) {
 
-and then we can use the userService's promise based **getCurrentUser()** method to get the details of the current logged in user:
+然后我们使用userService的方法**getCurrentUser()**来获取当前登录用户的详细信息：
 
-    var user = userService.getCurrentUser().then(function (user) {
-        console.log(user);
-        vm.UserName = user.name;
-    });
+	var user = userService.getCurrentUser().then(function (user) {
+		console.log(user);
+		vm.UserName = user.name;
+	});
 
-*__Tip:__ Notice you can use console.log to write out to the browser console window what is being returned by the promise, it helps to debug, but also understand what properties are available to use.*
+*__提示:__ 注意你可以使用 console.log 来输出信息到浏览器的控制台窗口，来了解返回信息，可以帮助调试，还可以用于了解用户的已有属性。*
 
-Finally we can now update our view to incorporate the current user's name in our Welcome Message:
+最终再次更改视图中的代码，在欢迎消息中显示当前登录用户的名字：
 
-    <h1>Welcome {{vm.UserName}} ...to Umbraco</h1>
+	<h1>Welcome {{vm.UserName}} ...to Umbraco</h1>
 
 ![Custom Dashboard Welcome Message With Current User's Name](images/welcomemessagepersonalised.jpg)
 
-and for reference the full contents of /customwelcomedashboard.controller.js at this stage of the tutorial should look like this:
+最终这个教程中的customwelcomedashboard.controller.js文件，修改后的完整内容看起来应该是这样的：
 
-    angular.module("umbraco").controller("CustomWelcomeDashboardController", function ($scope,userService) {
-        var vm = this;
-        vm.UserName = 'guest';
+	angular.module("umbraco").controller("CustomWelcomeDashboardController", function ($scope,userService) {
+		var vm = this;
+		vm.UserName = 'guest';
+		
+		var user = userService.getCurrentUser().then(function (user) {
+			console.log(user);
+			vm.UserName = user.name;
+		});
+	});
 
-        var user = userService.getCurrentUser().then(function (user) {
-            console.log(user);
-            vm.UserName = user.name;
-        });
-    });
+## 我知道你上星期二做了什么...
 
-## I know what you did last Tuesday...
+再次返回的编辑者可能想要友好的看到之前的的编辑信息，还带一个链接可以载入并且继续编辑（而不是必须记住，并且再从 Umbraco 内容树中找到它们）。
 
-A returning editor may find it useful to see a list of the last few articles they have been editing, with a handy link to load and continue editing (instead of having to remember, and find the item again in the Umbraco Content Tree).
+我们可以使用 Umbraco 的Angular资源来检索日志信息，**logResource**使用**getUserLog**方法来返回用户最近保存过的条目列表。
 
-We can make use of Umbraco's Angular resource for retrieving audit log information, the **logResource** using the **getUserLog** method to return a list of items the user has saved recently.
+我们把logResource注入到控制器中：
 
-We inject the logResource into our controller:
+	angular.module("umbraco").controller("CustomWelcomeDashboardController", function ($scope, userService, logResource) {
 
-    angular.module("umbraco").controller("CustomWelcomeDashboardController", function ($scope, userService, logResource) {
+添加属性到 ViewModel 对象，用于存储日志信息：
 
-Add a property on our ViewModel to store the log information:
+	vm.LogEntries = [];
 
-    vm.LogEntries = [];
+修改WelcomeDashboard.html添加一些标记，使用 angular 的*ng-repeat*来列表显示日志：
 
-Add to our WelcomeDashboard.html view some markup using angular's *ng-repeat* to display a list of these log entries:
+	<h2>We know what you edited last week...</h2>
+	<ul>
+		<li ng-repeat="logEntry in vm.LogEntries">{{logEntry.nodeId}} - {{logEntry.comment}} - {{logEntry.timestamp  | date:'medium'}}</li>
+	</ul>
 
-    <h2>We know what you edited last week...</h2>
-        <ul>
-            <li ng-repeat="logEntry in vm.LogEntries">{{logEntry.nodeId}} - {{logEntry.comment}} - {{logEntry.timestamp  | date:'medium'}}</li>
-        </ul>
+返回控制器中，使用**logResource**来填充实体数组，返回所有类型为'Save'的日志条目：
 
-Back in our controller we'll populate the array of entries using the **logResource**, returning any log entries of 'Save' type:
+	logResource.getUserLog("save",new Date()).then(function (response){
+		console.log(response);
+		vm.LogEntries = response;
+	});
 
-     logResource.getUserLog("save",new Date())
-       .then(function (response) {
-            console.log(response)
-            vm.LogEntries = response;
-       });
+现在我们查看控制台输出，可以看到**logResource**返回的数据内容，可能如下：
 
-However looking at the console output will reveal the data retrieved by the **logResource** is a little sparse eg:
-
-    Object
+	 Object
         $$hashKey:"265"
         Content:
             Object
@@ -244,89 +235,89 @@ However looking at the console output will reveal the data retrieved by the **lo
                 timestamp:"2017-03-18T14:09:40.91"
                 userId:0
 
-There is a bit of work to be done to provide something meaningful to the editor from the audit log!
+这里通过一些少量的工作就完成了提供一些有意义的日志信息给到编辑者！
 
-We can use the **entityResource**, an Umbraco Angular resource that enables us to retrieve more information about an entity given its id.
+要从日志中向编辑者提供一些有意义的信息，还有一些事情要做！
 
-Inject this into our angular controller:
+我们能够使用**entityResource**，一个 Umbraco 的 Angular 资源，可以让我们根据实体的 id 来查询实体的更多信息。
 
-    angular.module("umbraco").controller("CustomWelcomeDashboardController", function ($scope, userService, logResource, entityResource) {
+先把它注入到控制器中：
 
-We need to loop through the response from the **logResource**, filter out 'saves' we're not interested in eg, Macro Saves, or DocType Saves, generally we need the entry in the log to have a nodeId and mention either Media or Content in the comment text. 
+	angular.module("umbraco").controller("CustomWelcomeDashboardController", function ($scope, userService, logResource, entityResource) {
 
-The **entityResource** then has a **getById** method that accepts the Id of the item and the entity 'type' to retrieve useful information about the entity, ie its name and icon.
+我们要从**logResource**返回的响应中，过滤出我们不感兴趣的'saves'事件，例如：宏保存、文档类型保存，通常我们需要的是 nodeId以及注释文本中包含任何Media 和 Content的日志。
 
-Putting this together:
+**entityResource**包含**getById**方法，接受条目的 Id 和实体的'类型'来检索出关于实体的有意义的信息，例如名称和图标。
 
-       logResource.getUserLog("save", new Date()).then(function (response) {
-            console.log(response);
-            var logEntries = [];
-            // loop through the response, and filter out save log entries we are not interested in
-            angular.forEach(response, function (item) {
-                // if no entity exists -1 is returned for the nodeId (eg saving a macro would create a log entry without a nodeid)
-                if (item.nodeId > 0) {
-                    //this is the only way to tell them apart - whether the comment includes the words Content or Media!!
-                    if (item.comment.match("(\\bContent\\b|\\bMedia\\b)")) {
-                        if (item.comment.indexOf("Media") > -1) {
-                            //log entry is a media item
-                            item.entityType = "Media";
-                            item.editUrl = "media/media/edit/" + item.nodeId;
-                        }
-                        if (item.comment.indexOf("Content") > -1) {
-                            //log entry is a media item
-                            item.entityType = "Document";
-                            item.editUrl = "content/content/edit/" + item.nodeId;
-                        }
-                        //use entityResource to retrieve details of the content/media item
-                        entityResource.getById(item.nodeId, item.entityType).then(function (ent) {
-                            console.log(ent);
-                            item.Content = ent;
-                        });
-                        logEntries.push(item);
-                    }
-                }
-                console.log(logEntries);
-                vm.LogEntries = logEntries;
-            });
+代码如下:
+
+	logResource.getUserLog("save", new Date()).then(function (response){
+		console.log(response);
+		var logEntries = [];
+		/* 遍历响应，过滤出不感兴趣的日志 */
+		angular.forEach(response, function (item) {
+			/* 如果不是实体，返回的 nodeId 是-1（例如保存宏文件会创建一个不带 nodeid 的日志） */
+			if (item.nodeId > 0) {
+				/* 仅显示图片和内容的保存日志 */
+				if (item.comment.match("(\\bContent\\b|\\bMedia\\b)")) {
+					if (item.comment.indexOf("Media") > -1) {
+						/* 日志实体是媒体条目 */
+						item.entityType = "Media";
+						item.editUrl = "media/media/edit/" + item.nodeId;
+					}
+					
+					if (item.comment.indexOf("Content") > -1) {
+						/* 日志实体是内容 */
+						item.entityType = "Document";
+						item.editUrl = "content/content/edit/" + item.nodeId;
+					}
+					
+					/* 使用entityResource检索详细信息 */
+					entityResource.getById(item.nodeId, item.entityType).then(function (ent) {
+						console.log(ent);
+						item.Content = ent;
+					});
+					logEntries.push(item);
+				}
+			}
+			console.log(logEntries);
+			vm.LogEntries = logEntries;
+		});
  
-Finally update our view to use the additional retrieved entity information:
+最后更新视图使用格外的实体检索信息：
 
-        <h2>We know what you edited last week...</h2>
-        <ul class="unstyled">
-            <li ng-repeat="logEntry in vm.LogEntries"><i class="{{logEntry.Content.icon}}"></i> <a href="/Umbraco/#/{{logEntry.editUrl}}">{{logEntry.Content.name}}</a> - <span class="text-muted">(Edited on: {{logEntry.timestamp  | date:'medium'}})</span></li>
-        </ul>
+	<h2>We know what you edited last week...</h2>
+	<ul class="unstyled">
+		<li ng-repeat="logEntry in vm.LogEntries"><i class="{{logEntry.Content.icon}}"></i> <a href="/Umbraco/#/{{logEntry.editUrl}}">{{logEntry.Content.name}}</a> - <span class="text-muted">(Edited on: {{logEntry.timestamp  | date:'medium'}})</span></li>
+	</ul>
 
-and we should have a list of recently saved content and media:
+现在我们就可以看到最近保存的内容和媒体的列表：
 
 ![We know what you edited last week...](images/WeKnowWhatYouEditedLastWeek.jpg)
 
-*__Note:__ the url /Umbraco/#/content/content/edit/1234 is the path to open up a particular entity (with id 1234) ready for editing.*
+*__注意:__  /Umbraco/#/content/content/edit/1234 是一个 url 路径，前去打开特定的（根据 id 1234）实体用于编辑。*
 
-## I know what you want to do today
+## 我知道今天你想要做什么
+一个关键用户Journeys要在后台创建一个新的内容，如果这种工作需要每天在同一个板块进行多次，为什么不创建一个快捷按钮引导他们前去进行日常任务。
 
-One of the key user journeys an editor will make in the back office is to create a new thing of some sort, and if it is a person's job to create new blog entries in the same section two or three times a day, why not create them some handy shortcuts to achieve these common tasks:
+我们可以使用已有的知识，组装一个链接给到'edit a page'（或任意的按钮），通过附加的查询字符串 doctype=alias 和 create=true，可以使用户点击之后直接跳去指定板块根据别名来创建内容。
 
-We can use the knowledge that by convention a link to 'edit a page' (as used above) when passed the additional querystring parameters doctype=alias and create=true, can be made to present the user with a brand new content item of the alias type to create within the section.
+添加下面的内容到视图：
 
-Add the following to our view:
+	<div>
+		<a class="btn btn-primary btn-large" href="/umbraco/#/content/content/edit/1075?doctype=BlogPost&create=true"><i class="icon-edit"></i>Create New Blog Post</a>
+	</div>
 
-    <div>
-        <a class="btn btn-primary btn-large" href="/umbraco/#/content/content/edit/1075?doctype=BlogPost&create=true"><i class="icon-edit"></i>Create New Blog Post</a>
-    </div>
-
-Where 1075, is the id of our blog section, and BlogPost is the alias of the type of document we want to create.
+1075是博客板块的 id，BlogPost是我们想要创建的文档的别名。
 
 ![Handy short cut buttons](images/CreateNewBlogPost.jpg)
 
-## Custom External Data - creating your own angular resource
+## 自定义外部数据 - 创建你自己的 Angular 资源
 
-You can create your own custom angular services / resources, to interact with your own serverside data (using UmbracoAuthorizedJsonController), The property editor tutorial has a step explaining how to do this [part 4 - Adding server-side data to a property editor](../../Tutorials/creating-a-property-editor/part-4.md).
+你可以创建自己的 angular 服务/资源，整合你自己的服务端数据（使用UmbracoAuthorizedJsonController）。在属性编辑器教程中，已经描述了该如何做这些[第四部分 - 添加服务端数据给属性编辑器](../../Tutorials/creating-a-property-editor/part-4.md).
 
-## What else? - what are you waiting for?
-
-Perhaps the Dashboard is a gateway to a third party system or a tool to search specific content, or tools to help clean up existing content. extend extend extend
-
-Asteroids... ?
+## 还有什么? - 你还在等什么?
+可能控制台是第三方系统的接口，或者是用于搜索指定内容的工具，或者帮助我们清理已有内容的工具。你可以根据子级的需要，不断的扩展、扩展再扩展。
 
 ![really you can put anything here](images/asteroids.jpg)
 

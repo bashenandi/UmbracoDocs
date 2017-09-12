@@ -1,80 +1,59 @@
-#Creating More Pages
+#创建更多页面
 
-## Using a Maintainable Template Structure
+## 使用可维护的模板结构
 
-We've seen how to create a **_Document Type_**. If we wanted to create a simple three page site containing; Home, News and Contact Us pages we could easily just create a **_Document Type_** with a corresponding template for each and copy the same HTML code into each template and make the custom changes to each separate template for these pages.  
+我们再看一下**_Document Type_**是如何创建的。如果我们想创建一个简单的三个页面的站点，包含：首页，新闻和联系我们页面。我们可以为这些页面简单的创建带模板的**_Document Type_**，复制相同的 HTML 代码到每个模板中，再在每个模板中定制不同的修改。
 
-Though this would work (and on a very simple site it actually has some merits) but once a site starts to grow this would lead to problems - for instance changing anything in the header or footer would need to be done on each template - it also means we'd need the user to enter the same content for the footer on each page for example. 
+这样是可以工作的（在非常简单的网站上，确实有一些有点），但是一但你的网站开始快速成长就会出现问题 - 例如要更改任何头部和底部的信息，你都改修改每个模板 - 在这个例子中意味着我们要在每个页面中输入同样的底部内容。
 
-Umbraco provides us with an elegant solution for a consistent base template - those familiar with MVC will recognise it. 
+Umbraco 对于基本一致的模板，为我们提供了一个优雅的解决方案 - 熟悉 MVC 的人会认出它。
 
-To start we're going to unpick a little bit of what we did in creating the homepage to sit the homepage template under a master. 
-
-
-#Create a Master Template 
+开始做这些我们要拆开已经创建的 homepage，使 homepage 位于 master 之下。
 
 
-Go to the **_Settings > Templates_** and open up the tree.  At the moment we just have our **_Homepage_** template.  Hover over the **_Templates_** menu and click the menu **_..._** button. Create a new template called Master, click **_+ Create_** and then give it the name "_Master_" . Remember to click **_Save_**. 
+##创建主模板
+
+前去**_Settings > Templates_**展开树。这时我们只有**_Homepage_**模板。鼠标移动到**_Templates_**菜单上点击**_..._** 按钮，创建一个叫 master 的新模板。点击**_+ Create_**后给它一个名字叫"**_Master_**"，记得点击**_Save_**。
 
 
 ![Master Template](images/figure-22-master-template.png)
+*Figure 22 - 主模板*
 
+现在我们去把**_Homepage_**模板移动到**_Master_**模板下面。要做这些我们选择**_Settings > Templates > Homepage_**节点再**_Properties tab > Master template drop down_**中，选择_"Master"_之后点击**_Save_**。实际上这会更新 Razor 代码中的`Layout = null;`变为`Layout = "Master.cshtml";`。
 
-*Figure 22 - Master Template*
-
-
-Now we're going to move the **_Homepage_** template under the **_Master_** template. To do this select the **_Settings > Homepage node_** and from the **_Properties tab > Master template drop down_**, select _"Master"_ and then click **_Save_**.  This will update the Razor code section to change `Layout = null;` to `Layout = "Master.cshtml";` 
-
->NOTE: Due to a bug in older versions of Umbraco you may need to click off the **_Homepage node_** and back on to see this update. 
-
+>注意: 在旧版本的 Umbraco 中，这里可能会遇到一个 bug，需要你先点击**_Homepage_**节点之后，再返回来才能看到这些更改。
 
 ![Homepage Template now sits under the Master](images/figure-23-homepage-has-master-template.png)
+*Figure 23 - Homepage 模板现在位于主模板之下*
 
-
-*Figure 23 - Homepage Template now sits under the Master*
-
-
-Now we need to move the parts of our HTML template that are common across all pages into the **_Master_**. This is where as a developer you might need to use your brain as it will be slightly different for different websites - e.g. do all pages contain a `<div id="main">` section so can we put this in the master or does this belong to only certain pages? For this site we'll assume this is part of the child page. In the template edit screen cut everything from the closing curly brace to line 37 `<div id="main-container">` - we're going to move the header and nav of the site to the master template. Cut this and click **_Save_**. 
-
+现在我们要把所有页面中都需要的 HTML 模板代码部分粘贴到**_Master_**。这里作为开发人员你可能需要动动脑子，因为没个网站都会有所不同 - 例如所有页面都包含`<div id="main">`部分，那我们能把它放在主模板或者它只属于某些页面？对于本站我们假设这只在子页面中包含。在模板编辑界面中，剪切从关闭的花括号到37行`<div id="main-container">` - 我们移动网站的头部和导航到主模板中。剪切这些代码然后点击**_Save_**。
 
 ![Homepage Template After Cutting the Header](images/figure-24-homepage-after-cutting-the-header.png)
+*Figure 24 - Homepage 模板去掉头部之后*
 
 
-*Figure 24 - Homepage Template After Cutting the Header*
-
-
-Now click on your **_Master_** template and paste this HTML markup after the closing curly brace and remember to click **_Save_**.
-
+现在点击的 **_Master_** 模板，并且粘贴这些 HTML 标记到关闭花括号的后面，记得点击**_Save_**。
 
 ![Master Template after Pasting the Header](images/figure-25-master-template-with-header.png)
+*Figure 25 - 主模板粘贴头部之后*
 
-*Figure 25 - Master Template after Pasting the Header*
-
-
-At the end of this markup we need to tell Umbraco to insert the child template's content - this is done by adding the code **_@RenderBody()_** at the end (around line 37). Click **_Save_**. 
-
+在这些标记的后面我们需要告诉 Umbraco 插入子模板中的内容 - 这需要添加代码**_@RenderBody()_**到结果（37行附近）。点击**_Save_**。
 
 ![Adding RenderBody() to the Master Template](images/figure-26-adding-renderbody.png)
+*Figure 26 - 添加 RenderBody() 到主模板*
 
-
-*Figure 26 - Adding RenderBody() to the Master Template*
-
-
-Now we'll do the same with the footer content. Cut everything from the opening of the **_footer-container _** div (approximately line 35) from the **_Settings > Templates > Homepage > template tab_**, click **_Save_** and then paste this into the **_Master_** template under the **_@RenderBody_** field we've just added. Remember to click **_Save_**. 
-
+现在我们为底部内容做同样的事情。前往**_Settings > Templates > Homepage > template_**标签中，从**_footer-container _** div（大约在35行）的打开标记开始剪切所有内容，点击**_Save_**保存，然后把这些代码粘贴到**_Master_**中我们刚才添加的**_@RenderBody_**下方。记得点击**_Save_**。
 
 ![Completed Master Template](images/figure-27-master-template-complete.png)
+*Figure 27 - 完成主模板*
 
-
-*Figure 27 - Completed Master Template*
-
-
-Now we've done a lot of work - and what we should see if we refresh our localhost page is nothing has changed!  If you have a compilation error you've perhaps mistyped **_@RenderBody()_**. If you're missing any content (header or footer) check that what you have in the templates matches the following:
+现在我们已经做了很多工作 - 然而我们刷新本地页面时不会看到任何改变！如果你遇到了编译错误，你可能忘记了**_@RenderBody()_**。如果你丢失了任何内容（头部或底部），检查它们让你的模板看起来和下面一样：
 
 	@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 	@{
 	    Layout = null;
-	}<!doctype html>
+	}
+	<!doctype html>
 	<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
 	<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
 	<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
@@ -119,7 +98,7 @@ Now we've done a lot of work - and what we should see if we refresh our localhos
 	</body>
 	</html>
 
-*Figure 28 - Complete Master Template*
+*Figure 28 - 完整的主模板*
 
 	@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 	@{
@@ -154,12 +133,11 @@ Now we've done a lot of work - and what we should see if we refresh our localhos
 		</div> <!-- #main -->
 	</div> <!-- #main-container -->
 
-*Figure 29 - Complete Homepage Template*
+*Figure 29 - 完整的 Homepage 模板*
 
 
->If you're new to these concepts then I don't think what we've just done is going to make much sense until we make our next page. 
-
+>如果你对这些概念还是陌生的，我不认为在开始下一步之前做其他事是有意义的。还请反复阅读，操作这一章内容。
 
 ---
-##Next - [Creating Master Template Part 2](Creating-Master-Template-Part-2.md)
-Part 2 - using the Master template to create new page types. 
+##下一步 - [创建主模板 - 第二部分](Creating-Master-Template-Part-2.md)
+第二部分 - 使用主模板创建新的页面类型。

@@ -1,81 +1,56 @@
-#Articles Parent and Article Items - A Parent Page with Infinite Children
+#文章父级和文章条目 - 一个有无数子页面的父页面
+有一个文章的父页面和许多继承的子文章，编辑者能够任意添加页面，Umbraco 会提供很好的例子。我们假设我们虚构的部件有限公司，每月写大约10篇文章，并希望文章页面像博客一样运作(例如，你可以将这个功能用于博客、新闻和事件页面)。
 
-Having an Articles Parent page and a number of associated child articles which the editors can add to freely provides a good example page of the power of Umbraco. We'll assume our fictional company, Widgets Ltd, write about ten articles a month and want the articles page to act like a blog (e.g. you could use this functionality for a blog or news and events pages).
+创建两个新的文档类型"_Articles Main_" 和 "_Articles Item_"（**_Document Types Settings > Document Types (hover) > ... > + Create_**）。记得使用带模板的选项，来帮你创建模板。
 
-
-Create two new Document Types "_Articles Main_" and "_Articles Item_" **_Document Types Settings > Document Types (hover) > ... > + Create_**. Remember to use the option that creates the template for you.  
-
-
-Create the following **_Tabs_** and **_Data Properties_**:
+创建下面的**_标签页_**和**_数据属性_**：
 ####Articles Main
 >Tab = Intro
 
-
 >**"Articles Title"** - Type = Textbox
 
-
->**"Articles Body Text"** - type = Rich Text Editor**
+>**"Articles Body Text"** - Type = Rich Text Editor**
 
 
 ![Articles Main Document Type Data Properties](images/figure-38-articles-main.png)
-
-
-*Figure 38 - Articles Main Document Type Data Properties*
+*图 38 - Articles Main 文档类型数据属性*
 
 
 ####Articles Item
 >Tab = Contents
 
-
 >**"Article Title"** - Type = Textstring
-
 
 >**"Article Contents"** - type = Rich Text Editor**
 
 
 ![Article Item Document Type Data Properties](images/figure-39-articles-item.png)
+*图 39 - Article Item 文档类型数据属性*
 
+现在去**_Settings > Document Types >Articles Main node > Permissions screen > Allowed child nodetypes_** 添加**_Articles Item_**。这样才能允许我们在文章主页下面创建条目（作为父容器存在）。我们还需要允许**_Articles Main node_**创建在**_Homepage node_**下面（去**_Settings > Document Types > Homepage node > Permissions screen >  Allowed child node types_**设置 - 不要添加**_Articles Item_** - 仅允许它创建在文章主页下面）。
 
-*Figure 39 - Article Item Document Type Data Properties*
+现在去**_Content > Homepage 节点 (鼠标移入)> ..._**创建一个**_Articles Main_**（如果你看不见这个选项，返回检查你的 _allowed child nodes_ 设置 - 是否忘了点击**_保存_**？）类型的节点，叫做"_Articles_"。给这个节点输入一些内容和标题，然后在下面创建几个文章条目内容（**_Content > Homepage node > Articles node (鼠标移入) >  ..._** 创建）。
 
-
-Now go to the **_Settings > Document Types >Articles Main node > Permissions screen > Allowed child nodetypes_** and add **_Articles Item_**. This allows us to create items under the main (which acts as a parent container). We also need to allow the **_Articles Main node_** to be created under the **_Homepage node_** (do this in the **_Settings > Document Types > Homepage node > Permissions screen >  Allowed child node types_** - don't add the **_Articles Item_** - only the main should be allowed at this level). 
-
-
-Now go to **_Content > Homepage node (hover)> ..._** and create a node called "_Articles_" of type **_Articles Main_** (if you don't have this option go back and check your allowed child nodes - did you forget to click **_Save_**)?  Give the Articles node some content and a title and then create a couple of article item content nodes under this node (**_Content > Homepage node > Articles node (hover) >  ..._** 
-
-
-Now you should have a content tree that looks like the image below (obviously with your own page node names).  Let's go update our templates we just created (automatically when we created the Document Types). First update them to use the Master as a parent **_Settings > Templates > Articles Main node > Properties tab > Master template dropdown_** = "Master" - do the same for the Articles Item remembering to click **_Save_**. 
-
+现在你有了一个看起来如下图所示的内容树（显示你自己页面节点的名字）。现在去更新我们刚刚创建的模板（创建文档类型时自动创建的）。首页更新它们都去使用 Master 作为父级模板 **_Settings > Templates > Articles Main node > Properties tab > Master template dropdown_** = "Master" - 再对Articles Item模板做同样的事情，记得点击**_保存_**。
 
 ![Content Tree With Articles](images/figure-40-articles-created.png)
+*图 40 - 带文章的内容树*
+
+从**_Simple Content Page_**模板中复制模板内容粘贴到Articles Item 和 Articles Main模板中（你可能需要刷新节点才能看到它们。将主版本都设置为"Master"并且将其中的页面字段标签替换为相关的属性，例如：**_Articles Main_**模板中的**_articlesTitle_** 和 **_articlesBodyText_** 以及 **_Article Item_**模板中的**_articleTitle_** and **_articleContents_**）。
 
 
-*Figure 40 - Content Tree With Articles*
+>注意当复制时不要覆盖了第一行`@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.ArticlesMain>` - 如果在加载页面时抛出异常，可能是没有绑定源，确保最后一部分< >尖括号中的内容必须和你的文档类型别名匹配。
 
+如果现在我们去浏览器中访问Articles Main页面，会看到填写的内容。我们希望把子文章列表显示在介绍内容的下面，以便浏览者能够看到文章列表。 Umbraco 可以让这变的很容易，但是我们需要使用一些 Razor 代码来实现。
 
-Copy the template content from the **_Simple Content Page_**  template and paste this into both the Articles Item and Articles Main (you may need to refresh the nodes again to see these. Set the Master template to be "Master" and then replace the Page field tags with the relevant  properties e.g. **_articlesTitle_** and **_articlesBodyText_** for the **_Articles Main_** and the **_articleTitle_** and **_articleContents_** for **_Article Item_**. 
+点击左侧菜单的**_Developer_**菜单，把鼠标移动到**_Partial View Macros Files_**节点上面后点击**_..._**，然后再点击**_Create_**。命名为"_listArticles_"并且在**_Choose a snippet_**中选择"_List Child Pages Ordered By Date_"，最后点击**_Create_**。
 
->Take care when copying not to overwrite the first line `@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.ArticlesMain>` - if get an exception when loading the page about not being able to bind to source ensure the last part in < > brackets matches your Document Type Alias. 
-
-If we now go and check our Articles Main page in the browser we should see our content. We'd like to list the child article items under the intro content so that our visitors can see a list of our articles. Umbraco makes this easy for us but we need to use a bit of Razor.
-
-
-Click on the **_Developer_** menu from the left hand side menu and then hover over the **_Partial View Macros Files node_** to get the more menu **_..._** then **_click + Create_**. Name this "_listArticles_" and select the "_List Child Pages Ordered By Date_" in the **_Choose a snippet_** field and click **_Create_**.
-
-
-Now all we have to do is wire up the Articles main page to list our child articles. Edit the Articles Main template **_Settings > Templates node > Master node > Articles Main node > Template tab_**.  Under the *articlesBodyText* tag enter a carriage return and then click the **_Insert Macro_** button, choose the ListArticles macro we just created and then click **_Save_**. 
-
+现在我们必须要做的连接Articles主页面来显示子文章。编辑Articles Main 模板**_Settings > Templates node > Master node > Articles Main node > Template tab_**，在*articlesBodyText*标签下面按下回车，然后点击**_Insert Macro_**按钮，选择刚才创建的"ListArticles"宏然后点击**_Save_**。
 
 ![Template for Articles Parent with the Macro Code](images/figure-41-articles-parent-with-macro-code.png)
+*图 41 - 带有宏代码的文章父级模板*
 
-
-*Figure 41 - Template for Articles Parent with the Macro Code*
-
-
-Check what we have on our **_Articles_** page now - we're really getting somewhere!  Let's make it a bit more real world - I'll leave the understanding of this to Razor lessons / The Umbraco videos but it will finish our site off nicely - edit the Partial you just created - **_Developer > Partial View Macro Files > listArticles.cshtml_** and change the content to be:
-
-
+现在访问**_Articles_**查看刚才做的内容 - 我们已经获取到了一些东西！现在我们让他变得更加真实 - 要更好的理解这些需要学习Razor或者 Ummbraco 视频，但是我们只需要让网站更加漂亮一点 - 编辑刚才创建的宏**_Developer > Partial View Macro Files > listArticles.cshtml_**，更改内容如下：
 
     @inherits Umbraco.Web.Macros.PartialViewMacroPage
     @{ 
@@ -83,29 +58,23 @@ Check what we have on our **_Articles_** page now - we're really getting somewhe
 	    @* OrderBy() takes the property to sort by and optionally order desc/asc *@
     }
 
-    @foreach (var item in selection)
-    {
-	<div class="article">
-            <div class="articletitle"><a href="@item.Url">@item.Name</a></div>
-            <div class="articlepreview">@Umbraco.Truncate(@item.ArticleContents,100) <a href="@item.Url">Read More..</a></div>
-        </div>
-        <hr/>
+    @foreach (var item in selection){
+    	<div class="article">
+    		<div class="articletitle"><a href="@item.Url">@item.Name</a></div>
+    		<div class="articlepreview">@Umbraco.Truncate(@item.ArticleContents,100) <a href="@item.Url">Read More..</a></div>
+    	</div>
+    	<hr/>
     }
 
-*Figure 42 - Improved Macro for listArticles*
+*图 42 - 优化listArticles 模板*
 
-
-
-Now check this in the browser!
-
+现在在浏览器中检查这些！
 
 ![Finished Articles Page](images/figure-43-finished-articles-page.png)
-
-
-*Figure 43 - Finished Articles Page*
+*图 43 - 完成文章列表页*
 
 
 ---
-##Next - [Conclusions and Where Next?](Conclusions-Where-Next.md)
-By this point you'll have a basic working site - where next?  You've barely scratched the surface of the power of Umbraco!
+##Next - [结论和下一步?](Conclusions-Where-Next.md)
+到目前你应该有了一个基础的网站 - 但是下一步呢？你仅仅了解了Umbraco 强大的一些表面功能 - 这里还有一些链接告诉你更多！
 

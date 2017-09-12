@@ -1,76 +1,74 @@
-#Tutorial - Integrating services with a property editor
+#教程 - 使用属性编辑器整合服务
 
-##Overview
-This is step 3 in the property editor tutorial. In this part we will integrate one of the built-in
-Umbraco services. For this sample we will use the *dialog service* to hook into the *media picker* and return image data to the markdown editor.
+##概述
+这是属性编辑器教程的第三步。在这一部分，我们会整合一个 Umbraco 的内置服务。在这个示例中，我们会使用*dialog service*注入*media picker*，返回图片数据到 markdown 编辑器中。
 
-##Injecting the service.
-First up, we need to get access to the service, this is done in the constructor of the controller, where we add it as a parameter:
+##注入服务
+首先，我们需要获取服务操作，这可以通过控制器的构造方法完成，我们在这里添加一个参数：
 
-	angular.module("umbraco")
-		.controller("My.MarkdownEditorController",
-		//inject Umbraco's assetsServce and dialog service
+	angular.module("umbraco").controller("My.MarkdownEditorController",
+		/* 注入 Umbraco 的assetsServce 和 dialogService */
 		function ($scope,assetsService, dialogService) { ... }
+	)
 
-this works the same way as with the *assetsService* we added in step 1.
+这和我们在第一步中添加*assetsService*是一样的。
 
-##Hooking into pagedown
-The pagedown editor we are using, has a nice event system in place, so we can easily hook into the events triggered by the media chooser, by adding a hook, after the editor has started:
+##pagedown 中的钩子
+我们使用的 pagedown 编辑器，有着比较友好的事件系统，所以我们可以容易地通过媒体选择在编辑器中设置事件触发钩子，要添加一个钩子，要在编辑器启动后：
 
-	//Start the editor
+	/* 启动编辑器 */
 	var converter2 = new Markdown.Converter();
-    var editor2 = new Markdown.Editor(converter2, "-" + $scope.model.alias);
-    editor2.run();
-
-	//subscribe to the image dialog clicks
-    editor2.hooks.set("insertImageDialog", function (callback) {
-           //here we can intercept our own dialog handling
-
-           return true; // tell the editor that we'll take care of getting the image url
-       });
+	var editor2 = new Markdown.Editor(converter2, "-" + $scope.model.alias);
+	editor2.run();
+	
+	/* 定语图片对话框点击 */
+	editor2.hooks.set("insertImageDialog", function (callback) {
+		/* 这里我们可以拦截我们自己的对话框处理机制 */
+		
+		/* 告诉编辑器我们会自行获取并返回图片 url */
+		return true;
 	});
 
-Notice the callback, this callback is used to return whatever data we want to editor.
+注意callback事件，这个callback用于返回任何想给编辑器的数据。
 
-So now that we have access to the editor events, we will trigger a media picker dialog, by using the `dialogService`. You can inject whatever HTML you want with this service, but it also has a number of shorthands for things like a media picker:
+我们现在已经能够操作编辑器事件了，接下来通过`dialogService`触发一个媒体选择对话框。你可以注入你想要的 HTML 给这个服务，但是它也有一些固定方法，类似于媒体选择：
 
-	//the callback is called when the use selects images
+	/* 这个 callbak 会在选择了图片时调用 */
 	dialogService.mediaPicker({callback: function(data){
-							//data.selection contains an array of images
-	                        $(data.selection).each(function(i, item){
-	                               //try using $log.log(item) to see what this data contains
-	                        });
-	                   }});
+		/* data.selection 包含了选择的图片数组，注意=====这会视具体版本不同而有所区别 */
+		$(data.selection).each(function(i, item){
+			/* 尝试使用$log.log(item)看看数据包含了什么 */
+		});
+	}});
 
-##Getting to the image data
-Because of Umbraco's generic nature, you don't always know where your image is, as a media object's data is basically an array of properties, so how do you pick the right one? - you cannot always be sure the property is called `umbracoFile` for instance.
+##获取图片数据
+由于 Umbraco 的特性，你并不知道图片具体在哪里，一个媒体对象数据是基于属性的数组，所以你如何选择正确的？你无法一直确定实例的属性名`umbracoFile`。
 
-For cases like this, a helper service is available: `imageHelper`. This utility has useful methods for getting to images embedded in property data, as well as associated thumbnails. **Remember to** inject this imageHelper in the controller constructor as well (same place as dialogService and assetsService).
+对于这样的情况，有一个可用的帮助服务：`imageHelper`。这个实用工具有助于获取嵌入在属性数据中的图像，以及相关的缩略图。**记住**在控制器构造函数中注入这个imageHelper（类似于dialogService和assetsService）。
 
-So we get the image page from the selected media item, and return it through the callback:
+现在我们就可以从选择的媒体条目中获取图片，并且通过 callback 返回：
 
 	var imagePropVal = imageHelper.getImagePropertyValue({ imageModel: item, scope: $scope });
 	callback(imagePropVal);
 
-Now when we run the markdown editor and click the image button, we are presented with a native Umbraco dialog, listing the standard media archive.
+现在当我们运行 markdown 编辑器，并且点击图片按钮，我们会看到原生的 Umbraco 对话框，列出标准的媒体档案。
 
-Clicking an image and choosing select returns the image to the editor which then renders it as:
+点击图片并选择返回编辑器的输出类似于：
 
 	![Koala picture][1]
 
 	  [1]: /media/1005/Koala.jpg
 
-The above is correct markdown code, representing the image, and if preview is turned on, you will see the image below the editor.
+上面是正确的 markdown 代码，选择了图片，并且开启了预览，你会看到编辑器下面的图片。
 
+##总结
+通过之前的三个步骤，我们：
 
-##Wrap up
-So over the 3 previous steps, we've:
+- 创建了一个插件
+- 定义了一个编辑器
+- 注入我们自己的 JS 库和第三方组件
+- 使编辑器可配置
+- 使用原生对话框和服务连接编辑器
+- 浏览到选择的图片。
 
-- created a plugin
-- defined an editor
-- injected our own JavaScript libraries and 3rd party ones
-- made the editor configurable
-- connected the editor with native dialogs and services
-- looked at koala pictures.
-
-[Next - Adding server-side data to a property editor](part-4.md)
+[下一步 - 给属性编辑器添加服务端代码](part-4.md)

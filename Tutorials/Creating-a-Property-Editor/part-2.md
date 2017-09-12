@@ -1,17 +1,17 @@
-#Tutorial - adding configuration to a property editor
+#教程 - 添加配置到属性编辑器
 
-##Overview
-This is step 2 in our guide to building a property editor. This step continues work on the markdown editor we built in [step 1](creating-tutorial1-v7.md), but goes further to show you how you can add configuration options to the editor.
+##概述
+这是我们创建属性编辑器指导的第二步。这一步继续工作在我们[第一步](creating-tutorial1-v7.md)创建的 markdown 编辑器中，但是进一步呈现给你如何给编辑器添加一些配置项。
 
 
-##Configuration?
-So an important part of building good property editors, is to build something relatively flexible, so you can reuse it many many times, for different things; Like the rich text editor in Umbraco, that allows you to choose which buttons and stylesheets you want to use on each instance of the editor.
+##配置?
+建立一个好的属性编辑器的重要部分，是构建相对灵活的东西，你可以在不同的时候，多次的重复使用它；就像 Umbraco 中的富文本编辑器，它允许你为每个编辑器实例，选择想要的按钮和样式表。
 
-So an editor can be used several times, with different configurations, and that is what we will be working on now.
+因此一个编辑器能够重复使用，具有不同的配置，是现在我们要完成的工作。
 
 
 ##package.manifest
-To add configuration options to our markdown editor, open the `package.manifest` file. Right below the editor definition, paste in the following:
+要给我们的 markdown 编辑器添加配置属性，再次打开`package.manifest`文件。在编辑器定义的下面，粘贴下面的代码：
 
 	prevalues: {
 		fields: [
@@ -30,32 +30,32 @@ To add configuration options to our markdown editor, open the `package.manifest`
 		]
 	}
 
-**Remember to:** Separate the editor element and prevalue editor definition with a comma, or you will get a JSON error.
+**记住:** 分隔编辑器元素和编辑器预设值定义是通过逗号，你可以会遇到 JSON格式错误提示。
 
-So what did we just add? We added a prevalue editor, with a `fields` collection. This collection contains information about the UI we will render on the datatype configuration for this editor.
+我们添加了什么？我们添加了一个预设值编辑器，具有`fields`集合。这个集合包含我们的这个编辑器想要输出数据类型配置的相关信息。
 
-So the first one gets the label "Preview" and uses the view "boolean", so this will allow us to turn preview on/off and will provide the user with a simple checkbox. The name "boolean" comes from the convention that all preview editors are stored in `/umbraco/views/prevalueeditors/` and then found via `<name>.html`
+首先取到的是"Preview"，使用"boolean"视图，因此这会提供给用户一个简单的复选框，允许切换预览开启/关闭。"boolean"来自于转换器，所有的编辑器预览都存储在`/umbraco/views/prevalueeditors/`，通过`<name>.html`查找。
 
-Same with the next one, only that it will provide the user with a textarea to input a default value for the editor.
+下一个也相同，只是它提供一个文本域输入框给用户，用于给编辑器设置默认值。
 
-Save the manifest, **restart the app pool** and have a look at the markdown datatype in Umbraco now. You should now see that you have 2 configuration options.
+保存清单，**重启应用程序池**，现在再看一下 Umbraco 中嗯 markdown 数据类型。你会看到有了两个配置项。
 
-##Using the configuration
-The next step is to gain access to our new configuration options. For this, open the `markdowneditor.controller.js` file.
+##使用配置
+下一步是访问操作新的配置项。打开`markdowneditor.controller.js`文件。
 
-Let's first add the default value functionality. Basically, when the ´$scope.model.value` is empty or *undefined*, we want to use the default value, to do that, we add the following to the very beginning of the controller:
+首先添加默认值功能。基本上，当 `$scope.model.value` 为空或者*undefined*时，我们想要使用默认值，因此我们在控制器的头部添加下面的代码：
 
 	if($scope.model.value === null || $scope.model.value === ""){
-	    $scope.model.value = $scope.model.config.defaultValue;
+		$scope.model.value = $scope.model.config.defaultValue;
 	}
 
-You see whats new? - the `$scope.model.config` object is. And the other thing you will notice is that because of our configuration, we now have access to `$scope.model.config.defaultValue` which contains the configiration value for that key, it's that easy to setup and use configuration values from code.
+你新发现了什么？ - 是`$scope.model.config`对象。另一件你会注意到的事，是我们现在操作的`$scope.model.config.defaultValue`，包含了这个 key 所定义的配置值，它可以简单的安装以及从代码中访问这些配置值。
 
-However, you can also use these values without any JavaScript, so open the `markdowneditor.html` file instead.
+你可以不通过任何 JS 来使用这些值，打开`markdowneditor.html`。
 
-Because we can also use the configuration directly in our HTML like here, where we use it to toggle the preview `<div>`, using the `ng-hide` attribute:
+因为我们可以直接在 HTML 中使用这些配置，就像下面一样，我们使用它来切换预览`<div>`，通过`ng-hide`属性：
 
 	<div ng-show="model.config.preview" class="wmd-panel wmd-preview"></div>
 
 
-[Next - Integrating services with a property editor](part-3.md)
+[下一步 - 使用属性编辑器整合服务](part-3.md)

@@ -1,17 +1,17 @@
-#Tutorials
+#教程
 
-### [Creating a basic site with Umbraco](Creating-Basic-Site/index.md)
+### [使用 Umbraco 创建一个基础网站](Creating-Basic-Site/index.md)
 
-Step by step guide of everything you need to get a basic site up and running in Umbraco.
+一步一步指导你在Umbraco 中运行一个网站所需要做的所有事情。
 
-### [Creating a Property Editor](Creating-a-Property-Editor/)
+### [创建一个属性编辑器](Creating-a-Property-Editor/)
 
-This guide explains how to setup a simple property editor for the backoffice.
+这个指南阐述了如何在后台安装一个简单的属性编辑器。
 
-### [Creating a Custom Dashboard](Creating-a-Custom-Dashboard)
+### [创建一个自定义控制台](Creating-a-Custom-Dashboard)
 
-Custom dashboards is a great way to help editors maintain a site by providing useful information. This guide takes you through the steps to setup a  custom dashboard in Umbraco.
+自定义控制台是通过提供友好的信息来帮助编辑者维护网站的好方法。
 
-### [Multi language Setup](Multilanguage-Setup/index.md)
+### [多语言配置](Multilanguage-Setup/index.md)
 
-Tips and methods for creating multi lingual websites.
+创建多语言站点的提示和方法。

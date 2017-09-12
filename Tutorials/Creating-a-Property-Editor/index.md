@@ -1,158 +1,140 @@
-#Tutorial - Creating a property editor
+#教程 - 创建一个属性编辑器
 
-##Overview
+##概述
+这篇指导讲述了如何设置一个简单的属性编辑器，如何关联到 Umbraco 的数据类型，如果连接到 angularjs 并注入，以及最终如何测试你的属性编辑器。
 
-This guide explains how to setup a simple property editor, how to hook it into Umbraco's datatypes
-how to hook it into angulars modules and its injector, and finally how you can test your property editor.
+所以我们所有要操作的步骤是:
 
-So all the steps we will go through:
+- 设置一个插件
+- 编写基本的 "Hello World" HTML + JS
+- 注册数据类型到 Umbraco
+- 添加扩展依赖
+- 完成 markdown 编辑器
 
-- Setting up a plugin
-- Write some basic "Hello World" HTML + JS
-- Register the data type in Umbraco
-- Add external dependencies
-- Complete the markdown editor
-
-##Prerequisites
-This is about how to use AngularJS with Umbraco, so it does not cover AngularJS itself, as there are tons of resources on that already here:
+##准备条件
+这是关于如何在 Umbraco 中使用 AngularJS，因此并不包含 AngularJS 自身的内容，这里已经为你准备了一些资源：
 
 - [egghead.io](http://www.egghead.io/)
 - [angularjs.org/tutorial](http://docs.angularjs.org/tutorial)
 - [Tekpub](http://tekpub.com/products/angular)
 
-##The end result
+##最终结果
 
-By the end of this guide, we will have a simple markdown editor running inside of Umbraco
-registered as a data type in the backoffice, assigned to a document type, and the editor can
-create and modify data.
+指导的最终，我们会有一个简单的 markdown 编辑器运行在 Umbraco 中，在后台注册为一个数据类型，用于文档类型，编辑器可以创建和修改数据。
 
-##Setting up a plugin
+##安装一个插件
 
-The first thing we must do is create a new folder inside `/App_Plugins` folder. We will call it
-`MarkDownEditor`
+第一件事，我们必须在`/App_Plugins`文件夹中创建一个新的文件夹。我们叫它`MarkDownEditor`。
 
+接下来我们创建一个简单的manifest文件，来描述这个插件能干什么。这个 manifest 会告诉 Umbraco 关于我们的新属性编辑器以及允许我们注入任何需要的文件到应用中，因此我们创建这个文件`/App_Plugins/MarkDownEditor/package.manifest`，[完整的package.manifest JSON 文档看这里](../../Extending/Property-Editors/package-manifest.md)。
 
-
-Next we will create a simple manifest file to describe what this plugin does. This manifest will tell Umbraco about our new property editor and allows us to inject any needed files into the application, so we create the file `/App_Plugins/MarkDownEditor/package.manifest`
-[For full package.manifest JSON documentation see here](../../Extending/Property-Editors/package-manifest.md)
-
+在这个打包manifest中，我们添加一些 JSON 来描述属性编辑器，查看下面 JSON 中的内联注释，了解每个详细信息
 Inside this package manifest we add a bit of JSON to describe the property editor, have a look at the inline comments in the JSON below for details on each bit:
 
 	{
-		//you can define multiple editors
+		//你可以定义多个编辑器
 		propertyEditors: [
 			{
-				/*this must be a unique alias*/
+				/* 这必须是唯一的别名 */
 				alias: "My.MarkdownEditor",
-				/*the name*/
+				/* 名字 */
 				name: "My markdown editor",
-				/*the icon*/
+				/* icon图标 */
 				icon: "icon-code",
-				/*grouping for "Select editor" dialog*/
+				/* "Select editor"对话框中的分组 */
 				group: "Rich Content",
-				/*the HTML file we will load for the editor*/
+				/* 我们要为编辑器加载的 HTML 文件 */
 				editor: {
 					view: "~/App_Plugins/MarkDownEditor/markdowneditor.html"
 				}
 			}
-		]
-		,
-		//array of files we want to inject into the application on app_start
+		],
+		/* 在应用启动时要注入到应用中的文件数组 */
 		javascript: [
 		    '~/App_Plugins/MarkDownEditor/markdowneditor.controller.js'
 		]
 	}
 
 
-##Writing some basic HTML + JS
-Then we add 2 files to the /app_plugins/markdowneditor/ folder:
+##编写一些基本的 HTML和 JS
+然后我们添加两个文件到`/app_plugins/markdowneditor/`文件夹：
 - `markdowneditor.html`
 - `markdowneditor.controller.js`
 
-These will be our main files for the editor, with the .html file handling the view and the .js
-part handling the functionality.
+这是我们编辑器的主要文件，.html 文件处理视图，.js 文件处理功能。
 
-In the .js file I will add a basic AngularJS controller declaration
+在.js 文件中，我们要添加基本的 AngularJS 控制器定义
 
-	angular.module("umbraco")
-		.controller("My.MarkdownEditorController",
+	angular.module("umbraco").controller("My.MarkdownEditorController",
 		function () {
 			alert("The controller has landed");
 		});
 
-And in the .html file I'll add:
+.html 文件中，我们添加：
 
 	<div ng-controller="My.MarkdownEditorController">
 		<textarea ng-model="model.value"></textarea>
 	</div>
 
+现在我们的编辑器的基本部分就完成了，即：
 Now our basic parts of the editor is done, namely:
 
-- The package manifest, telling Umbraco what to load
-- The HTML view for the editor
-- The controller for wiring up the editor with angular.
+- 一个包装清单，告诉 Umbraco 要载入什么
+- 用于编辑器的视图
+- 控制器通过 angular 连接到编辑器。
 
-##Register the datatype in Umbraco
-After the above edits are done, restart your application. Go to the Developer section, click the 3 dots next to the datatypes folder and create a new data type called "markdown". In the editor you can now select a property editor, where your newly added "markdown editor" will appear.
+##注册数据类型到 Umbraco
+当上面的操作完成后，重启你的应用。前往开发区块，点击数据类型目录的三个点菜单，然后创建一个新的数据类型，名为"markdown"。在编辑器中，你现在可以选择一个编辑器，你新添加的"My markdown editor"会呈现出来。
 
-Save the datatype, and add it to a document type of your choice, open a document of that type, and you will be greeted with an alert message saying "The controller has landed", which means all is well, and you can now edit the assigned property's value with your editor.
+保存数据类型，然后将它添加到某个你选择的文档类型中，打开这个文档类型，你会看到一个 alert 消息，说的是"The controller has landed"，这意味的一切都是正常的，现在就就可以在你的编辑器中编辑属性值了。
 
+##添加扩展依赖
+接下来继续深入一些，载入一个 markdown 编辑器 JS 库，我选择了[pagedown][1]，但是你也可以选择任何你想要的。
 
-##Add external dependencies
-Lets go a bit further, and load in a markdown editor JavaScript library, I've chosen [pagedown][PagedownBootstrap], but you can use whatever you want.
+首先，我们要添加扩展文件到包的目录，位于`/app_plugins/markdowneditor/lib`文件夹，这些扩展文件可以从 pagedown 项目地址找到：[Pagedown-bootstrap on github.com][1]：
 
-First of, I'll add some external files to our package folder, in /app_plugins/markdowneditor/lib folder, these files comes from the pagedown editor project found here:
+然后打开 `markdowneditor.controller.js`文件进行编辑，看起来如下面：
 
-[Pagedown-bootstrap on github.com][PagedownBootstrap]
-
-[PagedownBootstrap]: https://github.com/samwillis/pagedown-bootstrap
-
-Then open the `markdowneditor.controller.js` file and edit it so it looks like this:
-
-	angular.module("umbraco")
-	.controller("My.MarkdownEditorController",
-	//inject umbracos assetsService
-	function ($scope,assetsService) {
-
-	    //tell the assetsService to load the markdown.editor libs from the markdown editors
-	    //plugin folder
-	    assetsService
-			.load([
+	angular.module("umbraco").controller("My.MarkdownEditorController",
+		/* 注册assetsService服务 */
+		function ($scope,assetsService) {
+			/* 告诉assetsService去插件目录加载markdown.editor类库 */
+			assetsService.load([
 				"~/App_Plugins/MarkDownEditor/lib/markdown.converter.js",
 				"~/App_Plugins/MarkDownEditor/lib/markdown.sanitizer.js",
 				"~/App_Plugins/MarkDownEditor/lib/markdown.editor.js"
-			])
-			.then(function () {
-			    //this function will execute when all dependencies have loaded
-			    alert("editor dependencies loaded");
+			]).then(function () {
+				/* 这些功能将在依赖加载完成后执行 */
+				alert("editor dependencies loaded");
 			});
+			
+			/* 为编辑器加载独立的 css 避免它们阻断 js 的加载*/
+			assetsService.loadCss("~/App_Plugins/MarkDownEditor/lib/markdown.css");
+		});
 
-	    //load the separate css for the editor to avoid it blocking our js loading
-	    assetsService.loadCss("~/App_Plugins/MarkDownEditor/lib/markdown.css");
-	});
+这是在我们外部依赖中的加载，但是只会在编辑器需要时加载。
 
-This loads in our external dependency, but only when it's needed by the editor.
-
-Now lets replace that `alert()` with some code that can instantiate the pagedown editor:
+现在让我们用一些实例化pagedown 编辑器的代码来替换`alert()`：
 
 	var converter2 = new Markdown.Converter();
-    var editor2 = new Markdown.Editor(converter2, "-" + $scope.model.alias);
-    editor2.run();
+	var editor2 = new Markdown.Editor(converter2, "-" + $scope.model.alias);
+	editor2.run();
 
-and add that id to the textarea in the HTML, for more info on the HTML structure, see the pagedown demo [here](https://github.com/samwillis/pagedown-bootstrap/blob/master/demo/browser/demo.html):
+再给 HTML 中的富文本输入框添加 id，查看更多 HTML 的结构，请浏览 pagedown 的演示[这里](https://github.com/samwillis/pagedown-bootstrap/blob/master/demo/browser/demo.html):
 
 	<div ng-controller="My.MarkdownEditorController" class="wmd-panel">
 		<div id="wmd-button-bar-{{model.alias}}"></div>
-
-			<textarea ng-model="model.value" class="wmd-input" id="wmd-input-{{model.alias}}">
-				your content
-			</textarea>
-
+		<textarea ng-model="model.value" class="wmd-input" id="wmd-input-{{model.alias}}">
+			your content
+		</textarea>
 		<div id="wmd-preview-{{model.alias}}" class="wmd-panel wmd-preview"></div>
 	</div>
 
-Now, clear the cache, reload the document and see the pagedown editor running.
+现在，清除缓存，重启应用程序，重新加载文档，查看 pagedown 编辑器的运行。
 
-When you save or publish, the value of the editor is automatically synced to the current content object and sent to the server, all through the power of angular and the `ng-model` attribute.
+当你保存或者发布时，编辑器的值会自动与当前内容对象同步并发送到服务器，这一些都是通过强大的angular和`ng-model`属性。
 
-[Next - Adding configuration to a property editor](part-2.md)
+[下一步 - 添加配置到属性编辑器](part-2.md)
+
+
+[1] https://github.com/samwillis/pagedown-bootstrap

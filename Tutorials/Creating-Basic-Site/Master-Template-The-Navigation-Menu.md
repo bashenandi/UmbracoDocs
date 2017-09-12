@@ -1,7 +1,5 @@
-#Master Template - The Navigation Menu
-
-
-Now let's fix the navigation menu - there are two ways of doing this, you could have Umbraco dynamically create a navigation menu from the pages it has in the Content Tree (*Hint: see the list child pages macro we create later..*), so that when an editor creates a page it automatically appears or, more simply you can hardcode it. We're going to hardcode this for now (it's a good idea as you start building a site to hard code this so you can move around testing before you replace this) and we'll leave it to you as an exercise to do this later. Edit your **_Master template_** - edit the `<li>` items under the `<nav>` tags to say:
+# 主模板 - 导航菜单
+现在让我们处理导航菜单 - 有两个方法做这件事，你可以使用Umbraco内容树中的页面动态创建导航菜单（*提示: 子页面列表宏我们将在后面介绍..*），因此当编辑者创建页面时它会自动呈现出来，更简单的方式是你可以使用硬编码来实现它。我们现在先使用硬编码（在你开始建立一个网站时，硬编码会是一个好方法，你可以在替换它们之前，任意修改它们进行测试），我们会把它留给您作为稍后的练习。编辑**_Master template_** - 编辑`<nav>`标签下一级的`<li>`条目，改为：
 	
 	<nav>
 		<ul>
@@ -11,11 +9,10 @@ Now let's fix the navigation menu - there are two ways of doing this, you could 
 		</ul>
 	</nav>
 
-*Figure 34 - Master Template - Menu / Nav Section*
+*图 34 - 主模板 - 菜单 / 导航 部分*
 
-
-**_Save_** your changes and let's test our menu. You'll find that clicking on the Article link throws an Umbraco error as we've not created this page yet. Let's do that now.
+**_Save_**你的改变然后来测试这个菜单。你会发现点击Article链接时，会出现一个 Umbraco 错误，这是因为我们还没有创建这个页面。现在我们来做这些。
 
 ---
-##Next - [Articles Parent and Article Items](Articles-Parent-and-Article-Items.md)
-How to have a parent page that lists and links to the child nodes automatically (e.g. Articles home with infinite articles - useful for Blogs or News pages). 
+##下一步 - [文章父级和文章条目](Articles-Parent-and-Article-Items.md)
+如何获取列表的父级页面和自动链接到子节点（例如：一个文章列表页面包含一定数量的文章 - 常用于博客或者新闻页面）。 
