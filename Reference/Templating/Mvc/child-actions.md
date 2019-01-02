@@ -1,18 +1,17 @@
-#Using MVC Child Actions in Umbraco
+#在 Umbraco 中使用MVC子Action
 
-_This section will demonstrate how to use MVC Child Actions when rendering a page in Umbraco_ 
+_这部分会说明在 Umbraco 中输出页面时如何使用 MVC 子方法_
 
-##What is an MVC Child Action?
+## 什么是 MVC 子Action？
 
-A Child Action in ASP.Net MVC is kind of similar to that of a User Control in ASP.Net web forms. It allows for a controller to execute for a portion of the rendered area of a view, just like in Web Forms where you can execute a UserControl for a portion of the rendered area of a page.
+ASP.NET MVC中的子Action与ASP .NET Web Forms中的用户控件类似。它允许控制器为了视图的局部输出而执行，就像在 Web Forms 中 你可以执行 UserControler 用于局部输出。
 
-There is quite a lot of documentation on MVC Child Actions on the net, for example: http://[stackoverflow.com/questions/8886433/asp-net-mvc-child-actions](http://stackoverflow.com/questions/8886433/asp-net-mvc-child-actions)
+这有一些网上的 MVC 子 Actons 文档：[http://stackoverflow.com/questions/8886433/asp-net-mvc-child-actions](http://stackoverflow.com/questions/8886433/asp-net-mvc-child-actions)
 
-Child Actions can be very powerful especially when you want to have re-usable controller code to execute that you otherwise wouldn't want executing inside of your view. This also makes unit testing this code much easier since you only have to test controller code, not code in a view.
+子 Actions 可以非常强大，尤其是当你想要可重用的控制器代码来执行那些你不想在你的视图中执行的代码。这也使得单元测试更容易，因为您只需要测试控制器代码，而不是视图中的代码。
 
-##Creating a Child Action
-
-This documentation is going to use [SurfaceControllers](surface-controllers.md) to create child actions but if you want to create child actions with your own custom controllers with your own custom routing that will work too. Once you've created a SurfaceController, you just need to create an action (Note the ChildActionOnly attribute, this will ensure that this action is not publicly routable via a URL):
+## 创建子Action
+这个文档会教你使用[SurfaceControllers](surface-controllers.md)来创建子 Action，但是如果你想要创建自定义的控制器和自己自定义的路由，也是可以的。一旦你创建了`SurfaceController`，你只要创建一个 Action（注意ChildActionOnly属性，这保证了这个方法不是一个通过 URl 的公开路由）：
 
 	public class MySearchController : SurfaceController 
 	{
@@ -28,27 +27,25 @@ This documentation is going to use [SurfaceControllers](surface-controllers.md) 
 		}
 	}
 
-*NOTE: In this example we have used a SurfaceController to create the ChildAction and so long as you are using this Child Action in the context of rendering an Umbraco view, you will then have available all of the handy SurfaceController properties such as UmbracoHelper, UmbracoContext, etc...*
+*注意：在这个示例中我们使用了SurfaceController来创建ChildAction，并且你可以在输出 Umbraco 视图的上下文中使用这个子 Action，然后你就可以使用所有SurfaceController属性，例如UmbracoHelper，UmbracoContext等...*
 
-###Action name conflicts
+### Action名称冲突
+MVC 允许你的控制器中有同名的重载 Action，然而在有些时候当提交数据并且输出子 Action 到响应中时，可能会遇到一些问题。如果你同时使用了名为`[HttpPost]`的action 和`[ChildActionOnly]` action时，你需要把你的 `[HttpPost]`方法再增加属性`[NotChildAction]`，这样 MVC 就不会混淆了。
 
-MVC allows you to have the same overloaded action names on your controllers, however in some cases when POST-ing data and rendering a child action in the response, this can cause issues when MVC is trying to determine which action to use. If you have named both an `[HttpPost]` action and a `[ChildActionOnly]` action with the same name you may also need to attribute your `[HttpPost]` action with the attribute `[NotChildAction]` so that MVC doesn't get confused. 
+## 视图位置
+相同的视图位置应用于从子Action返回的部分视图，如此处列出的视图位置：[Partial Views](partial-views.md)
 
-##View Locations
+还要注意的是这个示例中使用了Surface控制器，如果我们是将这个控制器作为包的一部分，那么在`~/App_Plugins`的视图也是可以工作的。具体请浏览[SurfaceControllers](surface-controllers.md) 文档*基于插件的控制器*标题下面的内容。
 
-The same view locations apply to Partial Views returned from Child Actions as the ones listed here: [Partial Views](partial-views.md)
-
-Also note that since this example is using a Surface Controller and if we were shipping this controller as part of a package, then the ~/App_Plugins view location will work too. See  [SurfaceControllers](surface-controllers.md) documentation under the heading *Plugin based controllers*.
-
-##Rendering a Child Action
-To render a child action in your view is really easy, call the Html.Action method, pass in the Action name and your controller's name and the route values including your model. In this case we are passing in a new instance of a custom QueryParameters class and using a current 'search' query string from the Http request:
+## 输出子Action
+在你的视图中输出子 Action 是非常简单的，调用Html.Action方法，通过输入 Action 名和你的控制器名，以及包含路由值的模型。在这里例子中，我们通过一个新的自定义QueryParameters类的实例，并且使用了从 Http 请求中获取的自定义'search'查询字符串：
 
 	@Html.Action("SearchResults", "MySearch", 
 		new { query = new QueryParameters(Request.QueryString["search"]) })
 
-*NOTE: notice that we are creating an anonymous object with a property called 'query', that is because our Child Action method accepts a parameter called 'query', these must match in order to work.*
+*注意：注意我们创建了一个匿名对象，包含属性为'query'，那事因为我们的子 Action 方法接受一个名为'query'的参数，为了正常运行它们必须保持一致。*
 
-This syntax becomes slightly different for Child Actions contained in Surface Controllers that are plugin based. The reason for this is because plugin based Surface Controllers are routed to an MVC Area, so we need to add the 'area' route parameter to this syntax. For an example, suppose we have the same class but it is marked to be a plugin based SurfaceController:
+这种语法在基于插件的Surface控制器中包含的子Action略有不同。原因在于基于插件的 Surface 控制器会路由到 MVA 的 Area，因此我们需要添加'area'路由参数给这个语句。例如，假设我们有相同的类，但是它标记为基于插件的 Surface 控制器：
 
 	[SurfaceController("MyCustomSearchPackage")]
 	public class MySearchController : SurfaceController 
@@ -65,7 +62,7 @@ This syntax becomes slightly different for Child Actions contained in Surface Co
 		}
 	}
 
-Now the syntax to render a Child Action becomes:
+现在输出子 Action 的语法变为：
 
 	@Html.Action("SearchResults", "MySearch", 
 		new {
@@ -73,6 +70,6 @@ Now the syntax to render a Child Action becomes:
 			query = new QueryParameters(Request.QueryString["search"]) 
 		})
 
-the only thing that is changed is that we've told it to route to the 'area' called "MyCustomSearchPackage". If this syntax seems strange to you please note that this routing logic and syntax is standard and very common practice in ASP.Net MVC.
+唯一的改变是我们告诉它路由到叫做'MyCustomSearchPackage'的'area'。如果这个语法你看着很奇怪，请注意这个路由逻辑和语法是ASP.NET中的标准和非常常见的实践用法。
 
-More documentation regarding Child Actions and how to render them can be found on the net, a nice write up can also be found here: [http://haacked.com/archive/2009/11/18/aspnetmvc2-render-action.aspx](http://haacked.com/archive/2009/11/18/aspnetmvc2-render-action.aspx)
+更多关于子Action的文档以及如何呈现它们，可以在网上找到，也可以在这里找到一个很好的说明：[http://haacked.com/archive/2009/11/18/aspnetmvc2-render-action.aspx](http://haacked.com/archive/2009/11/18/aspnetmvc2-render-action.aspx)

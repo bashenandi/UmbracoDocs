@@ -1,16 +1,16 @@
-#View/Razor Examples
+# 视图/Razor 示例
 
-_Lots of examples of using various techniques to render data in a view_ 
+_在视图中使用各种技术呈现数据的一些例子_ 
 
-##Rendering a field with UmbracoHelper
+## 使用UmbracoHelper输出字段
 
 	@Umbraco.Field("bodyContent")
 
-##Rendering a field with UmbracoHelper with optional parameters
+## 使用UmbracoHelper可选参数输出字段
 
 	@Umbraco.Field("bodyContent", insertBefore : "<h2>", insertAfter : "</h2>")
 
-##Rendering the raw value of a field from IPublishedContent
+## 从IPublishedContent 中输出字段原始值
 
 	@Model.Content.Properties["bodyContent"].Value
 
@@ -18,28 +18,28 @@ Or alternatively:
 
 	@Model.Content.GetPropertyValue("bodyContent")
 
-##Rendering the converted value of a field from IPublishedContent
+## 从IPublishedContent 中输出字段转换值
 
  	@Model.Content.GetPropertyValue<double>("amount")
 	@Model.Content.GetPropertyValue<RawXElement>("xmlContents")
 
-##Rendering a field using @CurrentPage (dynamically)
+## 使用@CurrentPage输出字段(动态语句)
 
 	@CurrentPage.bodyContent
 
-##Rendering a macro
+## 输出宏
 
 	@Umbraco.RenderMacro("myMacroAlias")
 
-##Rendering a macro with parameters using an anonymous object
+## 输出带匿名对象参数的宏
 
 	@Umbraco.RenderMacro("myMacroAlias", new { name = "Ned", age = 28 })
 
-##Rendering a macro with parameters using a dictionary
+## 输出带字典对象参数的宏
 
 	@Umbraco.RenderMacro("myMacroAlias", new Dictionary<string, object> {{ "name", "Ned"}, { "age", 27}})
 
-##Rendering some member data
+## 输出一些会员数据
 
 	@if(Members.IsLoggedIn()){
 	   var profile = Members.GetCurrentMemberProfileModel();

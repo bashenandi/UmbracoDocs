@@ -1,27 +1,25 @@
-#Macros
+# 宏
 
-_Describes how to set up a macro, use macro parameters & configuring caching. Defines the different types of macros and provides details on the different macro engine APIs and their usage_
+_描述了如何设置宏，使用宏参数以及配置缓存。定义不同类型的宏以及提供不同的宏引擎的 APIs 和它们的用法_
 
-##What is a macro?
+## 什么是宏?
+宏是可以在你整站重用的可重用功能块。宏可以使用参数配置，并且可以插入到富文本编辑器中。你可以定义对于你的富文本编辑器哪些宏是可用的。当编辑者插入宏到富文本编辑器时，它会提示你要输入任何给宏定义的参数。
 
-A macro is a reusable piece of functionality that you can re-use throughout your site. Macros can be configured with parameters and be inserted into a Rich Text Editor. You can define what macros are available for your editors to insert in to the rich text editor. When an editor inserts a macro into the rich text editor it will prompt them to fill out any of the defined parameters for the macro.
+## 输出宏
 
-##Rendering Macros
-
-Here's a basic method to render macros:
+这是输出宏的基本方法：
 
 	@Umbraco.RenderMacro("myMacroAlias")
 
-[Overloaded Methods](../Mvc/views.md#renderingMacros)
+[重载方法](../Mvc/views.md#renderingMacros)
 
-##Macro types
+## 宏类别
 
-All macro types will work in either MVC or WebForms templating engines
+所有类别的宏都可以在 MVC 和 WebForms 模板引擎中运行
 
-###[Partial View Macros](Partial-View-Macros/index.md)
+###[局部视图宏](Partial-View-Macros/index.md)
 
-**This is the recommended macro type to use**, it uses the exact same syntax and objects as MVC views.
+**这是推荐使用的宏类别**, 它使用与 MVC 视图完全一样的语法和对象。
 
-###[Xslt macros](Xslt/index.md)
-
-Information, examples and best practices according to readability and performance in your XSLT/XPath snippets.
+###[Xslt 宏](Xslt/index.md)
+促使 XSLT/XPath 片段易读更高的性能相关的信息、示例和最佳实践。

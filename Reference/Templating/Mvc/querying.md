@@ -1,28 +1,27 @@
-#Querying & Traversal
+# 查询和遍历
 
-_This section will describe how you can render content from other nodes besides the current page in your MVC Views_
+_这个部分会描述如何在你的 MVC 视图中输出不是当前页面的其他节点的内容_
 
-##Querying for content and media by id
-
-The easiest way to get some content by Id is to use the following syntax (where 1234 is the content id you'd like to query for):
+## 通过id 查询内容和媒体
+通过 Id 查询内容的简单使用方法，如下面的语句（假设1234是你想要查询的内容的 id）：
 	
-	//to return the strongly typed (Umbraco.Core.Models.IPublishedContent) object
+	//返回强类型(Umbraco.Core.Models.IPublishedContent)的对象：
 	@Umbraco.TypedContent(1234)
 
-	//to return the dynamic representation:	
+	//返回动态表述:	
 	@Umbraco.Content(1234) 	
 
-You can also query for multiple content items using multiple ids:
+你还可以使用多个 id 查询多个内容：
 
-	//to return the strongly typed (IEnumerable<Umbraco.Core.Models.IPublishedContent>) collection
+	//返回强类型(IEnumerable<Umbraco.Core.Models.IPublishedContent>)的集合
 	@Umbraco.TypedContent(1234, 4321, 1111, 2222)
 
-	//to return the dynamic representation:	
+	//返回动态表述:	
 	@Umbraco.Content(1234, 4321, 1111, 2222)
 
-This syntax will support an unlimited number of Ids passed to the method. 
+这个语句支持通过方法查询不限数量的 id。
 
-The same query structures apply to media:
+同样的查询结构也适用于媒体：
 
 	@Umbraco.TypedMedia(9999)
 	@Umbraco.TypedMedia(9999,8888,7777)
@@ -30,11 +29,10 @@ The same query structures apply to media:
 	@Umbraco.Media(9999,8888,7777)	
 
 
-##Traversing
+## 遍历
+所有这些扩展方法都是`Umbraco.Core.Models.IPublishedContent`可用的，因此你可以同时在内容和媒体的强类型对象通过智能提示来操作它们。另外，所有这些方法都试用于动态模型表述。下面的方法都返回`IEnumerable<IPublishedContent>`（如果使用@CurrentPage时返回动态示例）
 
-All of these extension methods are available on `Umbraco.Core.Models.IPublishedContent` so you can have strongly typed access to all of them with intellisense for both content and media. Additionally, all of these methods are available for the dynamic model representation too. The following methods return `IEnumerable<IPublishedContent>` (or dynamic if you are using @CurrentPage)
-
-	Children() //this is the same as using the Children property on the content item.
+	Children() //这个使用内容条目的Children 属性是一样的。
 	Ancestors()
 	Ancestors(int level)
 	Ancestors(string nodeTypeAlias)
@@ -48,8 +46,7 @@ All of these extension methods are available on `Umbraco.Core.Models.IPublishedC
 	DescendantsOrSelf(int level)
 	DescendantsOrSelf(string nodeTypeAlias)
 	
-
-Additionally there are other methods that will return a single `IPublishedContent` (or dynamic if you are using @CurrentPage) 
+另外还有其他一些方法会返回单个`IPublishedContent`（如果使用@CurrentPage时返回动态示例）
 
 	AncestorOrSelf()
 	AncestorOrSelf(int level)
@@ -70,42 +67,41 @@ Additionally there are other methods that will return a single `IPublishedConten
 	Sibling(int number)
 	Sibling(string nodeTypeAlias)
 
-##Complex querying (Where)
+## 复杂查询 (条件)
+对于`IPublishedContent`模型我们支持开箱即用的强类型 Linq 查询，因此你也可以使用智能提示。我们还支持所有的动态查询操作 Razor 宏，然而在极少数情况下同样的语句不被支持。在某些情况下，动态查询可能较少，而在某些情况下，强类型的输入可能较少，所以最终您将根据你的需要来使用，并且您可以将两者混合。
 
-With the `IPublishedContent` model we support strongly typed Linq queries out of the box so you will have intellisense for that too. We also still support all of the dynamic query access that was supported for razor macros, however in some very minor cases the same syntax may not be supported. In some cases the dynamic queries may be less to type and in some cases the strongly typed way might be less to type so it will ultimately be your preference for what you use and you can most definitely inter-mingle the two.
+###一些示例
 
-###Some examples
+#### 子内容是可见的
 
-####Where children are visible
-
-	//dynamic access
+	//动态操作
 	@CurrentPage.Children.Where("Visible")
 	
-	//strongly typed access
+	//强类型操作
 	@Model.Content.Children.Where(x => x.IsVisible())
 
-####Traverse for sitemap
+#### 遍历网站地图
 
-	//dynamic access
+	//动态操作
 	var values = new Dictionary<string,object>();
 	values.Add("maxLevelForSitemap", 4);
 	var items = @CurrentPage.Children.Where("Visible && Level <= maxLevelForSitemap", values);
 
-	//strongly typed access
+	//强类型操作
 	var items = @Model.Content.Children.Where(x => x.IsVisible() && x.Level <= 4)
 
-####Content sub menu
+#### 内容子菜单
 
-	//dynamic access
-	//NOTE: you can also use NodeTypeAlias but is recommended to use DocumentTypeAlias
+	//动态操作
+	//注意: 你还可以使用NodeTypeAlias ，但是推荐使用DocumentTypeAlias 
 	@CurrentPage.AncestorOrSelf(1).Children.Where("DocumentTypeAlias == \"DatatypesFolder\"").First().Children
 	
-	//strongly typed
+	//强类型
 	@Model.Content.AncestorOrSelf(1).Children.Where(x => x.DocumentTypeAlias == "DatatypesFolder").First().Children
 
-####Complex query
+#### 复杂查询
 
-Some complex queries cannot be written dynamically because the dynamic query parser may not understand precisely what you are coding. There are many edge cases where this occurs and for each one the parser will need to be updated to understand such an edge case. This is one reason why strongly typed querying is much better.
+有些复杂查询不能写为动态语句，因为动态查询分析器可能无法精确理解你的代码。这就是为什么强类型查询更好的一个原因。
 
 	//This example gets the top level ancestor for the current node, and then gets 
 	//the first node found that contains "1173" in the array of comma delimited 

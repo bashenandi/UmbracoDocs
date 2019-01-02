@@ -1,16 +1,15 @@
-#Creating Html Forms
+#创建 HTML 表单
 
-_Creating an HTML form to submit data with MVC in Umbraco is very easy! You'll need to create a SurfaceController, a 'View Model' class and use a handy HtmlHelper extension method called BeginUmbracoForm._
+_创建一个 HTML 表单用来提交数据到 Umbraco 是非常简单的！你只需要创建一个 SurfaceController，一个'View Model'类再使用一个方便的叫BeginUmbracoForm的HtmlHelper 扩展方法_
 
-##Quick links - MVC form tutorials
+## 快速链接 - MVC 表单教程
 
-* [Creating an MVC form using a Partial View](Forms/tutorial-partial-views.md)
-* [Creating an MVC form using a Child Action](Forms/tutorial-child-action.md)
-* [Creating an MVC form with custom html markup](Forms/tutorial-custom-markup.md)
+* [使用局部视图创建 MVC 表单](Forms/tutorial-partial-views.md)
+* [使用子 Action 创建 MVC 表单](Forms/tutorial-child-action.md)
+* [使用自定义html 标记创建 MVC 表单](Forms/tutorial-custom-markup.md)
 
-##Creating a form - The View Model
-
-First off we need to define the data that will be submitted, this is done by creating a 'View Model' class. Here's an example:
+## 创建表单 - View Model
+首先我们需要定义要提交的数据，这通过创建一个'Voew Model'类来完成。这是一个示例：
 	
 	public class CommentViewModel
 	{
@@ -24,28 +23,25 @@ First off we need to define the data that will be submitted, this is done by cre
 	    [Display(Name = "Enter a comment")]
 	    public string Comment { get; set; }
 	}
+这个类定义的数据是要提交的数据，还定义了哪些数据是必填的，MVC 会自动实现这些验证属性，前端验证 JS 也会自动执行。
 
-This class defines the data that will be submitted and also defines how the data will be validated upon submission and conveniently for us MVC automatically wires up these validation attributes with the front-end so JavaScript validation will automagically occur.
+## 创建 SurfaceController Action
 
-##Creating the SurfaceController Action
-
-Next up, we need to create an Action on a SurfaceController which accepts our submitted View Model. Here's an example (this is a locally declared controller):
+下一步，我们需要在SurfaceController中创建一个 Action用来接收我们提交的视图数据。这有一个示例（这是本地定义的控制器）：
 
 	public class BlogPostSurfaceController : Umbraco.Web.Mvc.SurfaceController
 	{
 		[HttpPost]
 		public ActionResult CreateComment(CommentViewModel model)
 		{    
-		    //model not valid, do not save, but return current Umbraco page
+		    //模型未验证，不会保存，但是会返回到当前的 Umbraco 页面
 		    if (!ModelState.IsValid)
 			{
-				//Perhaps you might want to add a custom message to the ViewBag
-				//which will be available on the View when it renders (since we're not 
-				//redirecting)	    	
+				//可能你想添加些自定义数据在 ViewBag 中
 		   		return CurrentUmbracoPage();
 			}
 		
-		    //if validation passes perform whatever logic
+		    //如果验证通过执行一些逻辑
 		    //In this sample we keep it empty, but try setting a breakpoint to see what is posted here
 			
 			//Perhaps you might want to store some data in TempData which will be available 
@@ -53,17 +49,16 @@ Next up, we need to create an Action on a SurfaceController which accepts our su
 			//successful' message on the View, for example:
 			TempData.Add("CustomMessage", "Your form was successfully submitted at " + DateTime.Now)
 		
-		    //redirect to current page to clear the form
+		    //跳转到当前页面并清空数据
 		    return RedirectToCurrentUmbracoPage();
 		
-		    //Or redirect to specific page
+		    //或者跳转到指定页面
 		    //return RedirectToUmbracoPage(12345)
 		}
 	}
 
-##Using BeginUmbracoForm
-
-Lastly we need to render the HTML form to ensure that it posts to the surface controller created. The easiest way to do this is to create a separate PartialView to render your form with the model type declared as your ViewModel. There's a few overloads for the BeginUmbracoForm method, we'll start with the simplest one:
+##使用 BeginUmbracoForm
+最后我们需要输出 HTML 表单来保证它们提交到 surface 控制器。最简单的方法是创建一个局部视图用来输出你的表单，并且将模型数据声明为你ViewModel。这里有一些重写的BeginUmbracoForm方法，我们只从最简单的一个开始：
 
 	@model CommentViewModel
 
@@ -73,21 +68,21 @@ Lastly we need to render the HTML form to ensure that it posts to the surface co
 		<input type="submit"/>
 	}
 
-The above code snippet is a PartialView to render the form. Because the Model for the view is the ViewModel we want to scaffold the form, we can just do an `@Html.EditorFor(x => Model)` to automatically create all of the input fields.
+上面的代码片段是用于输出表单的局部视图。由于视图的模型就是我们想要承载的ViewModel，我们可以使用`@Html.EditorFor(x => Model)`来自动建立所有的输入字段。
 
-####BeginUmbracoForm Overloads
+####BeginUmbracoForm 重载
 
-This lists the different overloads available for BeginUmbracoForm:
+这是BeginUmbracoForm可用的不同重载：
 
-	//as seen in the above example
+	//与上面的示例一样
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName)
 	
-	//The next three are the same as above but allow you to specify additional route values and/or html attributes for the form tag	
+	//接下来的三个类似于上面，但是允许你指定额外的路由值以及form 标签的 html 属性
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals)
-	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals, object htmlAttributes)	
+	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals, object htmlAttributes)
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals, IDictionary<string, object> htmlAttributes)
 	
-	//Allows you to specify the action name and controller type either by a generic type or type object:
+	//允许你指定 action 名字以及控制器类型：
 	BeginUmbracoForm(this HtmlHelper html, string action, Type surfaceType)
 	BeginUmbracoForm<T>(this HtmlHelper html, string action)
 	BeginUmbracoForm(this HtmlHelper html, string action, Type surfaceType, object additionalRouteVals)
@@ -97,48 +92,46 @@ This lists the different overloads available for BeginUmbracoForm:
 	BeginUmbracoForm(this HtmlHelper html, string action, Type surfaceType, object additionalRouteVals, IDictionary<string, object> htmlAttributes)
 	BeginUmbracoForm<T>(this HtmlHelper html, string action, object additionalRouteVals, IDictionary<string, object> htmlAttributes)
 	
-	//The following are only used for plugin based surface controllers. If you don't want to specify
-	//the controller type, you can specify the area that the plugin SurfaceController is routed to
+	//接下来的仅适用于基于插件的 surface 控制器。如果你不想指定控制器类型，你可以指定area，插件会寻找匹配的SurfaceController
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, string area)
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, string area, object additionalRouteVals, IDictionary<string, object> htmlAttributes)
 
-##Understanding the Routing Process
+## 理解路由处理
+很多人都尝试从他们的[HttpPost]action 中直接返回局部视图，是由于没有充分理解路由上传数据到服务器的过程。这里将解释事件的顺序。 这里例子中我们假设这个页面输出的地址是：http://mysite.com/feedback
 
-There's been numerous cases of people attempting to return a PartialView directly from their [HttpPost] action due to not fully understanding the routing process of POSTing data to the server. This will explain the sequence of events. For this example we'll assume that the page that is rendering is at the address: http://mysite.com/feedback
+### 1. Umbraco 页面请求
 
-### 1. Umbraco page requested
+1. 用户浏览页面 http://mysite.com/feedback
+2. Umbraco 找到这个内容页面
 
-1. A user visits the page http://mysite.com/feedback
-2. Umbraco finds this content page
+### 2. Umbraco 页面输出
+1. RenderMvcController 为当前页面执行请求
+2. MVC 视图会输出它包含的局部视图，局部视图会通过`BeginUmbracoForm`来创建 html 表单
 
-### 2. Umbraco page rendered
-1. The RenderMvcController executes the request for the current page
-2. An MVC view is rendered which contains a partial view with an html form created with `BeginUmbracoForm`
+### 3. 用户提交表单
 
-### 3. User submits the form
-
-1. The user fills out the form and submits it
-2. An http POST is made (you'll notice to the same URL that is currently rendering: http://mysite.com/feedback)
-3. Umbraco finds the content page
-4. Umbraco detects that a POST has been made
-5. Umbraco decrypts a special hidden value injected into the POST by the BeginUmbracoForm
-6. Using this decrypted data it routes the request directly to the SurfaceController's [HttpPost] action
-7. The [HttpPost] action executes returning "CurrentUmbracoPage()" if the data is invalid or "RedirectToCurrentUmbracoPage()" if the data is valid...
+1. 用户填写表单并提交
+2. 生成 http 的 POST 请求 (你要注意到和当前输出一样的 URL 地址: http://mysite.com/feedback)
+3. Umbraco 找到内容页面
+4. Umbraco 检测到 POST 请求被创建
+5. Umbraco 通过BeginUmbracoForm 加密特定的隐藏值注入到 POST 中
+6. 使用这个加密值路由到请求指定SurfaceController's 的action 
+7. [HttpPost] action如果未验证返回"CurrentUmbracoPage()"，如果验证则返回"RedirectToCurrentUmbracoPage()"...
 
 	#### 3.1 RedirectToCurrentUmbracoPage()
 	
-	1. The request is completely redirected, the process starts back over again at **1. Umbraco page requested**
+	1. 请求完全重定向, **1. Umbraco 页面请求**这个过程又开始了
 
 	#### 3.2 CurrentUmbracoPage()
 
-	1. Since the request is not valid any model errors will be automatically added to the ModelState dictionary. You can also manually add any errors to the ModelState dictionary.
-	2. The call to `return CurrentUmbracoPage()` sends the request back through the Umbraco pipeline and maintains the current ModelState and ViewData
-	3. The process starts again at **2. Umbraco page rendered**
+	1. 如果请求有任何模型数据验证错误，都会自动添加到ModelState 字典。你还可以手工添加任何错误到ModelState 字典。
+	2. 调用`return CurrentUmbracoPage()`通过 Umbraco 管道发送请求回执并且保持当前的ModelState和 ViewData 。
+	3. **2. Umbraco 页面输出**这个过程又开始了
 
-So you can see that if you returned a Partial View from within your [HttpPost] action, the only thing that would happen is that you'd end up displaying only the markup for the partial view to the end-user because you are not sending the request back to Umraco.
+因此你可以看到如果你从您的[HttpPost]action 内部返回局部视图，唯一发生的事情就是最终只会显示局部视图的标记给你的终端用户，因为你没有发送请求到 Umbraco。
 
-##Display success messages
+## 显示成功信息
 
-Displaying a success message is easy. You can either send the user to a totally different page. For example you could use `return RedirectToUmbracoPage(nodeId)`. This page would typically be a child of the page where the form is located in, which is hidden in the navigation.
+显示一条成功信息是简单的。你可以将用户定向到完全不同的页面。例如，你可以使用`return RedirectToUmbracoPage(nodeId)`。此页通常是窗体所在的页的子项，该页在导航中是隐藏的。
 
-The other way is to add a message or something to the TempData. For example you could use `TempData.Add("Success", "your form was successfully submitted");` in your SurfaceController action, and then display the message using `@TempData["Success"]` in the page where the form is located in. 
+其他的方法是添加信息或其他什么到 TempData。例如你可以在 SurfaceController 的 action 中使用`TempData.Add("Success", "your form was successfully submitted");`，然后通过`@TempData["Success"]`将信息显示在表单定位的页面中。

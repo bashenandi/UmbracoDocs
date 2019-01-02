@@ -1,42 +1,40 @@
-#Partial View Macros
+# 局部视图宏
 
-_Partial view macros are the recommended macro type to use in Umbraco. They work in both MVC and Webforms and use the unified query syntax that is available via the `UmbracoHelper`_
+_局部视图宏是推荐在 Umbraco 中使用的宏类别。它们可以运行在 MVC 和 WebForms 中，通过`UmbracoHelper`使用统一的查询语法_
 
-## View/Model Type
+## 视图/模型 类型
 
-All partial view macro views inherit from `Umbraco.Web.Macros.PartialViewMacroPage` and as such, the header of each partial view macro file will have this syntax:
+所有的局部视图宏的视图都继承自`Umbraco.Web.Macros.PartialViewMacroPage`，因此每个局部视图宏文件的头部都有下面的语句：
 
 	@inherits Umbraco.Web.Macros.PartialViewMacroPage
-	
-The model type for a partial view macro is `Umbraco.Web.Models.PartialViewMacroModel` which contains all of the properties you will need to
-render out content as well as some additional properties about the macro itself: `MacroName`, `MacroAlias`, `MacroId`, and `MacroParameters`. 
+局部视图宏的模型类型是`Umbraco.Web.Models.PartialViewMacroModel`，包含所有你会需要的用来输出内容的属性以及宏文件自身的附加属性：`MacroName`, `MacroAlias`, `MacroId`, 以及 `MacroParameters`。
 
-##File information
+## 文件信息
 
-By default Partial View Macros are stored in this folder: 
+默认情况局部视图宏存储在这个文件夹：
 
 > ~/Views/MacroPartials 
 
-However if you are bundling up Partial View Macros as part of a package, they can also exist in this folder:
+如果你是作为包的一部分捆绑了局部视图宏，他们也能存在于下面文件夹：
 
 > ~/App_Plugins/[YourPackageName]/Views/MacroPartials
 
-Since Partial View Macros are just a normal MVC partial view, their file extension is **cshtml**. All Partial View Macro views inherit from the view class
+其实局部视图宏也只是一个正常的 MVC 局部视图，它们的文件扩展名都是**cshtml**。所有的局部视图宏都继承自视图类
 
 	Umbraco.Web.Macros.PartialViewMacroPage
 
-Therefore all files will contain this header (which is done automatically for you if creating Partial View Macros via the Umbraco back office):
+因此所有文件都会包含这个头（当你在 Umbraco 后台中创建局部视图宏时会自动完成）：
 
 	@inherits Umbraco.Web.Macros.PartialViewMacroPage
 
-## Accessing content
+## 访问内容
 
-The syntax in Partial View Macros is 100% on par with the **[MVC View](../../Mvc/views.md)** syntax, in fact they are driven by the exact same engine as MVC Views.
+局部视图宏中的语句100%和**[MVC 视图](../../Mvc/views.md)中的语句一致，事实上它们都是通过 MVC 视图引擎驱动的。
 
-You can use @CurrentPage, @Model.Content, @Umbraco, ...
+你可以使用@CurrentPage, @Model.Content, @Umbraco，等等
 
-## Accessing macro parameters
+## 访问宏参数
 
-You can access the macro's parameters using the `MacroParameters` property on the model which is of type `IDictionary<string, object>`
+你可以通过模型属性中类型为`IDictionary<string, object>`的`MacroParameters`来操作宏的参数
 
     var myParam = Model.MacroParameters["aliasOfTheMacroParameter"];

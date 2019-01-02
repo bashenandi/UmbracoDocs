@@ -1,40 +1,30 @@
-# Common Pitfalls & Anti-Patterns
+# 常见陷阱与反模式
 
-_This section is ultra important! It will describe many common pitfalls that developers fall in to. 
-Some of the anti-patterns mentioned here can bring your site to a grinding halt, cause memory leaks, or just make your site unstable or perform poorly.
-Make sure you read this section - it might just save your site!_
+_这部分格外重要！它描述了开发人员容易陷入的许多的常见陷阱。
+这里提到的一些反模式会使你的站点停止，内存泄漏，运行不稳定或者性能下降。
+确保你阅读了这个部分 - 它可能会挽救你的网站！_
 
-## Usage of Singletons and Statics
+## 使用单例模式和静态对象
+一般来说如果你编写软件已经一段时间，你应该会使用到依赖注入规则。
+如果你这么做了，你可能不再使用单例模式和静态对象（多数时候也不必这么做！），由于 Umbraco 自身并不是一个可以开箱使用的IoC容器，你可以会用 Umbraco 构建一些单例单例访问器，例如：`ApplicationContext.Current`和`UmbracoContext.Current`。在多数时候，你不该使用这些单例操作器，它会使你的代码难于测试，而更加重要的是使用单例模式和静态对象会使你的代码难于管理，APIs 会容易泄露最终你会遇到比开始时更多的问题。
 
-Generally speaking if you are writing software these days you should be using Dependency Injection principles. 
-If you do this, you probably aren't using Singletons or Statics (and for the most part you shouldn't be!), 
-however since Umbraco itself is not built with an IoC container to use out of the box you may find yourself 
-using Umbraco's built in Singleton accessors like: 
-`ApplicationContext.Current` or `UmbracoContext.Current`. In most cases you shouldn't be using these Singleton accessors, 
-it makes your code very difficult to test but more importantly using Singletons and Statics in your code make it very hard 
-to manage, APIs become leaky and ultimately you'll end up with more problems than when you started.
+在所有你平常使用的基于 Umbraco 的类中，有些对象已经作为属性暴露，所以请使用它们来替换！
+例如，所有 Umbraco 创建的Razor 视图，都会将UmbracoContext暴露为一个`UmbracoContext `属性，它们暴露`ApplicationContext `属性指向 Umbraco 的ApplicationContext。在其他基类中也会暴露所有你需要的实例，例如：`SurfaceController`,
+`UmbracoApiController`, `UmbracoController`, `RenderMvcController`, `UmbracoUserControl`, `UmbracoPage`, `UmbracoHttpHandler`，这个支持列表还会添加
 
-In all Umbraco base classes that you'll normally use, these object are already exposed as properties, so please use these instead!
-For example, all Razor views that Umbraco creates expose an `UmbracoContext` property which is the UmbracoContext, they expose an `ApplicationContext` 
-property which is Umbraco's `ApplicationContext`. The other base classes that expose all the instances you need are things like `SurfaceController`,
-`UmbracoApiController`, `UmbracoController`, `RenderMvcController`, `UmbracoUserControl`, `UmbracoPage`, `UmbracoHttpHandler`, and the list goes on...
+__用基类属性替代单例访问器的示例：__
 
-__Example of using base class properties instead of Singleton accessors:__
+_这个示例展示了在`SurfaceController`中不依赖单实例来操作所有Umbraco 服务。这些类似的属性存在于所有你常用的 Umbraco 的基类中，包括 Razor 视图。_
 
-_This example shows how you can access all sorts of Umbraco services in a `SurfaceController` without
-relying on Singletons. These same properties exist on all of Umbraco's base clases that you commonly use
-including razor views._ 
-
-
-    public class ContactFormSurfaceController: SurfaceController
+	 public class ContactFormSurfaceController: SurfaceController
     {
         [HttpPost]
         public ActionResult SubmitForm(ContactFormModel model)
         {        
-            //TODO: All normal form processing logic is left out of this example for brevity
+            //TODO: 正常的表单逻辑处理代码放在这里
 
-            //You can access all of these because they are properties of the base class,
-            // notice there is no Singleton accessors used!
+            // 你可以操作所用的，因为它们是基类的属性,
+            // 注意这里没有单例模式操作!
 
             //ProfilingLogger:
             using (ProfilingLogger.TraceDuration<ContactFormSurfaceController>("start", "stop"))
@@ -60,57 +50,47 @@ including razor views._
         }
     }
 
-So next time you are using `ApplicationContext.Current` or `UmbracoContext.Current` think "Why am I doing this?", 
-"Is this already exposed as a property of the base class that I'm using?", "I'm using Dependency Injection, I should be injecting this instance into my class."
+所以当你下一次使用`ApplicationContext.Current` 或者 `UmbracoContext.Current`时思考一下"我为什么这么做？"，
+"这是否已经作为我使用的基类的属性公开了？"，"我是使用了依赖注入，我应该注入这些示例到我的类中。"
 
 
+##  web 请求实例静态引用 (例如 `UmbracoHelper`)
 
-## Static references to web request instances (such as `UmbracoHelper`)
-
-__Example 1:__
+__示例 1:__
 
 `private static _umbracoHelper = new UmbracoHelper(UmbracoContext.Current);`
 
-This practice can cause memory leaks along with inconsistent data results when using this `_umbracoHelper` instance. 
+这个实例在使用`_umbracoHelper`实例操作不一致的数据结果，会发生内存持续泄露的问题。
 
-__Why?__
+__为什么?__
+理解基于请求的生命周期的对象和基于应用程序的生命周期的对象之间的区别是非常重要的……
+这里是一些要点：
 
-It's important to understand the difference between an object that has a Request based scope/lifespan and 
-an object that has an Application based scope/lifespan ... here's the gist:
+* Application 范围 - 如果一个对象是应用程序范围/生命周期的，意味着这个单独的对象实例会存在于整个应用程序的生命周期。这个单独的实例会在每个操作它的线程之间共享。静态变量一直是应用程序范围/生命周期的。
 
-* Application scope - if an object has an Application scope/lifespan, that means that this single object
-instance will exist for the lifetime of the application. The single instance will be shared by every thread that
-accesses it. Static variables will always be Appplication scope/lifespan.
-* Request scope - The web world is made up of requests and each request is it's own thread. When an object is has a Request scope
-it only survives as long as the web request survives, at the end of the web request, it may either be disposed or cleared from memory
-by the garbage collector. Request scoped object instances are not accessed by every other thread in the application - __unless you do something like the above!__
+* Request 范围 - 网络世界是由请求组成的，每个请求都是它自己的线程。当一个对象是请求范围/生命周期的，网络请求存活它也就能存活，在网络请求结束后，它会通过垃圾回收机制从内存中销毁或清理。请求范围对象实例，不能在应用程序的其它线程内使用 - __除非你做了类似上面的事__
 
-An example of an application scoped instance is Umbraco's `ApplicationContext`, this single instance is shared by all threads and exists for the lifetime of
-the application. 
+一个应用程序范围实例的示例，是 Umbraco 的`ApplicationContext `，这个单独的实例会存在于应用程序的生命周期内并可以被其他线程使用。
 
-An example of a request scoped instance is the `HttpContext`, this object exists for a single request, it definitely cannot be shared between other threads and especially
-not other request threads because this is where the security information for a given user is stored! The `UmbracoContext` is also a request scoped object - in fact it 
-relies directly on an instance of `HttpContext`. The `UmbracoHelper` is a request scoped object - as you can see above, it requires an instance of an `UmbracoContext`.
+一个请求范围实例的示例，是`HttpContext `，这个对象存在于单个的请求，它的定义不允许它在其他线程尤其是其他请求线程之间共享，因为这是对应用户安全信息存储的！
 
-So... in the above example, the `UmbracoHelper` which relies on an `UmbracoContext` which relies on an `HttpContext` will now be statically assigned to a variable, which means
-that these particular request scoped objects are now bound to an Application scope lifetime and will never go away. This could mean that under certain circumstances that an entire Umbraco
-cache copy is stuck in memory, or that the `Security` property of the context will be accessed by multiple threads but this now contains the security information for a user for another request!
+`UmbracoContext `也是一个请求范围对象 - 实际上它直接依赖于一个`HttpContext `实例。`UmbracoHelper`是一个请求范围对象 - 正如你在上面看到的，它依赖`UmbracoContext `实例。
 
-__Other Examples:__
+因此...在上面的示例中，`UmbracoHelper `依赖于`UmbracoContext `，`UmbracoContext `又依赖于`HttpContext `，因此现在静态赋值给了变量，这意味着这些特殊的请求范围对象现在上升为了应用程序范围生命周期，并且永远不会消失。这还意味着在某些情况下，在内存中的Umbraco缓存备份会卡住，或者那些包含某个用户安全信息的上下文`Security `属性会被多个线程的其他请求所操作！
+
+__其他示例:__
 
     private static _umbracoContext = UmbracoContext.Current;
 
-    //MembershipHelper is also a request scoped instance - it relies either on an UmbracoContext or an HttpContext
+    //MembershipHelper 也是个请求范围实例 - 它依赖于UmbracoContext 或者HttpContext 
     private static _membershipHelper = new MembershipHelper(UmbracoContext.Current);
 
     private static _request = HttpContext.Current.Request;
 
-## Querying with Descendants, DescendantsOrSelf
+## 使用 Descendants 和 DescendantsOrSelf查询
 
-It's not 100% bad that you use these queries, you just need to understand the implications. 
-Here's a particularly bad scenario:
-
-You have 10,000 content items in your tree and your tree structure is something like this:
+当你使用这些请求时并不是100%不好的，你只是需要理解它可能引发的后果。这有一些特别不好的状况：
+你有10,000个内容条目在内容树中，你的树结构看起来是这样的：
 
     - Root
     -- Home
@@ -119,7 +99,7 @@ You have 10,000 content items in your tree and your tree structure is something 
     --- About Us
     --- Contact Us
 
-You create a menu on your Home page like:
+你在首页创建了一个菜单，类似于：
 
     <ul>
         <li><a href="@Model.Content.Site().Url">@Model.Content.Site().Name</a></li>
@@ -129,13 +109,11 @@ You create a menu on your Home page like:
         }
     </ul>
 
+只是渲染出： _Home, Blog, Office Locations, About Us, Contact Us_
 
-Which just renders out: _Home, Blog, Office Locations, About Us, Contact Us_
+但是! ...  这是最糟糕的做法。这个操作会去遍历 Umbraco 中每个单独的节点，10,000中的每一个。更进一步，意味着会在内存中分配10,000个`IPublishedContent `实例，用于检查它们的`Level`值。
 
-BUT! ...  this is going to perform most horribly. This is going to iterate over every single node in Umbraco, all 10,000 of them. Further more, 
-this means it is going to allocate 10,000 `IPublishedContent` instances in memory just in order to check it's `Level` value. 
-
-This can easily be re-written as:
+可以这样重写，让其变得简单：
 
     <ul>
         <li><a href="@Model.Content.Site().Url">@Model.Content.Site().Name</a></li>
@@ -145,17 +123,13 @@ This can easily be re-written as:
         }
     </ul>
 
-In many cases you might know that there is only ever going to be a small number of Descendants and if so then go nuts and use Descendants or DescendantsOrSelf, 
-it's just important to be aware of the implications of what you are writing.  
+在许多情况下，你可能知道只有少量的查询结果或者你比较喜欢使用Descendants或DescendantsOrSelf，但是在你编写的时候你要意识到这样做的后果是很重要的。
 
-## Too much querying (Over querying)
+## 太多查询 (重复查询)
+查询内容并不是免费的！当您查询或解析一个属性值时，请注意性能开销。
+您可以尝试将每一个查询看作是一个SQL调用 - 您不会想要太多，否则您网站的性能就会受到影响。
 
-Querying content is not Free! Anytime you make a query or resolve a property value be aware that there is overhead involved. 
-You could try to think about every query you make as an SQL call - you don't want to make too many otherwise the performance of 
-your website is going to suffer.
-
-Here's a common pitfall that is seen. Let's continue the menu example, in this example the menu is going to be rendered
-using the current page's root node::
+这里可以看到一些问题。继续之前的菜单示例，在这个示例中菜单继续使用当前页面节点进行绘制：
 
     <ul>
         <li><a href="@Model.Content.Site().Url">@Model.Content.Site().Name</a></li>
@@ -165,10 +139,7 @@ using the current page's root node::
         }
     </ul>
 
-The syntax `@Model.Content.Site()` is actually shorthand for doing this:
-`Model.Content.AncestorsOrSelf(1)` which means it is going to traverse up the tree until it reaches an ancestor node
-with a level of one. As mentioned above, traversing costs resources and in this example there is 3x traversals being done
-for the same value. Instead this can be rewritten as:
+语法`@Model.Content.Site()`实际上是`Model.Content.AncestorsOrSelf(1)`的短格式，这意味着它不得不向上查询，一直到父级根节点为止。上面提到过，穿越查询成本开销是比较大的，而上例中为同一个值使用了3次。我们替换为下面的代码：
 
     @{
         var site = @Model.Content.Site();
@@ -181,158 +152,119 @@ for the same value. Instead this can be rewritten as:
         }
     </ul>
 
-## Dynamics
+## 动态语句
+在 Umbraco 8+中，移除了操作IPublishedContent动态支持。这里有一些原因：
 
-In Umbraco version 8+ dynamic support for access to IPublishedContent will be removed. 
-There are a few reasons for this:
+* 与强类型相比，动态类型是非常缓慢的
+* 代码基础的动态语句对于维护是困难和繁重的
+* 动态类型中的许多查询概念是很难理解的，而且需要记住所有需要的字符串语法
+* 如果发生错误时，它们的语法是非常难于调试的
+* 在Visual Studio中没有智能感知
+* ModelsBuilder和 Umbraco 核心很重要的一部分，提供了许多友好和健壮类型的操作用于在视图中的属性操作和查询
 
-* Dynamics are much slower than their strongly typed equivalent
-* The codebase for Dynamics is difficult to maintain and it's massive
-* Many querying concepts in Dynamics are difficult to understand and need to be memorize due to all of the string syntax required
-* It is much harder to debug and to know if there are errors since the syntax is not typed or compiled
-* No intellisense is possible inside Visual Studio
-* ModelsBuilder is part of the Umbraco Core and provides much nicer and strongly typed access to property accessors and querying in your views
+你如何知道你是否使用了动态语句？
 
-How do you know if you are using Dynamics?
+* 如果你使用了`@CurrentPage` 那么 __你就是__ 使用了动态语句
+* 如果你使用了UmbracoHelper查询方法，类似于`@Umbraco.Content`或 `@Umbraco.Media`替代了强类型方法`@Umbraco.TypedContent` 和 `@Umbraco.TypedMedia`，那么 __你就是__ 使用了动态语句
 
-* If you are using `@CurrentPage` then __you are__ using dynamics
-* If you are using the UmbracoHelper query methods like `@Umbraco.Content` or `@Umbraco.Media` instead of the typed methods like `@Umbraco.TypedContent` and `@Umbraco.TypedMedia` then __you are__ using dynamics
+强烈建议你在视图中使用强类型的`@Model.Content`替换`@CurrentPage`模型，事实上这会提高性能并且Umbraco 会将其当做查询`IPublishedContent `来向前兼容。
 
-It is strongly advised that you use the strongly typed `@Model.Content` instead of `@CurrentPage` models in your views,  
-this will actually perform much better and you'll be forward compatible with Umbraco v8+ with regards to querying `IPublishedContent`. 
+一个大问题是，当你使用了字符串转换语句类似于：`@CurrentPage.Children.Where("DocumentTypeAlias == \"DatatypesFolder\" && Visible")`当你替换它们时需要编写一些语句来兼容它们。
 
-A large problem with the performance of dynamics is having to parse string syntax such as:
-`@CurrentPage.Children.Where("DocumentTypeAlias == \"DatatypesFolder\" && Visible")` and turn that into something that is compilable when 
-instead it can just be written as something that compiles
+__关于 Query Builder 需要注意的:__ _我们意识到目前后台的模板编辑器中的 Query Builder 使用了动态语句。我们最终将照着这个最佳实践的建议，使用强类型模型（Models Builder）语句替换对话框中的查询逻辑。同时如果你担心性能并拥有大型站点，那么我们建议您使用查询生成器以强类型语法更新其结果。_
 
-__NOTE about the Query Builder:__ _We are aware that the Query Builder in the template editor of the back office currently 
-uses dynamics. We will eventually replace the query logic in this dialog with strongly typed model (Models Builder) syntax to follow
-these best practices. In the meantime if you are concerned about performance and have a large site then we'd recommend if you use the 
-Query Builder to update it's results with strongly typed syntax._
+## 在你的视图中使用服务层
 
-## Using the Services layer in your views
+Umbraco 中的服务层，是用来用于 Umbraco 的业务逻辑直接存取数据库的。这些方法不该在你的视图中使用，可能对应用程序的稳定性和性能有很大的影响。
 
-The Services layer of Umbraco is for manipulating the business logic of Umbraco directly to/from the database. 
-None of these methods should be used within your views and can have a very large impact on performance and stability of 
-your application.
+你的视图应该仅使用只读的数据操作`UmbracoHelper `和它暴露的属性和方法。这将确保数据的查询变得快速（从缓存中）以免你无意中更改数据库中的数据。
 
-Your views should rely only on the readonly data access of the `UmbracoHelper` and the properties/methods that it exposes. This ensures
-that the data being queried is fast (comes from cache) and that you aren't inadvertently making database changes.
+__例如__ 在视图中检索数据:
 
-__For example__ when retrieving a content item in your views:
-
-    //Services access in your views :(
+    //视图中的服务操作 :(
     var dontDoThis = ApplicationContext.Services.ContentService.GetById(123);
 
-    //Content cache access in your views :)
+    //视图中的内容缓存操作 :)
     var doThis = Umbraco.TypedContent(123);
 
-If you are using `Application.Services...` in your views, you should figure out why this is being done and in most cases remove this logic.   
+如果你在视图中使用了`Application.Services...`，你应该弄清楚为什么这么做，而且多数时候你应该删除这些逻辑。
 
-## Using UmbracoContext to access ApplicationContext
+## 使用UmbracoContext来操作ApplicationContext
+你不应该通过`UmbracoContext`来操作`ApplicationContext`。
 
-You should not access the `ApplicationContext` via the `UmbracoContext`. 
+例如 `UmbracoContext.Current.Application` _<-- 现在这是过时的_
 
-For example: `UmbracoContext.Current.Application` _<-- this is now deprecated/obsolete_
+如果你需要操作`UmbracoContext`和`ApplicationContext`，你应该通过下面的一种：
 
-If you need access to both the `UmbracoContext` and the `ApplicationContext`, you should do one of the following:
-
-* Access these services via the properties exposed on the Umbraco base class you are using (i.e. Controllers, views, controls, http handler, etc...)
-* or inject these services into the services you are using 
-* or access each of these services from their own singleton constructs: `UmbracoContext.Current` and `ApplicationContext.Current`.
+* 通过你使用的 Umbraco 基类所暴露的属性来操作这些服务 (例如. Controllers, views, controls, http handler, etc...)
+* 或者注入这些服务类到你使用的服务中 
+* 或者从这些服务自己的单例模式中操作这些服务：`UmbracoContext.Current` 和 `ApplicationContext.Current`。
 
 The reason why this is bad practice is because it has caused confusion and problems in the past. In some cases developers would always
 access the `ApplicationContext` from the `UmbracoContext` but as we now know, this won't always work because the `UmbracoContext` is a request
-scoped instances which isn't going to be available when executing code in a non-request scope (i.e. background thread).
+scoped instances which isn't going to be available when executing code in a non-request scope (i.e. background thread).（懒得翻译了，一个意思，不该通过web 请求级别的生命周期去获取应用程序级别的）
 
-## Using Umbraco content items for volatile data 
+## 为不稳定的数据使用 Umbraco 内容条目 
 
-This is one of the worst Umbraco anti-patterns and could very well cause your site to perform ultra poorly. 
+是一个最坏的Umbraco反模式，很可能导致你的站点性能超低。
 
-Umbraco's content should not be used for volatile data, Umbraco's APIs and the way Umbraco's data is persisted
-was never designed for this. If you need to store/write/track data that changes a lot you should use a 
-custom database table or another service but not Umbraco content nodes.
+Umbraco 的内容不应该用于不稳定的数据，Umbraco 的 APIs 和 Umbraco 的数据从来都不是为此而设计的。如果你需要存储/写入/跟踪更改频繁的数据，你应该使用自定义数据库表或者其他服务，而不能是 Umbraco 内容节点。
 
-Some examples of what not to do are:
+一些不该这么做的示例：
 
-* Hit counters to track the number of times your page has been viewed - use something like Google Analytics for this or a custom database table
-* Creating new nodes for form submissions - this should be stored in a custom database table
-* Importing lots of data into Umbraco content nodes that could easily just be stored in a custom database table (i.e. it's not going to be edited).
-In some cases this might be ok but many times we've seen bulk imports occur on a hourly/daily schedule which is generally unecessary.
+* 点击计数或者页面访问统计 - 使用类似Google Analytics或者自定义数据表
+* 为表单提交创建新节点 - 这应该存储在自定义数据库表中
+* 导入大量数据到 Umbraco 内容节点中要比存储在自定义数据表中更容易（例如，不会编辑它）。在某些时候这是 ok 的，但是更多时候我们每小时/每周批量导入就最好避免。
 
-## Processing during startup
+## 启动进程
+Umbraco 允许你在通过`ApplicationEventHandler `在启动期间运行一些初始化代码，但你无必要确认这样并不会拖慢应用程序的启动速度。
 
-Umbraco allows you to run some initialization code during startup by using `ApplicationEventHandler`, however great
-care should be used to ensure that you are not slowing down application startup. You should be especially careful
-as a Package developer that you are not slowing down application startup since your package may end up being used for
-thousands of websites.
+作为包开发人员，您应该特别小心，因为您的包可能是用在数以千计的网站上，你不能减慢应用程序启动的速度。
 
-In many cases, [initialization code can be done lazily instead of eagerly](https://msdn.microsoft.com/en-us/library/dd997286(v=vs.110).aspx). 
-Instead of initialization everything you need as soon as the application starts you could execute your initialization code only when it is required. 
-This can be achieved in various ways such as:
+在许多时候，[初始化代码延迟加载替换提前加载](https://msdn.microsoft.com/en-us/library/dd997286(v=vs.110).aspx)。只有在应用程序启动需要的时候执行你的初始化代码而不是启动时就加载。
 
-* Using [`Lazy<T>`](https://msdn.microsoft.com/en-us/library/dd642331(v=vs.110).aspx) and put the initialization logic in it's callback
-* Using [`LazyInitializer`](https://msdn.microsoft.com/en-us/library/system.threading.lazyinitializer%28v=vs.110%29.aspx?f=255&MSPPError=-2147217396)
+这有多种途径可以实现：
+
+* 使用 [`Lazy<T>`](https://msdn.microsoft.com/en-us/library/dd642331(v=vs.110).aspx) 将初始化逻辑放在它的回调中
+* 使用 [`LazyInitializer`](https://msdn.microsoft.com/en-us/library/system.threading.lazyinitializer%28v=vs.110%29.aspx?f=255&MSPPError=-2147217396)
 * Putting logic in a property getter with a lock and setting a flag that it's processed
 * Putting logic in a method with a lock and setting a flag that it's processed
 * (there's plenty of ways)
 
-Even more important is that you ensure that the initialization logic only executes one time for the lifetime of the 
-application even when your app domain is restarted. If your initialization logic creates a database table or something
-similar to that where it should only be executed one time only, then you should set a persistent flag (such as a file) to 
-indicate to your own logic that the initialization code has already executed and doesn't need to be done again.
+更加要的是你要确保初始化逻辑在整个应用程序生命周期内，仅在应用重启时执行一次。如果你的初始化逻辑会创建数据库表或者类似的一些事情，那么它就应该只执行一次，接下来你应该设置一个持续性标识（或者文件）来表明你的初始化代码逻辑已经执行过，不要再次执行。
 
-## Rebuilding indexes
+## 重建索引
+太多时候我们看到在用户们的解决方案代码中会重建Exmaine 索引（我们甚至在每个请求上都看到了这一点！）。重建索引会导致严重的性能问题，这不是推荐的方式。Umbraco 和 Examine的索引管理，索引的稳定性和索引中的数据同步在每个版本都运行的很好。如果你的索引数据与 Umbraco 数据不同步，你应该确保你一直运行的是最新版本的 Umbraco 和 Examine。
 
-Far too often we've seen code in people's solutions that rebuild the Examine indexes 
-(we've even seen this done on every request!). Rebuilding indexes can cause severe
-performance penalties and is not a recommended practice. Umbraco's and Examine's index management, index stability and 
-synchronization of the data in the index gets better with every release. You should always ensure you are running the latest
-Umbraco and Examine versions if you are having trouble with your index data becoming out of sync with your Umbraco data.
+你的数据不同步，主要是因为：
 
-The primary reasons your data will become out of sync are:
+* 使用了旧版本的
+* 同时重启你的 app 应用程序和重建索引(尽量避免这种方案!)
 
-* Old version of Umbraco
-* Rebuilding indexes and restarting your app domain at the same time (try to avoid this scenario!)
+我们不建议你重建索引，除非你有绝对的理由要去这么做，如果您经常需要这样做，那么建议您慎重考虑这样做的原因，并设法解决潜在的问题。
 
-It is not recommended to rebuild your indexes unless you absolutely need to and if you need to do this often then it is 
-advised to determine why and to try to resolve the underlying problem.
+## Examine 事件进行的查询和逻辑
 
-## Performing lookups and logic in Examine events
+这里有几个常见的 Examine 事件：`GatheringNodeData `和`DocumentWriting `。这些方法都允许开发人员修改 Lucene 索引中的数据，但是很多时候，我们看到开发人员在这些方法中执行服务查询。例如：在这些方法中使用`ApplicationContext.Current.Services.ContentService.GetById(e.NodeId)`会遇到`N + 1`问题。
 
-There's a couple well known Examine events: `GatheringNodeData` and `DocumentWriting`. Both of these events
-allow the developer to modify the data that is going into the Lucene index but many times we see developers Performing
-Service lookups in these methods. For example, using `ApplicationContext.Current.Services.ContentService.GetById(e.NodeId)`
-inside of these events could cause an `N + 1` problem. This is because these events are executed for every single document
-being indexed and if you are rebuilding an index, this will mean this logic will fire for every single document and media item
-going into each index ... That could mean a tremendous amount of lookups and performance drain. 
+这是因为这些方法会在每个独立的文档建立索引和你重建索引时执行，这将意味着这些逻辑将介入每个独立文档和媒体条目的每个索引...那将意味着数量巨大的轮询和性能损耗。
 
-Similarly if you are executing other logic in these events that perform poorly, then anytime you save or publish content or media
-it will slow that process down. And of course if you rebuild an index then any slow code running in these events will cause the indexing
-to go ultra slow.
+## 绘制模板
 
-## RenderTemplate
+在 Umbraco 中有一个你永远不该使用的 API，除非你真的真的知道你要做什么。这个 API 方法叫`RenderTemplate `。它允许你能够绘制特定的内容条目的模板并且在响应中获取`string`。在有些时候这是有用的，或许你想在内容条目和它的模板基础上发送一封邮件，但是你必须非常小心，不要为了使用它而使用它。
 
-There is an API in Umbraco that should never be used unless you really really know what you are doing. This API method
-is called `RenderTemplate`. It allows you to be able to render a particular content item's template and get a `string` 
-in response. In some cases this may be useful, perhaps you want to send an email based on a content item and it's template, but
-you must be very careful not to use this for purposes it is not meant to be used for.
+一般来说这个方法不该用于常规内容的输出。如果滥用，会导致严重的性能问题。对于正常的内容，输出其他内容条目的类型数据，你应该使用局部视图替换。
 
-Generally speaking this method should not be used for the normal rendering of content. If abused this could cause severe
-performance problems. For normal content rendering of module type data from another content item, you should use Partial Views instead. 
+## 不要把逻辑放在构造函数中
+构造函数一般不应执行任何逻辑，它们应该用于设置一些参数值，执行一些非空检查和可能的验证数据，但是在大多数情况下它们不应该执行任何逻辑。
 
-## Don't put logic inside your constructors
+这里有一些为什么会导致巨大的性能问题的原因：
 
-Constructors should generally not perform any logic, they should set some parameter values, perform some null checks and perhaps validate
-some data but in most cases they should not perform any logic.
+* API 的构造器，并不期望通过其创建的对象，还要去担心性能方面的问题
+* 创建一个对象时会在不经意间发生太多次，尤其是在使用 Linq 时
 
-There's a few reasons why this can become a huge performance problem:
-
-* The consumer of an API doesn't expect that by creating an object that they should be worried about performance
-* Creating an object can inadvertently happen a vast number of times, expecially when using Linq
-
-Here's an example of how this can go wrong very quickly:
-Your tree structure is something like this:
+这里示范了如何非常快速的生成这个错误的示例：
+你的树结构大致看起来像这样：
 
     - Root
     -- Home
@@ -340,7 +272,7 @@ Your tree structure is something like this:
     --- About Us
     --- Contact Us
 
-You have a custom model that looks like:
+你有个自定义模型，看起来是这样的：
 
     public class RecipeModel : PublishedContentWrapped
     {
@@ -358,8 +290,7 @@ You have a custom model that looks like:
         public int Votes { get; private set; }
         public IEnumerable<RecipeModel> RelatedRecipes { get; private set; }
     }
-
-You then run the following code to show to show the favorites 
+然后你运行下面的代码，显示收藏夹 
 
     @var recipeNode = Umbraco.TypedContent(3251);
     <ul>
@@ -372,24 +303,18 @@ You then run the following code to show to show the favorites
     }
     </ul>
 
-__Ouch!__ So just to show the top 10 voted recipe's this will end up doing the following:
+__Ouch!__ 因此只是显示投票最多的 top10，这将完成以下操作：
 
-* This will iterate over all Recipess, create and allocate 5000 instances of `IPublishedContent`
-* This will create and allocate 5000 instances of `RecipeModel`
-* For each `RecipeModel` created, this will traverse upwards, iterate all 5000 recipes then resolve property data for 2 properties
+* 这将遍历所有的Recipess ，创建并分配5000个`IPublishedContent `实例
+* 这将创建并分配5000个`RecipeModel`实例
+* 对于每个`RecipeModel`的创建，这会向上横切，递归所有的5000个recipes，然后为两个属性解析属性数据
 
-This means that there is now a minimum of __20,000__ new objects created and allocated in memory. The number of traversals/visits to each
-of these objects is now 5000 x 5000 = __25,000,000 (25 MILLION TIMES!)__
+这意味着目前在内存中至少创建并分配了 __20,000__ 个新对象。遍历和访问它们的次数现在达到了5000 x 5000 = __25,000,000 (2500万次!)__
 
-_Side note: The other problem is the logic used to lookup related recipes is incredibly inneficient. Instead, each reciple
-should have a picker to choose it's related recipe's and then each of those can just be looked up by their ID.
-(There's probably a few other ways to achieve this too!)_
+这会引导我们进入下一个反模式...
 
-Which leads us on to the next anti-pattern...
-
-## Don't eager load data, lazy load it instead
-
-The above example could be rewritten like this:
+## 不要过早载入数据，在需要的时候加载
+上面的示例重写为下面的样子：
 
     public class RecipeModel : PublishedContentWrapped
     {
@@ -422,7 +347,7 @@ The above example could be rewritten like this:
         }    
     }
 
-This is slightly better:
+这稍微好了一些:
 
 * This will iterate over all Recipess, create and allocate 5000 instances of `IPublishedContent`
 * This will create and allocate 5000 instances of `RecipeModel`
@@ -448,7 +373,7 @@ This is slightly better:
 This means that there is now a minimum of __10,000__ new objects created and allocated in memory. The number of traversals/visits to each
 of these objects is now __5000__.
 
-## Too much Linq - XPath is still your friend 
+## 大量的Linq - XPath 依旧对你有帮助 
 
 Based on the above 2 points, you can see that just iterating content with the traversal APIs will cause new
 instances of `IPublishedContent` to be created. When memory is used, Garbage Collection needs to occur and this 
@@ -471,7 +396,7 @@ on your XPath query but without creating interim `IPublishedContent` instances t
 These 2 methods can certainly help avoid using Linq (and as such allocating IPublishedContent instances) 
 to perform almost any content filtering you want. 
 
-## XPathNodeIterator - for when you need direct XML support
+## XPathNodeIterator - 在你需要直接操作XML 时提供支持
 
 Using the `GetXPathNavigator` method is a little more advanced but can come in very handy to solve some performance problems when
 dealing with a ton of content. Of course when you use this method you'll now be working directly with XML.

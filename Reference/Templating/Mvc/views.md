@@ -1,25 +1,25 @@
-# Working with MVC Views in Umbraco
+# 在 Umbraco 中使用 MVC 视图
 
-_Working with MVC Views and Razor syntax in Umbraco_
+_在 Umbraco 中使用 MVC 视图和 Razor 语法_
 
-## Properties available in Views
+## 视图中可用的属性
 
-All Umbraco views inherit from `Umbraco.Web.Mvc.UmbracoTemplatePage` which exposes many properties that are available in razor:
+所有的 Umbraco 的视图都继承自`Umbraco.Web.Mvc.UmbracoTemplatePage`，它在 Razor 中暴露了许多可用的属性：
 
-* @Umbraco (of type `Umbraco.Web.UmbracoHelper`) -> contains many helpful methods, from rendering macros and fields to retreiving content based on an Id and tons of other helpful methods. [See UmbracoHelper Documentation](../../Querying/UmbracoHelper/index.md)
-* @Html (of type `HtmlHelper`) -> the same HtmlHelper you know and love from Microsoft but we've added a bunch of handy extension methods like @Html.BeginUmbracoForm
-* @CurrentPage (of type `DynamicPublishedContent`) -> the dynamic representation of the current page model which allows dynamic access to fields and also dynamic Linq
-* @Model (of type `Umbraco.Web.Mvc.RenderModel`) -> the model for the view which contains a property called `Content` which gives you access to the typed current page (of type `IPublishedContent`). 
-* @UmbracoContext (of type `Umbraco.Web.UmbracoContext`)
-* @ApplicationContext (of type `Umbraco.Core.ApplicationContext`)
-* @Members (of type `Umbraco.Web.Security.MemberShipHelper`) [See MemberShipHelper Documentation](../../Querying/MemberShipHelper/index.md)
+* __@Umbraco__ (对应类型`Umbraco.Web.UmbracoHelper`) -> 包含了许多有用的方法，从输入宏和字段到基于 Id 来检索内容，还有其他许多有用的方法。[查看UmbracoHelper文档](../../Querying/UmbracoHelper/index.md)
+* __@Html__ (对应类型 `HtmlHelper`) -> 如同你知道并喜欢的 Microsoft 提供的 HtmlHelper 方法，我们添加了一些更易使用的扩展方法，就像 `@Html.BeginUmbracoForm` 一样。
+* __@CurrentPage__ (对应类型 `DynamicPublishedContent`) -> 当前页面模型的动态表述，允许动态的操作字段以及动态 Linq。
+* __@Model__ (对应类型 `Umbraco.Web.Mvc.RenderModel`) -> 视图对应的模型，包含一个叫`Content`的属性，可以让你操作当前页面的强类型 (对应类型`IPublishedContent`)。
+* __@UmbracoContext__ (对应类型 `Umbraco.Web.UmbracoContext`)
+* __@ApplicationContext__ (对应类型 `Umbraco.Core.ApplicationContext`)
+* __@Members__ (对应类型 `Umbraco.Web.Security.MemberShipHelper`) [查看MemberShipHelper文档](../../Querying/MemberShipHelper/index.md)
 
-## Rendering a field with UmbracoHelper
-This is probably the most used method which simply renders the contents of a field for the current content item.
+## 使用UmbracoHelper 输出字段
+这可能是用于输入当前内容条目的字段内容最常用的方法。
 
 	@Umbraco.Field("bodyContent")
 
-There are several optional parameters. Here is the list with their default values:
+这有一些可选参数。这是它们的列表以及一些默认值：
 
 * altFieldAlias = ""
 * altText = ""
@@ -31,57 +31,56 @@ There are several optional parameters. Here is the list with their default value
 * casing = RenderFieldCaseType.Unchanged
 * encoding = RenderFieldEncodingType.Unchanged
 
-The easiest way to use the Field method is to simply specify the optional parameters you'd like to set. For example, if we want to set the insertBefore and insertAfter parameters we'd do:
+使用 Field 方法的简单方式是直接指定设置你喜欢的可选参数。例如，如果我们想设置insertBefore 和insertAfter 参数，我们可以：
 
 	@Umbraco.Field("bodyContent", insertBefore : "<h2>", insertAfter : "</h2>")
 
 
-## Rendering a field with Model
-
-The UmbracoHelper method provides many useful parameters to change how the value is rendered. If you however simply want to render value "as-is" you can use the @Model.Content property of the view. For example:
+## 使用模型输出字段
+UmbracoHelper方法提供了许多有用的参数来改变值的输出。但是如果你只是想简单的原样输出值，你可以使用视图的@Model.Content属性。例如：
 
 	@Model.Content.Properties["bodyContent"].Value
 
-Or alternatively:
+或者:
 
 	@Model.Content.GetPropertyValue("bodyContent")
 
-You can also specify the output type that you want from the property. If the property editor or value does not support the conversion then an exception will be thrown. Some examples:
+你还可以给属性指定你想要的输出类型。如果属性编辑器或者值不支持指定的转换，则会引发异常。一些例子：
 
  	@Model.Content.GetPropertyValue<double>("amount")
 	@Model.Content.GetPropertyValue<RawXElement>("xmlContents")
 
-## Rendering a field using @CurrentPage (dynamically)
+## 使用@CurrentPage (动态化)输出字段
 
-The UmbracoHelper method provides many useful parameters to change how the value is rendered. If you however simply want to render value "as-is" you can use the @CurrentPage property of the view. The difference between @CurrentPage and @Model.Content is that @CurrentPage is the dynamic representation of the model which exposes many dynamic features for querying. For example, to render a field you simply use this syntax:
+UmbracoHelper方法提供了许多有用的参数来改变值的输出。但是如果你只是想简单的原样输出值，你可以使用视图的@CurrentPage属性。@CurrentPage和@Model.Content之间的不同在于，@CurrentPage是模型的动态表述，为查询暴露了许多动态特性。例如，输出字段你可以简单的使用语句：
 
 	@CurrentPage.bodyContent
 
-*NOTE: When accessing content dynamically you will not get intellisense if you are using Visual Studio to edit your templates.*
+*注意: 如果你使用 Visual Studio 编辑你的模板，当你操作内容的动态语句时不会出现智能提示。*
 
-## <a name="renderingMacros"></a>Rendering Macros
+## 输出宏
 
-Rendering a macro is easy using UmbracoHelper. There are 3 overloads, we'll start with the most basic:
+使用UmbracoHelper输出宏是非常简单的。这里有三个重载方法，我们从最基础的开始：
 
-This renders a macro with the specified alias without any parameters:
+通过特定的别名，不包含任何参数输出一个宏：
 
 	@Umbraco.RenderMacro("myMacroAlias")
 
-This renders a macro with some parameters using an anonymous object:
+通过使用匿名对象参数输出一个宏：
 
 	@Umbraco.RenderMacro("myMacroAlias", new { name = "Ned", age = 28 })
 
-This renders a macro with some parameters using a dictionary
+通过使用字典对象参数输出一个宏
 
 	@Umbraco.RenderMacro("myMacroAlias", new Dictionary<string, object> {{ "name", "Ned"}, { "age", 27}})
 
 
-[UmbracoHelper Documentation](../../Querying/UmbracoHelper/index.md)
+[UmbracoHelper 文档](../../Querying/UmbracoHelper/index.md)
 
 
-## Accessing Member data
+## 访问会员数据
 
-`@Members` is the gateway to everything related to members when templating your site. [MemberShipHelper Documentation](../../Querying/MemberShipHelper/index.md)
+`@Members` 在模板化网站时是关联你的任何成员的接口。 [MemberShipHelper 文档](../../Querying/MemberShipHelper/index.md)
 
 	@if(Members.IsLoggedIn()){
 	   var profile = Members.GetCurrentMemberProfileModel();
@@ -93,11 +92,10 @@ This renders a macro with some parameters using a dictionary
 
 ## ModelsBuilder
 
-ModelsBuilder allows you to use strongly typed models in your views.
-Properties created on your document types can be accessed with this syntax:
+ModelsBuilder 允许你在视图中使用强类型的模型。属性会在创建文档类型时创建，可以通过下面的语句操作：
 
 	@Model.BodyText
 
 When ModelsBuilder resolve your properties it will also try to use value converters to convert the values of your data into more convenient models allowing you to access nested objects as strong types instead of having to rely on dynamics and risking having a lot of potential errors when working with these.
 
-[ModelsBuilder documentation](modelsbuilder.md)
+[ModelsBuilder 文档](modelsbuilder.md)

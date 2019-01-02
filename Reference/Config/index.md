@@ -1,6 +1,6 @@
 #Configuration Files
 
-_This section will explain the many configuration options in Umbraco and what they do_
+_这个部分会讲解许多Umbraco 中的配置项以及它们是做什么的_
 
 ###[web.config](webconfig/index.md)
 
@@ -24,16 +24,16 @@ _This section will explain the many configuration options in Umbraco and what th
 
 ###[umbracoSettings.config](umbracoSettings/index.md)
 
-Contains many Umbraco options, generally the default values work well in most installs; however, in some cases some of these options may need adjusting depending on each installation.
+包含许多 Umbraco 选项，通常在绝对多数安装中这些默认值会工作的很好；然而，在一些场景中这些选项可能需要根据不同的安装进行一些调整
 
-##clientdependency.config
+### clientdependency.config
 
-The ClientDependency configuration options can be found on the [ClientDependency website](https://github.com/Shandem/ClientDependency/wiki/Configuration).
+ClientDependency 配置选项可以在这里找到 [ClientDependency 网站](https://github.com/Shandem/ClientDependency/wiki/Configuration).
 
-##log4net.config
+### log4net.config
 
-The log4net configuration options can be found on the [log4net website](http://logging.apache.org/log4net/release/manual/configuration.html).
+log4net配置选项可以在这里找到 [log4net 网站](http://logging.apache.org/log4net/release/manual/configuration.html).
 
-##UrlRewriting.config
+### UrlRewriting.config
 
-The UrlRewriting documentation can be [downloaded in PDF format](http://www.urlrewriting.net/Download.ashx?File=4640f315-27ae-4ab0-8930-6957cfd1f138).
+UrlRewriting文档在这里 [下载 pdf 格式](http://www.urlrewriting.net/Download.ashx?File=4640f315-27ae-4ab0-8930-6957cfd1f138).
