@@ -1,8 +1,8 @@
-# SAN/NAS/Clustered File Server/Network Share上的文件共享
+# SAN/NAS/Clustered File Server/Network Share上的文件共享 #
 
-_文档是关于使用共享文件系统来设置负载均衡环境_
+_本文档是关于使用共享文件系统来设置负载均衡环境_
 
-## 概述
+## 概述 ##
 
 配置你的服务器，使所有 IIS 实例使用共享集中式文件系统，是比较复杂的，需要一段时间才能正常完成。
 
@@ -10,9 +10,23 @@ _文档是关于使用共享文件系统来设置负载均衡环境_
 
 这里还需要做一些事情才能让它工作起来，但是一但完成之后，维护是非常简单的。对于多数站点来说，还有一些类似的设置工作，希望可以帮助你入门：
 
-### Umbraco XML 缓存文件
+### Umbraco XML 缓存文件 ###
 
 一个重要的配置配置项，是当使用集中式存储时，**必须**将 umbraco.config 文件存储在各个服务器的本地中。
+
+For **Umbraco v7.7.3+**
+
+The `umbracoLocalTempStorage` setting controls where the `umbraco.config` and the other Umbraco TEMP files are stored. This setting can be configured in the [Web.config](../../../../Reference/Config/webconfig/#umbracolocaltempstorage-umbraco-v773).
+
+	<add key="umbracoLocalTempStorage" value="EnvironmentTemp" />
+
+This will set Umbraco to store `umbraco.config` and the other Umbraco TEMP files in the environment temporary folder.
+
+**Or**
+
+	<add key="umbracoLocalTempStorage" value="AspNetTemp" />
+
+This will set Umbraco to store `umbraco.config` and the other Umbraco TEMP files in the ASP.NET temporary folder
 
 For **Umbraco v7.6+**
 
@@ -33,7 +47,7 @@ For **Umbraco Pre v7.6**
 此设置会将`umbraco.config`，存储在 ASP.NET的临时目录中
 
 
-## Lucene/Examine 配置
+## Lucene/Examine 配置 ##
 
 你不能在服务器之间共享索引，所以当使用共享文件服务时，Examin 设置有一点技巧。
 
@@ -47,11 +61,13 @@ Examine v0.1.83 引入了新的 `directoryFactory`，名为`TempEnvDirectoryFact
 
 #### Pre Examine v0.1.83 ####
 
+
 * 在ExamineIndex.config配置文件中, 你可以标记每台服务器的路径包含机器名, 这可以确保你在每台机器上的索引都存储在不同的位置。一个标记化的路径为：`~/App_Data/TEMP/ExamineIndexes/{machinename}/Internal/`
 * 在 ExamineSettings.config配置文件中, 你可以给每个索引器和搜索器都增加这个属性`useTempStorage="Sync"`
 * 这个'Sync'设置，可以将你的索引存储在本地文件系统中的 ASP.NET 临时目录。由于 Lucene 只能读取/操作本地文件，因此操作远程共享文件会出现问题。任何时候当索引更新时，这个设置会保证本地索引被创建以及索引可以被正常写入。这样同时会确保，当应用重启或者本地临时文件被清空时，索引都可以从集中存储的索引中获取并重新存储在本地。如果你在日志文件中，看到同步过程发生错误，你也可以设置这个值为'LocalOnly'使索引文件仅保留在本地。
 
-## Windows 设置
+
+## Windows 设置 ##
 
 * 创建域账户用于运行 IIS 网站。例如：MyDomain\WebsiteUser
 * 给予这个域用户操作你共享文件的完全操作权限
@@ -64,7 +80,7 @@ Examine v0.1.83 引入了新的 `directoryFactory`，名为`TempEnvDirectoryFact
 
 **以上大部分内容都包含在微软文档中: [ASP.NET 3.5 主机](http://wiki.dev/GetFile.aspx?File=Wiggles-Hosting/ASPNET35_HostingDeploymentGuide.doc)**
 
-## IIS 设置
+## IIS 设置 ##
 
 由于所有的网站文件都集中管理，所以每台服务器的 IIS 都需要将网站指定到同样的UNC 共享中。例如：*\\\\fileserver.mydomain.local\Inetpub\MySite*
 

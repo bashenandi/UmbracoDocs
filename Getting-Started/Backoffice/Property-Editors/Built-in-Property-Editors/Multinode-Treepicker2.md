@@ -1,4 +1,4 @@
-# 多节点树选取器
+# 多节点树选取器 #
 
 `别名: Umbraco.MultiNodeTreePicker2`
 
@@ -35,21 +35,22 @@
 **注意:** 允许内容树根节点的查询，从7.0.3版本才添加进来 
 
 
-## 数据类型定义示例
+## 数据类型定义示例 ##
 
 ![Multinode Treepicker Data Type Definition](images/Multinode-Treepicker2-DataType.png)
 
-## 内容示例 
+## 内容示例  ##
 
 ![Multinode Treepicker](images/Multinode-Treepicker2-Content.jpg)
 
-## MVC 视图示例
+## MVC 视图示例 ##
 
-### 类型:
+### 类型 ###
 
-	@{
-		var typedMultiNodeTreePicker = Model.Content.GetPropertyValue<IEnumerable<IPublishedContent>>("featuredArticles");
-		foreach (var item in typedMultiNodeTreePicker){
-			<p>@item.Name</p>
-		}
-	}
+    @{
+        var typedMultiNodeTreePicker = Model.Content.GetPropertyValue<IEnumerable<IPublishedContent>>("featuredArticles");
+        foreach (var item in typedMultiNodeTreePicker)
+        {
+            <p>@item.Name</p>
+        }
+    }

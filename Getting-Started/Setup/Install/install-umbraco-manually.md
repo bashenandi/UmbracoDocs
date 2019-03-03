@@ -1,22 +1,22 @@
-#手工安装 Umbraco
+# 手动安装 Umbraco #
 
-_跟着下面的步骤一步步完成 Umbraco 的手工安装。_
+_跟着下面的步骤一步步完成 Umbraco 的手动安装。_
 
-## 下载 Umbraco 二进制文件
-在 [our.umbraco.org/download](http://our.umbraco.org/download/) 上可以找到稳定版的二进制文件。如果你不介意使用实验性构建，你可以下载 [夜版](http://nightly.umbraco.org/) 但是你需要自己承担风险 (并不保证它能正常运行)。
+## 下载 Umbraco 二进制文件 ##
+在 [our.umbraco.org/download](http://our.umbraco.org/download/) 上可以找到稳定版的二进制文件。如果你不介意使用实验性的构建，你可以下载 [夜版](http://nightly.umbraco.org/) 但是你需要自己承担风险 (并不保证它能正常运行)。
 
-## 解压缩文件
-当您的二进制保存到磁盘中，请确保该文件没有被Windows安全机制阻拦。右键单击下载的文件并选择“属性”。如果在“属性”窗口的底部提示：『此文件来自另一台计算机，可能会被阻止以帮助您保护计算机』，然后请点击“解锁”按钮，之后二进制文件就可以被解压缩了。
+## 解压缩文件 ##
+把你下载的二进制保存到磁盘中，请确保该文件没有被Windows安全机制阻拦。右键单击下载的文件并选择“属性”。如果在“属性”窗口的底部提示：『此文件来自另一台计算机，可能会被阻止以帮助您保护计算机』，然后请点击“解锁”按钮，之后二进制文件就可以被解压缩了。
 
 现在你可以解压缩二进制文件到你选择的本地位置（例如： `D:\Dev\MyUmbracoSite\`)
 
-## 选择你的 Web Server
+## 选择你的 Web Server ##
 有两种方式在服务器运行应用程序文件：
 
 1. 简单的途径: 使用 IIS Express
 2. Internet Information Server (IIS)
 
-###使用 IIS Express
+### 使用 IIS Express ###
 
 你可以从 [Web Platform Installer (WebPI)](http://www.microsoft.com/web/downloads/platform.aspx) 上下载 IIS Express( 搜索关键词 "IIS Express")。如果要在 Visual Studio 2010中开发使用 IIS Express，你需要安装 Visual Studio 2010 Service Pack 1，这也可以在 WebPI 中找到。
 
@@ -26,11 +26,9 @@ _跟着下面的步骤一步步完成 Umbraco 的手工安装。_
 
 WebMatrix一旦安装，你可以右击之前解压缩umbraco后的文件夹，从打开的菜单中选择“打开一个网站微软WebMatrix”从上下文菜单（应该在接近顶部的位置）。当 WebMatrix 开始运行，你就可以点击『Run』按钮启动你的网站。使用 WebMatrix 还有一个额外的好处：他可以允许你在网站运行时修改你的网站文件。
 
-
-
 ![Start Umbraco through Web Matrix](images/Manual/2012-03-17_173822.png)
 
-###使用 IIS
+### 使用 IIS ###
 如果你想使用 IIS 为你的 Umbraco 网站提供服务，你可以使用主机名指向你的本地机器。
 
 *注意: 我们强烈建议使用IIS7(.5). 或许 IIS6 可以工作, 但是本文档仅覆 IIS7。 IIS7 包含于Windows 7 和 Windows Server 2008.*
@@ -65,28 +63,27 @@ WebMatrix一旦安装，你可以右击之前解压缩umbraco后的文件夹，�
 
 虽然为开发环境设置完整的权限是较好的方式，但是对于生产服务器你可能想要进一步限制权限。请浏览 [权限](permissions.md) 获取详细信息。
 
-###选择数据库环境
+### 选择数据库环境 ###
+
 关于数据库环境，有三个选项以供选择：
 
 1. SQL Compact Edition
 2. SQL Server 2008 (Express 或更高
 3. MySQL 5 (或更高)
 
-###SQL Compact Edition
+### SQL Compact Edition ###
 
 如果希望快速开始，SQL CE 是一个很好的选择。你不需要提前在服务器端创建数据库，而且它是免费的。但同时意味着，对于海量内容的网站来说，它的扩展性不好。一但到达了SQL CE 性能瓶颈，您可将其迁移至SQL Server 数据库中。
 
 如果要开始使用 SQL CE，只要在安装向导中选择：『*I want to use SQL CE 4, a free, quick-and-simple embedded database*』即可。
 
-###SQL Server 2008
-当你使用 SQL Server 时，在继续安装 Umbraco 之前，你需要在其中创建一个空的数据库。如何配置数据库完全取决于你的需要，但是要确保连接基于 TCP/IP 协议并且拥有 SQL 用户和密码（你也可以使用Windows身份验证，但这需要你自行编写连接字符串）。
+### SQL Server 2008 ###
+如果你要使用 SQL Server ，在继续安装 Umbraco 之前，你需要在其中创建一个空的数据库。如何配置数据库完全取决于你的需要，但是要确保连接基于 TCP/IP 协议并且拥有 SQL 用户和密码（你也可以使用Windows身份验证，但这需要你自行编写连接字符串）。
 
 一般来说，对于开发环境，你需要确保数据库用户拥有数据库所有者的权利，但一定要遵守你或你的工作环境为此设置的规则。
 
 一旦你创建了数据库和凭据，在选择『*I already have a blank SQL Server 2008 database*』选项之后，请在安装向导中输入这些详细信息。
 
-***
-
-### 结尾
+### 结尾 ###
 
 按照安装向导进行操作，经过一些简单的步骤和选择，您应该看到安装成功的提示信息。

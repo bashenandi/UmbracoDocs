@@ -1,11 +1,21 @@
+<<<<<<< HEAD
 #使用子 Action 创建 MVC 表单
+=======
+# Creating an MVC form using a Child Action
+>>>>>>> upstream/master
 
 **适用于: Umbraco 4.10.0+**
 
 _这个教程解释了如何在 Umbraco 中使用子 Action创建表单。_
 
+<<<<<<< HEAD
 ## View Model
 这个教程中使用的视图模型如下：
+=======
+## The View Model
+
+The view model that will be used in this tutorial will be as follows:
+>>>>>>> upstream/master
 	
 	public class CommentViewModel
 	{
@@ -20,7 +30,13 @@ _这个教程解释了如何在 Umbraco 中使用子 Action创建表单。_
 	    public string Comment { get; set; }
 	}
 
+<<<<<<< HEAD
 这个类定义的数据是要提交的数据，还定义了哪些数据是必填的，MVC 会自动实现这些验证属性，前端验证 JS 也会自动执行。
+=======
+This class defines the data that will be submitted and also defines how the data will be validated upon submission and conveniently for us MVC automatically wires up these validation attributes with the front-end so JavaScript validation will automagically occur.
+
+## The Surface Controller
+>>>>>>> upstream/master
 
 ## Surface Controller
 对于这个教程，我们创建的Surface 控制器包含2个 action，一个用于接收从表单 POST 过来的值，另外一个用于绘制包含表单的视图。 
@@ -34,17 +50,23 @@ _这个教程解释了如何在 Umbraco 中使用子 Action创建表单。_
 
 HttpPost Action 用来：
 
+<<<<<<< HEAD
 *	检查模型是否是有效的 - 基于上面基于验证属性的模型，我们不会执行任何自定义验证
 *	如果模型 **是无效的**, 返回到当前绘制的 Umbraco 页面（不做重定向）。通过不跳转，ViewData还是保存在 ModelState 中的，好包含有验证信息。 *(查看下面的'注意事项'获取更多信息)*
 *	如果模型 **是有效的**, 添加一段自定义消息到 TempData 集合，并重定向到当前绘制的 Umbraco 页面。对于网页来说如果POST 是成功的，重定向是标准的处理过程。这会确保 POST 数据不会因意外的按下了 F5（刷新）而意外的重复提交... *不幸的是ASP.Net WebForms并不会遵循规则*
+=======
+*	Check if the model is valid - based on the validation attributes applied to the model above, we will not be performing any custom validation
+*	If the model **is not valid**, return the currently rendered Umbraco page (do not redirect). By not redirecting the ViewData is preserved including the ModelState which contains the validation information *(See 'Other Considerations' below for more info)*
+*	If the model **is valid**, add a custom message to the TempData collection and then redirect to the currently rendered Umbraco page. A standard procedure for a web based for is to redirect if the POST is successful. This ensures that the POST cannot be accidentally re-submitted by accidentally pressing F5 (refresh) ... *unfortunately ASP.NET WebForms does not adhere to this rule by default but it 'should' be done in WebForms too.* 
+>>>>>>> upstream/master
 
 <br/>
 
 	public class BlogPostSurfaceController : Umbraco.Web.Mvc.SurfaceController
 	{
-		//Important to attribute your child action with ChildActionOnly
-		//otherwise the action will become publicly routable (i.e. have
-		//a publicly available Url) 
+		// Important to attribute your child action with ChildActionOnly
+		// otherwise the action will become publicly routable (i.e. have
+		// a publicly available Url) 
 		[ChildActionOnly]
 		public ActionResult ShowCommentForm(int memberId) 
 		{
@@ -61,25 +83,29 @@ HttpPost Action 用来：
 		[HttpPost]
 		public ActionResult CreateComment(CommentViewModel model)
 		{    
-		    //model not valid, do not save, but return current Umbraco page
+		    // model not valid, do not save, but return current Umbraco page
 		    if (!ModelState.IsValid)
 			{
-				//Perhaps you might want to add a custom message to the ViewBag
-				//which will be available on the View when it renders (since we're not 
-				//redirecting)	    	
+				// Perhaps you might want to add a custom message to the ViewBag
+				// which will be available on the View when it renders (since we're not 
+				// redirecting)	    	
 		   		return CurrentUmbracoPage();
 			}
 				    
-			//Add a message in TempData which will be available 
-			//in the View after the redirect 
+			// Add a message in TempData which will be available 
+			// in the View after the redirect 
 			TempData.Add("CustomMessage", "Your form was successfully submitted at " + DateTime.Now)
 		
-		    //redirect to current page to clear the form
+		    // redirect to current page to clear the form
 		    return RedirectToCurrentUmbracoPage();		    
 		}
 	}
 
+<<<<<<< HEAD
 ##创建局部视图输出表单
+=======
+## Create a Partial View to render the form
+>>>>>>> upstream/master
 
 在 MVC 中绘制表单最好的方式，是使用强类型模型的局部视图来绘制。在本例中，我们在*~/Views/Partials/BlogCommentForm.cshtml*创建一个使用了前面创建的强类型模型的局部视图。这个示例展示了如何使用带强类型的BeginUmbracoForm重载方法来指定提交到哪个 Surface 控制器和 Action。
 
@@ -93,7 +119,11 @@ HttpPost Action 用来：
 		<input type="submit"/>
 	}
 
+<<<<<<< HEAD
 ## 绘制子 Action
+=======
+## Render the Child Action
+>>>>>>> upstream/master
 
 最后一步是在不的 Umbraco 模板视图中绘制刚才创建的子 Action：
 
@@ -119,7 +149,11 @@ HttpPost Action 用来：
 		return PartialView("BlogCommentForm", model);
 	}
 
+<<<<<<< HEAD
 ##Action 命名
+=======
+## Action naming
+>>>>>>> upstream/master
 
 当命名 actions 时，你可能会想将它们命名为同一个名字用来绘制表单以及处理表单的 POST 数据。例如上面的例子你可能想这么做：
 
@@ -154,9 +188,15 @@ HttpPost Action 用来：
 
 否则，给你的 actions 使用不同的命名。
 
+<<<<<<< HEAD
 ## 操作 ViewData 
 
 当你在[HttpPost]方法中添加任何数据到 ViewData 集合时，这些 ViewDta 是在'根'视图上下文上存取的。因为为了从你的 ChildAction 视图中检索 ViewData 中的数据，你需要通过下面的语句来操作：
+=======
+## Accessing ViewData 
+
+When you are adding any data to the ViewData collection in your [HttpPost] action, this ViewData gets set on the 'root' view context. Therefore in order to retrieve the data in the ViewData collection from your ChildAction view, you'll need to access it by:
+>>>>>>> upstream/master
 
 	@ParentActionViewContext.ViewData
 

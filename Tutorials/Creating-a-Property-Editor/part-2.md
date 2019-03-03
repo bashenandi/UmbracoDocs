@@ -1,17 +1,17 @@
-#教程 - 添加配置到属性编辑器
+#教程 - 给属性编辑器添加配置项
 
-##概述
-这是我们创建属性编辑器指导的第二步。这一步继续工作在我们[第一步](creating-tutorial1-v7.md)创建的 markdown 编辑器中，但是进一步呈现给你如何给编辑器添加一些配置项。
+## 概述 ##
 
+这是我们创建一个属性编辑器指南的第二步。这一步继续在我们[第一步](./)创建的 markdown 编辑器上进行工作，将进一步教会你如何给编辑器添加一些配置项。
 
-##配置?
-建立一个好的属性编辑器的重要部分，是构建相对灵活的东西，你可以在不同的时候，多次的重复使用它；就像 Umbraco 中的富文本编辑器，它允许你为每个编辑器实例，选择想要的按钮和样式表。
+## 配置? ##
+构建好的属性编辑器的一个重要部分，是构建相对灵活的内容，让你可以多次的将其用于不同的内容；就像 Umbraco 中的富文本编辑器，它允许你为每个编辑器实例，选择想要使用的按钮和样式表。
 
-因此一个编辑器能够重复使用，具有不同的配置，是现在我们要完成的工作。
+因此一个编辑器可以通过不同的配置，被多次重复使用，就是我们现在要进行的工作。
 
+## package.manifest ##
 
-##package.manifest
-要给我们的 markdown 编辑器添加配置属性，再次打开`package.manifest`文件。在编辑器定义的下面，粘贴下面的代码：
+打开`package.manifest`文件给我们的markdown 编辑器添加配置选项。在编辑器定义的下方，粘贴以下内容：
 
 	prevalues: {
 		fields: [
@@ -29,33 +29,34 @@
 			}
 		]
 	}
-
+	
 **记住:** 分隔编辑器元素和编辑器预设值定义是通过逗号，你可以会遇到 JSON格式错误提示。
 
-我们添加了什么？我们添加了一个预设值编辑器，具有`fields`集合。这个集合包含我们的这个编辑器想要输出数据类型配置的相关信息。
+我们添加了什么？我们添加了一个编辑器预设值，含有`fields`集合。这个集合包含了我们想要在这个编辑器渲染配置时显示的数据类型 UI 相关信息。
 
-首先取到的是"Preview"，使用"boolean"视图，因此这会提供给用户一个简单的复选框，允许切换预览开启/关闭。"boolean"来自于转换器，所有的编辑器预览都存储在`/umbraco/views/prevalueeditors/`，通过`<name>.html`查找。
+首先获取到的标签是"Preview"，使用了"boolean"视图，这会提供给用户一个简单的复选框，允许切换预览开启/关闭。"boolean"来自于编辑器预览转换器，所有的预览编辑器都存储在`/umbraco/views/prevalueeditors/`，通过`<name>.html`查找。
 
-下一个也相同，只是它提供一个文本域输入框给用户，用于给编辑器设置默认值。
+下一个配置也相同，只是它提供一个文本域输入框给用户，用于给编辑器设置默认值。
 
-保存清单，**重启应用程序池**，现在再看一下 Umbraco 中嗯 markdown 数据类型。你会看到有了两个配置项。
+保存清单，**重启应用程序池**，再看一下 Umbraco 中的 markdown 数据类型。现在你会看到多出了两个配置选项。
 
-##使用配置
-下一步是访问操作新的配置项。打开`markdowneditor.controller.js`文件。
+## 使用配置 ##
 
-首先添加默认值功能。基本上，当 `$scope.model.value` 为空或者*undefined*时，我们想要使用默认值，因此我们在控制器的头部添加下面的代码：
+下一步是操作我们新的配置选项。打开`markdowneditor.controller.js`文件。
+
+让我们先添加默认值的功能。一般来说，当 `$scope.model.value` 为空或者*undefined*时，我们想要使用默认值，因此我们在控制器的最开头添加下面的代码：
 
 	if($scope.model.value === null || $scope.model.value === ""){
 		$scope.model.value = $scope.model.config.defaultValue;
 	}
 
-你新发现了什么？ - 是`$scope.model.config`对象。另一件你会注意到的事，是我们现在操作的`$scope.model.config.defaultValue`，包含了这个 key 所定义的配置值，它可以简单的安装以及从代码中访问这些配置值。
+有什么新发现麽？ - 是`$scope.model.config`对象。另一件你该注意到的事情，是我们现在所读取的`$scope.model.config.defaultValue`，包含了这个 key 的配置值，它可以简单的从代码中配置和使用这些配置值。
 
-你可以不通过任何 JS 来使用这些值，打开`markdowneditor.html`。
+而且，你还可以不通过任何JabaScript 来使用这些值，打开`markdowneditor.html`进行替换。
 
-因为我们可以直接在 HTML 中使用这些配置，就像下面一样，我们使用它来切换预览`<div>`，通过`ng-hide`属性：
+因为我们可以直接在 HTML中使用这些配置，例如可以使用`ng-show`属性来切换预览`<div>`：
 
 	<div ng-show="model.config.preview" class="wmd-panel wmd-preview"></div>
 
 
-[下一步 - 使用属性编辑器整合服务](part-3.md)
+[下一步 - 属性编辑器整合服务](part-3.md)

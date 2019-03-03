@@ -1,14 +1,14 @@
-#创建表单
-创建表单需要.NET MVC 的知识体系。因此如果你熟悉了添加视图模型，视图和控制器，你已经准备好创建你的第一个表单了。
+# 创建表单 #
+创建表单需要.NET MVC 的知识体系。因此如果你熟悉了添加视图模型，视图和控制器，你已经为创建你的第一个表单做好准备了。
 
 *你也可以使用[Umbraco forms](https://umbraco.com/products/umbraco-forms/)。它可以使你和你的编辑人员在后台创建和处理表单。 这包含了验证，跳转和存储和发送表单数据。优秀的 UI，易于扩展并且被 Umbraco HQ 所支持。*
 
 在这个示例中，我们会创建一个基本的联系表单包含：name，email 和message 字段。
 In this example we'll create a basic contact form contain name, email and message field.
 
-###创建视图模型
+### 创建视图模型 ###
 首先我们通过添加一个新类到`/Models`来为联系表单创建模型。我们称它为： `ContactFormViewModel.cs`
-	
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -48,7 +48,6 @@ In this example we'll create a basic contact form contain name, email and messag
 ###添加控制器
 最后我们前去添加控制器。添加一个控制器类到`/Controllers`，命名为`ContactController `，并且确保使用了 __empty MVC controller__  视图。
 
-
     using MyFirstForm.Models;
     using System;
     using System.Collections.Generic;
@@ -76,7 +75,7 @@ In this example we'll create a basic contact form contain name, email and messag
 
 如果模型状态为无效，`CurrentUmbracoPage() `会使用户返回到表单。如果验证有效，你可以使用表单数据做些什么（例如发送邮件给网站管理员），并且会`RedirectToCurrentUmbracoPage();`
 
-##将表单添加到模板
+## 将表单添加到模板##
 你可以通过输出局部视图把表单添加到模板中：
 
     @using MyFirstForm.Models;
@@ -102,15 +101,16 @@ In this example we'll create a basic contact form contain name, email and messag
     }
 
 
-####添加宏
+#### 添加宏 ####
 在能够添加表单到页面中，还要做最后一件事，就是允许在富文本中允许宏。选择并展开 __Macros__ 节点后选择 __Contact Form__ 宏。勾选 __Editor Settings__ 下面的复选框。
 
 现在你就可以包含富文本编辑器的页面中插入表单了。
 
-###更多信息
+### 更多信息 ###
+
 - [Surface Controllers](../../../Reference/Routing/surface-controllers.md)
 - [Custom controllers](../../../Reference/Routing/custom-controllers.md)
 - [Routing](../../../Reference/Routing/)
 
-
-
+### Umbraco TV
+- [Chapter: Surface Controllers](https://umbraco.tv/videos/umbraco-v7/developer/fundamentals/surface-controllers/)

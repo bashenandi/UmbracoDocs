@@ -1,20 +1,20 @@
-# 基于文件复制的文件存储
+# 使用文件复制的文件存储 #
 
-_文档是关于使用文件复制来设置负载均衡环境_
+_本文档是关于使用文件复制来设置负载均衡环境_
 
-##复制技术
+## 复制技术 ##
 
 在 Windows 服务器中常见的文件复制技术，是使用[DFS](http://msdn.microsoft.com/en-us/library/windows/desktop/bb540031(v=vs.85).aspx), 它包含在 Windows 服务版中。
 
 附加的 DFS 资源:
 
 * [Implementing DFS Replication in Windows Server 2003](http://www.windowsnetworking.com/articles_tutorials/Implementing-DFS-Replication.html)
-* [Overview of DFS Replication in Windows Server 2008 R2](http://technet.microsoft.com/en-us/library/cc771058.aspx)
-* [Watch an intro to installing and working with DFS](http://www.youtube.com/watch?v=DYfBoUt2RVE)
+* [Overview of DFS Replication in Windows Server 2008 R2](https://technet.microsoft.com/en-us/library/cc771058.aspx)
+* [Watch an intro to installing and working with DFS](https://www.youtube.com/watch?v=DYfBoUt2RVE)
 
 还有其他一些文件复制的替代方案，一些是免费的一些是授权的。你需要根据自行选择选择更加适合你环境的解决方案。
 
-##非复制文件
+## 非复制文件 ##
 
 当使用文件复制发布 Umbraco 到负载均衡环境是，有个很重要的问题是你要知道并不是所有文件都需要复制 - 否则，你将会遇到文件锁的问题。这里有一些文件和目录不能被复制：
 
@@ -36,6 +36,6 @@ _文档是关于使用文件复制来设置负载均衡环境_
 * 在App_Data 目录中创建虚拟目录（不是虚拟应用），命名为 TEMP 。将虚拟目录指向到第二步创建的文件夹。
 * 你可以在文件系统中删除 /App_Data/TEMP 目录 - 注意不是在 IIS 中，否则会删除虚拟目录。
 
-##IIS设置
+## IIS设置 ##
 
 文件复制环境中的IIS 的配置相当简单。IIS 只会读取本地文件系统，就像正常的 IIS 网站一样。

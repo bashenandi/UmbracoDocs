@@ -1,81 +1,102 @@
-#Working with Record data
+# Working with Record data
 
-Umbraco Forms includes some helper methods that return dynamic objects, making it easy to output records using razor.
+Umbraco Forms includes some helper methods that return dynamic objects, which makes it easy to output records in your templates using razor.
 
-##Available methods
+## Available methods
 The static methods can be found in Umbraco.Forms.Mvc.DynamicObjects.Library
 
-###GetApprovedRecordsFromPage
+### GetApprovedRecordsFromPage
 
-	DynamicRecordList GetApprovedRecordsFromPage(int pageId)
-Returns all records with the state set to approved from all forms on the Umbraco page with the id = pageId as a DynamicRecordList
+```csharp
+DynamicRecordList GetApprovedRecordsFromPage(int pageId)
+```
 
-###GetApprovedRecordsFromFormOnPage
+Returns all records with the state set to approved from all forms on the Umbraco page with the id = `pageId` as a DynamicRecordList. 
 
-	DynamicRecordList GetApprovedRecordsFromFormOnPage(int pageId, string formId)
-Returns all records with the state set to approved from the form with the id = formId on the Umbraco page with the id = pageId as a DynamicRecordList
+### GetApprovedRecordsFromFormOnPage
 
-###GetApprovedRecordsFromForm
-	DynamicRecordList GetApprovedRecordsFromForm(string formId)
-Returns all records with the state set to approved from the form with the ID = formId as a DynamicRecordList
-###GetRecordsFromPage
+```csharp
+DynamicRecordList GetApprovedRecordsFromFormOnPage(int pageId, string formId)
+```
 
-	DynamicRecordList GetRecordsFromPage(int pageId)
-Returns all records from all forms on the Umbraco page with the id = pageId as a DynamicRecordList
+Returns all records with the state set to approved from the form with the id = `formId` on the Umbraco page with the id = `pageId` as a DynamicRecordList.
 
-###GetRecordsFromFormOnPage
+### GetApprovedRecordsFromForm
 
-	DynamicRecordList GetRecordsFromFormOnPage(int pageId, string formId)
-Returns all records from the form with the id = formId on the Umbraco page with the id = pageId as a DynamicRecordList
+```csharp
+DynamicRecordList GetApprovedRecordsFromForm(string formId)
+```
 
-###GetRecordsFromForm
+Returns all records with the state set to approved from the form with the ID = `formId` as a DynamicRecordList.
 
-	DynamicRecordList GetRecordsFromForm(string formId)
+### GetRecordsFromPage
+
+```csharp
+DynamicRecordList GetRecordsFromPage(int pageId)
+```
+
+Returns all records from all forms on the Umbraco page with the id = `pageId` as a DynamicRecordList.
+
+### GetRecordsFromFormOnPage
+
+```csharp
+DynamicRecordList GetRecordsFromFormOnPage(int pageId, string formId)
+```
+
+Returns all records from the form with the id = `formId` on the Umbraco page with the id = `pageId` as a DynamicRecordList.
+
+### GetRecordsFromForm
+
+```csharp
+DynamicRecordList GetRecordsFromForm(string formId)
+```
+
 Returns all records from the form with the ID = formId as a DynamicRecordList
 
-##DynamicRecordsList and DynamicRecord
-As you see all of these methods will return an object of type DynamicRecordList so you can easily iterate trough the DynamicRecord objects.
+## DynamicRecordsList and DynamicRecord
+
+All of these methods will return an object of type `DynamicRecordList` so you can easily iterate through the DynamicRecord objects.
 
 The properties available on a DynamicRecord are:
 
-	DateTime Created
-	string Form
-	string Id
-	string IP
-	object MemberKey
-	Dictionary<Guid, RecordField> RecordFields
-	FormState? State
-	int UmbracoPageId
-	DateTime Updated
+```csharp
+DateTime Created
+string Form
+string Id
+string IP
+object MemberKey
+Dictionary<Guid, RecordField> RecordFields
+FormState? State
+int UmbracoPageId
+DateTime Updated
+```
 
 In order to access custom form fields you can simply use the dot notation, using the field caption but removing all spaces and non alphanumeric characters.
 
-##Sample razor script 
+## Sample razor script 
 
 Sample script that is outputting comments using a form created with the default comment form template.
-	
-	@using Umbraco.Forms.Mvc.DynamicObjects
 
-	<ul id="comments">
-	 @foreach (dynamic record in Library
-	           .GetApprovedRecordsFromPage(@CurrentPage.Id).OrderBy("Created"))
-	 {
-	     <li>
-	          @record.Created.ToString("dd MMMM yyy")
-	          @if(string.IsNullOrEmpty(record.Website)){
-	             <strong>@record.Name</strong>
-	          }
-	          else{
-	             <strong>
-	               <a href="@record.Website" target="_blank">@record.Name</a>
-	             </strong>
-	          }
-	         <span>said</span>
-	        <p>@record.Comment</p>
-	     </li>
-	  }
-	</ul>
+```csharp
+@using Umbraco.Forms.Mvc.DynamicObjects
 
-
-
-
+<ul id="comments">
+	@foreach (dynamic record in Library
+			.GetApprovedRecordsFromPage(@CurrentPage.Id))
+	{
+		<li>
+			@record.Created.ToString("dd MMMM yyy")
+			@if(string.IsNullOrEmpty(record.Website)){
+				<strong>@record.Name</strong>
+			}
+			else{
+				<strong>
+				<a href="@record.Website" target="_blank">@record.Name</a>
+				</strong>
+			}
+			<span>said</span>
+			<p>@record.Comment</p>
+		</li>
+	}
+</ul>
+```

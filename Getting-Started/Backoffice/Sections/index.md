@@ -1,46 +1,62 @@
-# 区块
-这里是八个 Umbraco 默认的区块：
+# 板块 #
+Umbraco 中的一个板块是指用于执行该板块相关的特定任务集合。例如：Content、Settings 和 Developer 都是板块。您可以通过单击位于后台左侧的分区菜单中的相应图标在不同分区之间导航。
+
+![Sections](images/umbraco7-6_sections.jpg "The Section menu is the vertical menu located on the left side of the backoffice.")
+
+*__Section menu__ 是后台中位于左侧的垂直菜单。*
+
+Umbraco 附带8个默认板块：
 
 
-###<img src="images/Content.jpg" style="width:60px;vertical-align:middle" /> 内容
-内容区块包含了网站的内容。内容作为节点显示在内容树中。为了创建内容，你必须先使用文档类型定义它。
+### <img src="images/Content.png" style="width:60px;vertical-align:middle" /> Content ###
+Content板块包含所有网站的内容。内容在内容树中显示为节点。节点还可以显示内容状态：
 
-###<img src="images/Media.jpg" style="width:60px;vertical-align:middle" /> 媒体
-媒体区块包含了网站的媒体资源。默认情况下你可以创建目录，上传媒体文件（图片和 pdf）。你可以在设置区块个性化已有的媒体类型或者定义你自己的。
+* 灰色节点尚未发布
+* <img src="images/has-unpublished-version.svg" width="12px" style="margin: 0;"> 节点具有未发布的版本（但当前已发布）
+* <img src="images/protected.svg" width="12px" style="margin: 0;"> 节点受保护，非公开节点 (需要登录)
+* <img src="images/locked.svg" width="12px" style="margin: 0;"> 节点当前锁定，不能删除
+* <img src="images/is-container.svg" width="12px" style="margin: 0;"> 节点是容器 (例如 List Views)
 
-###<img src="images/Settings.jpg" style="width:60px;vertical-align:middle" /> 设置
-设置区块，你可以使用网站布局，语言/本地化和定义媒体和内容。设置树包含：
+为了创建内容，你必须使用 Document Types定义它们。
 
-- 模板 (cshtml 文件)
-- 样式表 (CSS 文件)
-- 局部视图 (cshtml 文件)
-- 脚本 (javascript 文件)
-- 字典
-- 语言
-- 媒体类型
-- 文档类型
+### <img src="images/Media.png" style="width:60px;vertical-align:middle" /> Media ###
+Meida 板块包含了网站所有的媒体。默认情况下，您可以创建文件夹并上传媒体文件（图片和 PDF）。你可以自定义现有的媒体类型，或者在 Settings 板块中定义您自己的媒体类型。
 
-###<img src="images/Developer.jpg" style="width:60px;vertical-align:middle" /> 开发
-开发区块，你可以使用数据类型，宏，包，关系和 xslt 文件。开发树包括：
+### <img src="images/Settings.png" style="width:60px;vertical-align:middle" /> Settings ###
+Settings 板块是管理网站布局，语言/本地化以及定义媒体和内容的地方。Settings 树结构包含： 
 
-- 数据类型
-- 宏
-- 包
-- 关系类型
-- XSLT 文件
-- 局部视图宏文件
+- Document Types
+- Templates (.cshtml 文件)
+- Partial views (.cshtml 文件)
+- Stylesheets (.css 文件)
+- Scripts (.js 文件)
+- Languages
+- Dictionary
+- Media Types
 
-###<img src="images/Members.jpg" style="width:60px;vertical-align:middle" /> 会员
-管理，创建和自定义会员。
+### <img src="images/Developer.png" style="width:60px;vertical-align:middle" /> Developer ###
 
-###<img src="images/Users.jpg" style="width:60px;vertical-align:middle" /> 用户
-管理，创建和自定义管理后台用户。
+在 Developer 板块你可以处理包，数据类型，宏，关系，XSLT 以及 Razor 文件。Developer 树包含：
 
-###<img src="images/Forms.jpg" style="width:60px;vertical-align:middle" /> 表单
-你可以直接在 Umbraco 后台点击安装按钮来安装 Umbraco Forms。安装之后，本区块可以创建和管理你的表单。
+- Packages
+- Data Types
+- Macros
+- Relation Types
+- XSLT files
+- Partial View Macro Files
 
-###<img src="images/Help.jpg" style="width:60px;vertical-align:middle" /> 帮助
-当打开帮助区块时，你会得到一个关于你所在区块的视频教程链接。
+### <img src="images/Members.png" style="width:60px;vertical-align:middle" /> Members ###
+管理，创建和自定义用户，用户类型以及用户组。
 
-##更多信息
-- [自定义区块](../../../Extending/Section-Trees/index.md)
+### <img src="images/Users.png" style="width:60px;vertical-align:middle" /> Users ###
+管理，创建和自定义后台用户以及用户组。
+
+### <img src="images/Forms.png" style="width:60px;vertical-align:middle" /> Forms ###
+你可以在后台中通过点击来直接安装 Umbraco Forms 组件。安装完成后，可以在这个板块中创建并管理你的表单。
+
+### <img src="images/Help.png" style="width:60px;vertical-align:middle" /> Help ###
+
+打开“帮助”板块后，您将获得一个指向有关您所在部分的视频教程的链接。
+
+## 更多信息 ###
+除了 Umbraco 附带的默认板块，您可以创建你自己的[自定义板块](../../../Extending/Section-Trees/index.md)。

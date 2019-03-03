@@ -1,14 +1,16 @@
-# Grid Editors
-A grid editor is the component responsible for getting data into the grid - that could be a simple text field or a media picker. They're built in the same way as a property editor thus consists of 3 parts:
+# 网格编辑器 #
 
-- .html view file
-- .js controller
-- .cshtml serverside renderer
+网格编辑器是负责将数据输入网格的组件 - 可以是简单的文本字段或者媒体选择器。它们的构建方式与属性编辑器相同，因此由3部分组成：
 
-The view is what the editor sees, the controller handles how it acts and the cshtml determines how the entered data is rendered in the template.
+- .html 视图文件
+- .js 控制器
+- .cshtml 服务器端渲染
 
-### Default Grid editors
-The default editors are specified in `/config/grid.editors.config.js`. They are written in the JSON format and each editor is an object like so:
+视图是编辑者所看到的东西，控制器处理它的行为，CSHTML决定如何在模板中呈现输入的数据。
+
+
+### Default Grid editors ###
+默认的编辑器在`/config/grid.editors.config.js`中声明。它们是以JSON格式编写的，每个编辑器都是类似这样的对象：
 
     {
         "name": "Rich text editor",
@@ -17,11 +19,11 @@ The default editors are specified in `/config/grid.editors.config.js`. They are 
         "icon": "icon-article"
     }
 
-### Custom Grid editors
-You can easily customize the built-in editors to tailor the grid to your need.
+### Custom Grid editors ###
+您可以轻松地根据需要来自定义内置编辑器来适应您的网格。
 
-##### package.manifest
-It is recommended that you define custom editors in a `package.manifest` file (not in the config file described above) like so:
+##### package.manifest ####
+当你定义自己的编辑器时推荐使用`package.manifest`文件（并不是上面介绍的配置文件中）例如：
 
     {
         "gridEditors": 
@@ -35,32 +37,32 @@ It is recommended that you define custom editors in a `package.manifest` file (n
         ]
     }
     
-While the root JSON element of `/config/grid.editors.config.js` is an array of grid editors, `package.manifest` files start with a JSON object with a number of different properties - one of them being `gridEditors`.
+不同于`/config/grid.editors.config.js`文件中网格编辑器的JSON 根元素是一个数组，在`package.manifest`文件中是从一个具有多个不同属性的json对象开始，其中一个属性是`gridEditors`。
 
-The package manifest should be placed in a folder inside the `/App_Plugins/` folder - for instance `/App_Plugins/{YourPackageName}/package.manifest`. You can define as many grid editors you want and it can be done over multiple manifests so you can use grid editors from packages etc. With the `package.manifest` file in place, Umbraco will automatically pick it up during startup.
+打包文件清单位于`/App_Plugins/`目录中的某个目录里面 - 比如`/App_Plugins/{YourPackageName}/package.manifest`。您可以定义任意多个网格编辑器，并且可以在多个清单上进行定义，这样您就可以使用清单文件中的网格编辑器。在`package.manifest`文件就位后，Umbraco将在启动过程中自动提取它。
 
-You can read more about `package.manifest` files in general at the [Package Manifest](../../../../../Extending/Property-Editors/package-manifest.md) page.
+你可以在[Package Manifest](../../../../../Extending/Property-Editors/package-manifest.md)页面读到更多关于`package.manifest`的信息。
 
-##### Grid editor configuration
+##### Grid editor configuration #####
 
-For a grid editor, the required values are:
-- **name**: The name of the editor
-- **alias**: Unique alias of the editor
-- **icon**: Icon shown to the editor, uses same icon classes as the rest of 
-- **view** the view defines the editor used to enter a value. By default Umbraco will look in `/umbraco/views/propertyeditors/grid/editors` for a html view to use - but you can pass in your own path
+对于一个网格编辑器，必要的值包括：
 
-The built-in views you can use are: 
+- **name**: 编辑器的名字
+- **alias**: 唯一的编辑器别名
+- **icon**: 显示在编辑器中的图标，使用与其他图标相同的图标类
+- **view**：view 定义了编辑者可以输入的值。Umbraco默认会在 `/umbraco/views/propertyeditors/grid/editors`中查找 htmlm 视图来使用，但是你也可以使用自己的路径来替换
+
+你可以使用的内置视图：
 
 - textstring
 - rte
 - embed
 - macro
 - media
-- rte
 
-In most cases you will either use the textstring or media view, or built your own from scratch. The textstring and media editors come with some additional configuration to make it easy and quick to customise these.
+在大多数情况下，您要么使用文本字符串或媒体视图，要么从头开始构建自己的视图。textstring和media编辑器提供了一些额外的配置，以方便快速地自定义它们。
 
-##### Sample textstring config
+##### Sample textstring config #####
 
     {
         "name": "Headline",
@@ -73,11 +75,9 @@ In most cases you will either use the textstring or media view, or built your ow
         }
     }
 
-In this sample, the `config.style` value is applied to the editor so users can see an accurate preview in the backoffice. This will be applied as as inline styling to the textarea in the backoffice. 
+在此示例中，`config.markup`值应用于编辑器，以便用户可以在后台看到准确的预览。这将作为内联样式应用于后台的文本区域。`config.markup`会作为字符串输出到模板中。其中的`#value#`会被真实的值所替代。
 
-The `config.markup` is the string rendered server side in your template. `#value#`will be replaced with the actual value 
-
-##### Sample media config
+##### Sample media config #####
 
     {
         "name": "Square Image",
@@ -92,5 +92,6 @@ The `config.markup` is the string rendered server side in your template. `#value
         }
     }
 
-In this sample `config.size` will resize the the image according to `height` and `width`. The above example will result in a rendered image that is 200x200 pixels no matter the size of the uploaded image. If the ratio of the size differs from the uploaded image it is possible to set a focal point that determines how the image should be cropped.
+在此示例中，`config.size`将根据`height` 和 `width`调整图像大小。上面的示例将导致渲染图像为200x200像素，无论上传图像的大小如何。如果大小比与上载的图像不同，则可以设置一个焦点，以确定图像应如何裁剪。
+
 ![Resizing](images/grid-resizing.png)

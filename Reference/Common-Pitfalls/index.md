@@ -1,10 +1,10 @@
-# 常见陷阱与反模式
+# 常见陷阱与反模式 #
 
 _这部分格外重要！它描述了开发人员容易陷入的许多的常见陷阱。
 这里提到的一些反模式会使你的站点停止，内存泄漏，运行不稳定或者性能下降。
 确保你阅读了这个部分 - 它可能会挽救你的网站！_
 
-## 使用单例模式和静态对象
+## 使用单例模式和静态对象 ##
 一般来说如果你编写软件已经一段时间，你应该会使用到依赖注入规则。
 如果你这么做了，你可能不再使用单例模式和静态对象（多数时候也不必这么做！），由于 Umbraco 自身并不是一个可以开箱使用的IoC容器，你可以会用 Umbraco 构建一些单例单例访问器，例如：`ApplicationContext.Current`和`UmbracoContext.Current`。在多数时候，你不该使用这些单例操作器，它会使你的代码难于测试，而更加重要的是使用单例模式和静态对象会使你的代码难于管理，APIs 会容易泄露最终你会遇到比开始时更多的问题。
 
@@ -12,44 +12,40 @@ _这部分格外重要！它描述了开发人员容易陷入的许多的常见�
 例如，所有 Umbraco 创建的Razor 视图，都会将UmbracoContext暴露为一个`UmbracoContext `属性，它们暴露`ApplicationContext `属性指向 Umbraco 的ApplicationContext。在其他基类中也会暴露所有你需要的实例，例如：`SurfaceController`,
 `UmbracoApiController`, `UmbracoController`, `RenderMvcController`, `UmbracoUserControl`, `UmbracoPage`, `UmbracoHttpHandler`，这个支持列表还会添加
 
-__用基类属性替代单例访问器的示例：__
+_用基类属性替代单例访问器的示例：__
 
 _这个示例展示了在`SurfaceController`中不依赖单实例来操作所有Umbraco 服务。这些类似的属性存在于所有你常用的 Umbraco 的基类中，包括 Razor 视图。_
 
-	 public class ContactFormSurfaceController: SurfaceController
-    {
-        [HttpPost]
-        public ActionResult SubmitForm(ContactFormModel model)
-        {        
-            //TODO: 正常的表单逻辑处理代码放在这里
-
-            // 你可以操作所用的，因为它们是基类的属性,
-            // 注意这里没有单例模式操作!
-
-            //ProfilingLogger:
-            using (ProfilingLogger.TraceDuration<ContactFormSurfaceController>("start", "stop"))
-            {
-                //Logger:
-                Logger.Warn<ContactFormSurfaceController>("warning!");
-                
-                //MembershipHelper:
-                Members.CurrentUserName;
-                
-                //ServiceContext:
-                Services.ContentService.GetById(1234);
-                
-                //ApplicationContext:
-                ApplicationContext.ApplicationCache.RuntimeCache.GetCacheItem("myKey", () => "hello world");
-                
-                //UmbracoContext:
-                UmbracoContext.UrlProvider.GetUrl(4321);
-                
-                //DatabaseContext:
-                DatabaseContext.Database.ExecuteScalar<int>("SELECT COUNT(*) FROM umbracoNode");   
-            }        
-        }
-    }
-
+	public class ContactFormSurfaceController: SurfaceController{
+		[HttpPost]
+		public ActionResult SubmitForm(ContactFormModel model){
+			//TODO: 正常的表单逻辑处理代码放在这里
+			// 你可以操作所用的，因为它们是基类的属性,
+			// 注意这里没有单例模式操作!
+			
+			using (ProfilingLogger.TraceDuration<ContactFormSurfaceController>("start", "stop")){
+				// Logger:
+				Logger.Warn<ContactFormSurfaceController>("warning!");
+				
+				// MembershipHelper:
+				Members.CurrentUserName;
+				
+				// ServiceContext:
+				Services.ContentService.GetById(1234);
+				
+				// ApplicationContext:
+				ApplicationContext.ApplicationCache.RuntimeCache.GetCacheItem("myKey", () => "hello world");
+				
+				// UmbracoContext:
+				UmbracoContext.UrlProvider.GetUrl(4321);
+				
+				// DatabaseContext:
+				DatabaseContext.Database.ExecuteScalar<int>("SELECT COUNT(*) FROM umbracoNode");
+				
+			}
+		}
+	}
+	
 所以当你下一次使用`ApplicationContext.Current` 或者 `UmbracoContext.Current`时思考一下"我为什么这么做？"，
 "这是否已经作为我使用的基类的属性公开了？"，"我是使用了依赖注入，我应该注入这些示例到我的类中。"
 
@@ -82,7 +78,9 @@ __其他示例:__
 
     private static _umbracoContext = UmbracoContext.Current;
 
+
     //MembershipHelper 也是个请求范围实例 - 它依赖于UmbracoContext 或者HttpContext 
+    // MembershipHelper is also a request scoped instance - it relies either on an UmbracoContext or an HttpContext
     private static _membershipHelper = new MembershipHelper(UmbracoContext.Current);
 
     private static _request = HttpContext.Current.Request;
@@ -142,7 +140,7 @@ __其他示例:__
 语法`@Model.Content.Site()`实际上是`Model.Content.AncestorsOrSelf(1)`的短格式，这意味着它不得不向上查询，一直到父级根节点为止。上面提到过，穿越查询成本开销是比较大的，而上例中为同一个值使用了3次。我们替换为下面的代码：
 
     @{
-        var site = @Model.Content.Site();
+        var site = Model.Content.Site();
     }
     <ul>
         <li><a href="@site.Url">@site.Name</a></li>
@@ -181,6 +179,7 @@ Umbraco 中的服务层，是用来用于 Umbraco 的业务逻辑直接存取数
 
 __例如__ 在视图中检索数据:
 
+
     //视图中的服务操作 :(
     var dontDoThis = ApplicationContext.Services.ContentService.GetById(123);
 
@@ -188,6 +187,17 @@ __例如__ 在视图中检索数据:
     var doThis = Umbraco.TypedContent(123);
 
 如果你在视图中使用了`Application.Services...`，你应该弄清楚为什么这么做，而且多数时候你应该删除这些逻辑。
+
+__For example__, when retrieving a content item in your views:
+
+    // Services access in your views :(
+    var dontDoThis = ApplicationContext.Services.ContentService.GetById(123);
+
+    // Content cache access in your views :)
+    var doThis = Umbraco.TypedContent(123);
+
+If you are using `Application.Services...` in your views, you should figure out why this is being done and, in most cases, remove this logic.   
+
 
 ## 使用UmbracoContext来操作ApplicationContext
 你不应该通过`UmbracoContext`来操作`ApplicationContext`。
@@ -200,8 +210,9 @@ __例如__ 在视图中检索数据:
 * 或者注入这些服务类到你使用的服务中 
 * 或者从这些服务自己的单例模式中操作这些服务：`UmbracoContext.Current` 和 `ApplicationContext.Current`。
 
-The reason why this is bad practice is because it has caused confusion and problems in the past. In some cases developers would always
+The reason why this is bad practice is that it has caused confusion and problems in the past. In some cases developers would always
 access the `ApplicationContext` from the `UmbracoContext` but as we now know, this won't always work because the `UmbracoContext` is a request
+
 scoped instances which isn't going to be available when executing code in a non-request scope (i.e. background thread).（懒得翻译了，一个意思，不该通过web 请求级别的生命周期去获取应用程序级别的）
 
 ## 为不稳定的数据使用 Umbraco 内容条目 
@@ -216,6 +227,7 @@ Umbraco 的内容不应该用于不稳定的数据，Umbraco 的 APIs 和 Umbrac
 * 为表单提交创建新节点 - 这应该存储在自定义数据库表中
 * 导入大量数据到 Umbraco 内容节点中要比存储在自定义数据表中更容易（例如，不会编辑它）。在某些时候这是 ok 的，但是更多时候我们每小时/每周批量导入就最好避免。
 
+
 ## 启动进程
 Umbraco 允许你在通过`ApplicationEventHandler `在启动期间运行一些初始化代码，但你无必要确认这样并不会拖慢应用程序的启动速度。
 
@@ -227,9 +239,6 @@ Umbraco 允许你在通过`ApplicationEventHandler `在启动期间运行一些�
 
 * 使用 [`Lazy<T>`](https://msdn.microsoft.com/en-us/library/dd642331(v=vs.110).aspx) 将初始化逻辑放在它的回调中
 * 使用 [`LazyInitializer`](https://msdn.microsoft.com/en-us/library/system.threading.lazyinitializer%28v=vs.110%29.aspx?f=255&MSPPError=-2147217396)
-* Putting logic in a property getter with a lock and setting a flag that it's processed
-* Putting logic in a method with a lock and setting a flag that it's processed
-* (there's plenty of ways)
 
 更加要的是你要确保初始化逻辑在整个应用程序生命周期内，仅在应用重启时执行一次。如果你的初始化逻辑会创建数据库表或者类似的一些事情，那么它就应该只执行一次，接下来你应该设置一个持续性标识（或者文件）来表明你的初始化代码逻辑已经执行过，不要再次执行。
 
@@ -249,7 +258,7 @@ Umbraco 允许你在通过`ApplicationEventHandler `在启动期间运行一些�
 
 这是因为这些方法会在每个独立的文档建立索引和你重建索引时执行，这将意味着这些逻辑将介入每个独立文档和媒体条目的每个索引...那将意味着数量巨大的轮询和性能损耗。
 
-## 绘制模板
+## 绘制模板 ##
 
 在 Umbraco 中有一个你永远不该使用的 API，除非你真的真的知道你要做什么。这个 API 方法叫`RenderTemplate `。它允许你能够绘制特定的内容条目的模板并且在响应中获取`string`。在有些时候这是有用的，或许你想在内容条目和它的模板基础上发送一封邮件，但是你必须非常小心，不要为了使用它而使用它。
 
@@ -262,6 +271,7 @@ Umbraco 允许你在通过`ApplicationEventHandler `在启动期间运行一些�
 
 * API 的构造器，并不期望通过其创建的对象，还要去担心性能方面的问题
 * 创建一个对象时会在不经意间发生太多次，尤其是在使用 Linq 时
+
 
 这里示范了如何非常快速的生成这个错误的示例：
 你的树结构大致看起来像这样：
@@ -327,12 +337,12 @@ __Ouch!__ 因此只是显示投票最多的 top10，这将完成以下操作：
         {
             get 
             {
-                //Lazy load the property value and ensure it's not re-resolved once it's loaded
+                // Lazy load the property value and ensure it's not re-resolved once it's loaded
                 return _votes ?? (_votes = GetPropertyValue<int>("votes"));
             } 
         }
 
-        //Just return the Ids, they can be resolved to IPublishedContent instances in the view or elsewhere,
+        // Just return the Ids, they can be resolved to IPublishedContent instances in the view or elsewhere,
         // doesn't need to be in the model - this would also be bad if the model was cached since all of the
         // related entities would end up in the cache too.
         private List<int> _related;
@@ -340,7 +350,7 @@ __Ouch!__ 因此只是显示投票最多的 top10，这将完成以下操作：
         {
             get 
             {
-                //Lazy load the property value and ensure it's not re-resolved once it's loaded            
+                // Lazy load the property value and ensure it's not re-resolved once it's loaded            
                 return _related ?? 
                     (_related = GetPropertyValue<IEnumerable<int>>("related").ToList());
             } 
@@ -349,7 +359,7 @@ __Ouch!__ 因此只是显示投票最多的 top10，这将完成以下操作：
 
 这稍微好了一些:
 
-* This will iterate over all Recipess, create and allocate 5000 instances of `IPublishedContent`
+* This will iterate over all Recipes, create and allocate 5000 instances of `IPublishedContent`
 * This will create and allocate 5000 instances of `RecipeModel`
 
 This means that there is now a minimum of __15,000__ new objects created and allocated in memory. The number of traversals/visits to each
@@ -380,9 +390,9 @@ instances of `IPublishedContent` to be created. When memory is used, Garbage Col
 turnover can cause performance problems. The more objects created, the more items allocated in memory, the harder the job
 is for the Garbage Collector == more performance problems. Even worse is when you allocate tons of items in memory and/or really 
 large items in memory, they will remain in memory for a long time because they'll end up in something called "Generation 3" which the 
-GC tries to ignore for as long as possible because it knows it's gonna take a lot of resources to cleanup!
+GC tries to ignore for as long as possible because it knows it's going to take a lot of resources to cleanup!
 
-So if you have a huge site and are running Linq queries over tons of content, how do you avoid allocating all of these `IPublishedContent` instances? 
+So, if you have a huge site and are running LINQ queries over tons of content, how do you avoid allocating all of these `IPublishedContent` instances? 
 
 Instead of iterating over (and thus creating them) we can use regular old `XPath` or use the `XPathNodeIterator` directly:
 
@@ -393,13 +403,13 @@ Instead of iterating over (and thus creating them) we can use regular old `XPath
 The methods `TypedContentAtXPath` and `TypedContentSingleAtXPath` will return the resulting `IPublishedContent` instances based
 on your XPath query but without creating interim `IPublishedContent` instances to perform the query against. 
 
-These 2 methods can certainly help avoid using Linq (and as such allocating IPublishedContent instances) 
+These 2 methods can certainly help avoid using LINQ (and as such allocating IPublishedContent instances) 
 to perform almost any content filtering you want. 
 
 ## XPathNodeIterator - 在你需要直接操作XML 时提供支持
 
 Using the `GetXPathNavigator` method is a little more advanced but can come in very handy to solve some performance problems when
-dealing with a ton of content. Of course when you use this method you'll now be working directly with XML.
+dealing with a ton of content. Of course, when you use this method you'll now be working directly with XML.
 
 For example, here's how to turn the above recipe query into a much more efficient query 
 without allocating any `IPublishedContent` instances:

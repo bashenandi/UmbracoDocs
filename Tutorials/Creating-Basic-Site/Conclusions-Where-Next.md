@@ -1,6 +1,6 @@
-#结论
+# 总结 #
 
-我们现在已经有了一个完全成熟的网站！希望这个指导可以给你所有关于使用创建你自己的网站的基本信息。对于你创建大多数网站来说，并不需要比这更加复杂的东西。我们并没有编写任何代码，更多是在Umbraco UI 中工作。
+我们现在已经有了一个完整运行的网站！希望本指南能够为您提供在Umbraco 中创建自己网站所需的基础知识。对于大多数你要创建的网站来说，也并不会比这复杂更多。我们没有编写任何代码，也不需要在Umbraco UI中进行大量工作。
 
 这并不是 Umbraco 的极限 - 在这个指导中你只是了解了一些表面。
 
@@ -9,5 +9,4 @@
 *    这还有官方的在线教程：[http://our.umbraco.org/documentation](http://our.umbraco.org/documentation) 
 *    获取帮助或者任何本指导未包含的内容，论坛是一个好地方：[http://our.umbraco.org/forum ](http://our.umbraco.org/forum )
 
----
-#快乐使用 Umbraco!
+# Happy Umbraco-ing! #

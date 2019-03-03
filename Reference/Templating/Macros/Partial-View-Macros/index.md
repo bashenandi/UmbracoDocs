@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # 局部视图宏
+=======
+# Partial View Macros
+>>>>>>> upstream/master
 
 _局部视图宏是推荐在 Umbraco 中使用的宏类别。它们可以运行在 MVC 和 WebForms 中，通过`UmbracoHelper`使用统一的查询语法_
 
@@ -9,7 +13,11 @@ _局部视图宏是推荐在 Umbraco 中使用的宏类别。它们可以运行�
 	@inherits Umbraco.Web.Macros.PartialViewMacroPage
 局部视图宏的模型类型是`Umbraco.Web.Models.PartialViewMacroModel`，包含所有你会需要的用来输出内容的属性以及宏文件自身的附加属性：`MacroName`, `MacroAlias`, `MacroId`, 以及 `MacroParameters`。
 
+<<<<<<< HEAD
 ## 文件信息
+=======
+## File information
+>>>>>>> upstream/master
 
 默认情况局部视图宏存储在这个文件夹：
 
@@ -23,7 +31,11 @@ _局部视图宏是推荐在 Umbraco 中使用的宏类别。它们可以运行�
 
 	Umbraco.Web.Macros.PartialViewMacroPage
 
+<<<<<<< HEAD
 因此所有文件都会包含这个头（当你在 Umbraco 后台中创建局部视图宏时会自动完成）：
+=======
+Therefore all files will contain this header (which is done automatically for you if creating Partial View Macros via the Umbraco backoffice):
+>>>>>>> upstream/master
 
 	@inherits Umbraco.Web.Macros.PartialViewMacroPage
 
@@ -38,3 +50,11 @@ _局部视图宏是推荐在 Umbraco 中使用的宏类别。它们可以运行�
 你可以通过模型属性中类型为`IDictionary<string, object>`的`MacroParameters`来操作宏的参数
 
     var myParam = Model.MacroParameters["aliasOfTheMacroParameter"];
+
+or via the typed GetParameterValue method in Umbraco.Web.Models namespace
+
+    var myParam = Model.GetParameterValue<string>("aliasOfTheMacroParameter");
+
+and with default value fallback
+
+    var myParam = Model.GetParameterValue<string>("aliasOfTheMacroParameter", "default value if parameter value has not been set");

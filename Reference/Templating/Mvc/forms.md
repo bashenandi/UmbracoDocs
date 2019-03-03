@@ -1,14 +1,14 @@
-#创建 HTML 表单
+# 创建 HTML 表单 #
 
 _创建一个 HTML 表单用来提交数据到 Umbraco 是非常简单的！你只需要创建一个 SurfaceController，一个'View Model'类再使用一个方便的叫BeginUmbracoForm的HtmlHelper 扩展方法_
 
-## 快速链接 - MVC 表单教程
+## 快速链接 - MVC 表单教程 ##
 
 * [使用局部视图创建 MVC 表单](Forms/tutorial-partial-views.md)
 * [使用子 Action 创建 MVC 表单](Forms/tutorial-child-action.md)
 * [使用自定义html 标记创建 MVC 表单](Forms/tutorial-custom-markup.md)
 
-## 创建表单 - View Model
+## 创建表单 - View Model ##
 首先我们需要定义要提交的数据，这通过创建一个'Voew Model'类来完成。这是一个示例：
 	
 	public class CommentViewModel
@@ -23,17 +23,17 @@ _创建一个 HTML 表单用来提交数据到 Umbraco 是非常简单的！你�
 	    [Display(Name = "Enter a comment")]
 	    public string Comment { get; set; }
 	}
+
 这个类定义的数据是要提交的数据，还定义了哪些数据是必填的，MVC 会自动实现这些验证属性，前端验证 JS 也会自动执行。
 
-## 创建 SurfaceController Action
-
+## 创建 SurfaceController Action ##
 下一步，我们需要在SurfaceController中创建一个 Action用来接收我们提交的视图数据。这有一个示例（这是本地定义的控制器）：
 
 	public class BlogPostSurfaceController : Umbraco.Web.Mvc.SurfaceController
 	{
 		[HttpPost]
 		public ActionResult CreateComment(CommentViewModel model)
-		{    
+		{
 		    //模型未验证，不会保存，但是会返回到当前的 Umbraco 页面
 		    if (!ModelState.IsValid)
 			{
@@ -43,12 +43,11 @@ _创建一个 HTML 表单用来提交数据到 Umbraco 是非常简单的！你�
 		
 		    //如果验证通过执行一些逻辑
 		    //In this sample we keep it empty, but try setting a breakpoint to see what is posted here
-			
-			//Perhaps you might want to store some data in TempData which will be available 
-			//in the View after the redirect below. An example might be to show a custom 'submit
-			//successful' message on the View, for example:
-			TempData.Add("CustomMessage", "Your form was successfully submitted at " + DateTime.Now)
-		
+		    // Perhaps you might want to store some data in TempData which will be available 
+		    // in the View after the redirect below. An example might be to show a custom 'submit
+		    // successful' message on the View, for example:
+		    TempData.Add("CustomMessage", "Your form was successfully submitted at " + DateTime.Now);
+		    
 		    //跳转到当前页面并清空数据
 		    return RedirectToCurrentUmbracoPage();
 		
@@ -57,7 +56,7 @@ _创建一个 HTML 表单用来提交数据到 Umbraco 是非常简单的！你�
 		}
 	}
 
-##使用 BeginUmbracoForm
+## 使用 BeginUmbracoForm ##
 最后我们需要输出 HTML 表单来保证它们提交到 surface 控制器。最简单的方法是创建一个局部视图用来输出你的表单，并且将模型数据声明为你ViewModel。这里有一些重写的BeginUmbracoForm方法，我们只从最简单的一个开始：
 
 	@model CommentViewModel
@@ -70,7 +69,7 @@ _创建一个 HTML 表单用来提交数据到 Umbraco 是非常简单的！你�
 
 上面的代码片段是用于输出表单的局部视图。由于视图的模型就是我们想要承载的ViewModel，我们可以使用`@Html.EditorFor(x => Model)`来自动建立所有的输入字段。
 
-####BeginUmbracoForm 重载
+#### BeginUmbracoForm 重载 ####
 
 这是BeginUmbracoForm可用的不同重载：
 
@@ -78,6 +77,9 @@ _创建一个 HTML 表单用来提交数据到 Umbraco 是非常简单的！你�
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName)
 	
 	//接下来的三个类似于上面，但是允许你指定额外的路由值以及form 标签的 html 属性
+	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName)
+	
+	// The next three are the same as above but allow you to specify additional route values and/or html attributes for the form tag
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals)
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals, object htmlAttributes)
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals, IDictionary<string, object> htmlAttributes)
@@ -96,19 +98,19 @@ _创建一个 HTML 表单用来提交数据到 Umbraco 是非常简单的！你�
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, string area)
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, string area, object additionalRouteVals, IDictionary<string, object> htmlAttributes)
 
-## 理解路由处理
+## 理解路由处理 ##
 很多人都尝试从他们的[HttpPost]action 中直接返回局部视图，是由于没有充分理解路由上传数据到服务器的过程。这里将解释事件的顺序。 这里例子中我们假设这个页面输出的地址是：http://mysite.com/feedback
 
-### 1. Umbraco 页面请求
+### 1. Umbraco 页面请求 ###
 
 1. 用户浏览页面 http://mysite.com/feedback
 2. Umbraco 找到这个内容页面
 
-### 2. Umbraco 页面输出
+### 2. Umbraco 页面输出 ###
 1. RenderMvcController 为当前页面执行请求
 2. MVC 视图会输出它包含的局部视图，局部视图会通过`BeginUmbracoForm`来创建 html 表单
 
-### 3. 用户提交表单
+### 3. 用户提交表单 ###
 
 1. 用户填写表单并提交
 2. 生成 http 的 POST 请求 (你要注意到和当前输出一样的 URL 地址: http://mysite.com/feedback)

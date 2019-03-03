@@ -1,11 +1,12 @@
-#设置和样式
-网格布局还可以公开自定义设置 - 比如数据属性或者样式选项 - 对于每个单元格和行都是如此。它们允许编辑器使用一些友好的 UI 添加一些配置值到网格元素。当应用了自定义设置和样式时，她们将被作为html 属性或者内联样式被包含在网格 html 中。
+# 设置和样式 #
+
+网格布局还可以暴露自定义设置 - 比如数据属性或者样式选项 - 对于每个单元格和行都是如此。它们允许编辑器使用一些友好的 UI 添加一些配置值到网格元素。当应用了自定义设置和样式时，她们将被作为html 属性或者内联样式被包含在网格 html 中。
 
 ![Grid layouts](images/settings.png)
 
 在设置网格布局数据类型时，这些设置和样式必须由开发人员配置。
 
-###配置自定义设置和样式
+### 配置自定义设置和样式 ###
 为了增加设置，点击*Edit Settings*链接。会展开一个显示原始数据的对话框。这些数据是 JSON 格式的，并且在保存会验证 JSON 格式。
 
 设置数据看起来大概是这样的，每项设置都是一个对象:
@@ -33,14 +34,13 @@
 
 **label** 和 **description** 最好描述清晰直接了当。
 
-**key** defines the alias the configuration is stored under and by default the alias of the attribute will also be the attribute on the rendered html element. In the example above any value entered in this settings editor will be rendered in the grid html as:
+**key**定义了配置的存储别名，并且在渲染 html 元素时默认将别名作为属性名。下面的例子中，任何在这个配置编辑中输入的值都会输出到网格 html 中：
 
     <div **class**="VALUE-ENTERED"></div>
 
-By changing the key of the setting you can modify the `<div>` element's attributes like `class`, `title`, `id` or custom `data-*` attributes.
+想要修改设置的键，你可以编辑`<div>`元素的属性，例如`class`, `title`, `id`以及自定义的`data-*`属性。
 
-
-**view** the view defines the editor used to enter a value. By default Umbraco comes with a collection of prevalue editors:
+**view**定义了编辑者可以输入的值。默认情况下，Umbraco附带了一组预设的编辑器：
 
 - textstring
 - textarea
@@ -53,9 +53,9 @@ By changing the key of the setting you can modify the `<div>` element's attribut
 - number
 - multivalues
 
-Alternatively you can also pass in a path to a custom view like "/app_plugins/grid/editors/view.html"
+或者你也可以使用类似于"/app_plugins/grid/editors/view.html"这样的自定义视图的路径来替代。
 
-**prevalues** is for views that need predefined values, e.g. the radiobuttonlist view. Prevalues are defined as strings in an array:
+**prevalues**用于视图所需的预设值，例如单选按钮列表视图。预设值定义为一个字符串类型的数组：
     
     "prevalues":[
         "value_1",
@@ -63,9 +63,9 @@ Alternatively you can also pass in a path to a custom view like "/app_plugins/gr
         "value_3"
     ]
 
-and will translate in to three different options where each string will become a radiobutton. The strings represent the value of the options.
+这将会把每个字符串转换成为三个不同的选项的单选按钮。显示的字符串就是选项的值。
 
-**In Umbraco 7.5.4 & newer** prevalues can also be defined as an object of label/value allowing to have a displayed label instead of showing the actual underlying value. You can even mix and match these and use both label/value prevalues and simple string prevalues in the same configuration:
+**从Umbraco 7.5.4 版本开始**，预设值可以定义为label/value 的对象，允许有一个显示的标签，而不是实际值。你还可以在同一个配置项中混合使用 label/value 预设值和简单的字符串预设值：
 
     "prevalues":[
         {
@@ -79,23 +79,24 @@ and will translate in to three different options where each string will become a
         "value_3"
     ]
 
-**modifier** is a basic way to prepend, append or wrap the value from the editor in a simple string. This is especially useful when working with custom styles which often requires additional values to function. For instance if you want to set a background image you can get an image path from the image picker view. But in order for it to work with css it has to be wrapped in `url()`. In that case you set the **modifier** to `url('{0}')` which means that `{0}` is replaced with the editor value.
+**modifier**是可预置的，将编辑者输入的值添加或者嵌入到一个简单字符串中的基本方法。这在处理平时需要附加值才能工作的自定义样式时特别有用。举例来说如果你想设置一张背景图片，你可以从图片选取器中获取到图片的路径。但是为了让它在 css 中能正常工作，必须包裹在`url()`中。这种时候，你就可以把**modifier**设置为`url('{0}')`，这代表着`{0}`将会被编辑者选择的值所替代。
 
-**applyTo** defines what this setting can be applied to. It should be either **row** or **cell** as a string.
+**applyTo**定义了这些设置可以被应用在哪里。它只能是作为字符串的**row** 或者 **cell**。
 
-**In Umbraco 7.5.4 & newer** a JSON object can also be used if you need a more specific configuration. A JSON configuration could look like this:
+**在 Umbraco 7.5.4 以及更新的版本中** 如果你需要更多特殊的配置，也可以使用 JSON 对象。它看起来是下面这样的：
 
     "applyTo": {
         "row": "Headline,Article",
         "cell": "4,8,6"
     }
 
-This would ensure the setting can only be used on rows named **Article** or **Headline**, or on cells sized: **4**, **8** or **6**. If it should only apply to cells you can remove the row property. If it should apply to all rows you can specify it by having the row property with null or an empty string as value.
+这会使得该设置仅应用于名称为**Article** 或者 **Headline**的rows或者尺寸为**4**, **8** 或者 **6**的 cells。如果你只需要应用于 cells 你可以移除 row 属性。如果要应用于所有 rows 你可以将 row 属性设置为 null 或者一个空的字符串作为值。
 
-###Sample settings
-There are many ways to combine these, here are some samples:
+### 设置实例 ###
 
-**Set a background image style**
+有很多方法可以组合使用这些，这里有一些示例：
+
+**设置一张背景图片的样式**
 
     {
         "label": "Background image",
@@ -106,7 +107,7 @@ There are many ways to combine these, here are some samples:
     }
 
 
-**Set a title setting**
+**设置标题配置**
 
     {
         "label": "Title",
@@ -116,7 +117,7 @@ There are many ways to combine these, here are some samples:
     }
 
 
-**Set a data-custom setting**
+**设置一个数据自定义配置**
 
     {
         "label": "Custom data",
@@ -130,10 +131,10 @@ There are many ways to combine these, here are some samples:
         ]
     }
 
-###Multiple settings and styles
-You can add multiple settings and styles configurations on a datatype. This is done by creating a new setting or style object. Remember to separate the objects with a comma.
+### 多配置和样式 ###
+你可以添加多个设置和样式设置到一个数据类型。这是通过添加新的setting 或 style 对象来实现的。记住对象之间用逗号分隔。
 
-**Adding multiple settings**
+**添加多个设置**
 
     [
         {
@@ -157,5 +158,6 @@ You can add multiple settings and styles configurations on a datatype. This is d
     ]
 
 
-###Full-width settings and styles
-It is possible to use settings and styles to add full-width background-images, background-colors and so forth. Just make sure the surrounding *section* is full-width(12 columns by default) and the *rows* inside it will automatically become full-width.
+### 全宽设置和样式 ###
+
+可以使用setting和styles 来添加全宽背景图像、背景颜色等。只需确保外层的*section*是全宽的（默认为12列），其中的*rows*将自动变为全宽。

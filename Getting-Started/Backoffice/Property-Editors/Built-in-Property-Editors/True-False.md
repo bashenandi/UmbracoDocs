@@ -1,20 +1,20 @@
-# 是/非
+# 是/否 #
 
-`返回值: Boolean`
+`Returns: Boolean`
 
-是/非是一个简单的复选框，保存值是0或1，这取决于你是否选取了。
+是/否 是一个简单的复选框，保存值是0或1，这取决于你是否选取了。
 
-## 数据类型定义示例
+## 数据类型定义示例 ##
 
-![True/False Data Type Definition](images/True-False-DataType.png)
+![True/False Data Type Definition](images/True-False-DataType-742.jpg)
 
-## 内容示例 
+## 内容示例 ##
 
 ![No Edit Content Example](images/True-False-Content.png)
 
-##MVC 视图示例 - 显示子页面中没有隐藏的链接列表
+## MVC 视图示例 - 显示子页面中没有隐藏的链接列表 ##
 
-###类型:
+### Typed: ###
 
 	@{
 		foreach (IPublishedContent page in Model.Content.Children){
@@ -24,7 +24,9 @@
 		}	
 	}
 
-###动态: 
+### Dynamic (Obsolete): ###
+
+访问 [Common pitfalls](https://our.umbraco.com/documentation/reference/Common-Pitfalls/#dynamics) 了解更多关于为什么动态方法已经过时的信息。
 
 	@{
 		foreach (var page in CurrentPage.Children){

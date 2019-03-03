@@ -1,11 +1,11 @@
-#Data Persistence (CRUD) in Umbraco
+# Data Persistence (CRUD) in Umbraco
 
 _The Umbraco Services layer is used to query and manipulate Umbraco stored in the database_
 
-##Service Context
+## Service Context
 
 The `ServiceContext` is the gateway to all of Umbraco's core services. In most cases, the `ServiceContext` will be 
-exposed as a property on all Umbraco base classes such as `SurfaceController`'s, `UmbracoApiController`'s, any Umbraco views, etc...
+exposed as a property on all Umbraco base classes such as `SurfaceController`s, `UmbracoApiController`s, any Umbraco views, etc...
 So for the majority of cases you can simply access the services by using this code (for example):
 
 	Services.ContentService.Get(123);
@@ -16,7 +16,7 @@ that you are not using an Umbraco base class, you can access the ApplicationCont
 
 	ApplicationContext.Current.Services.ContentService.Get(123);
 	
-##Services
+## Services
 
 There are quite a few different services exposed on the ServiceContext such as: ContentService, MediaService, MemberService, etc... 
 There is a service for each type of data in Umbraco.

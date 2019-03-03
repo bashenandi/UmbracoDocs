@@ -1,8 +1,8 @@
-# 灵活负载均衡的高级技术
+# 灵活负载均衡的高级技术 #
 
 _这里讲述了一些进阶技术，你可以通过灵活负载均衡技术实现_
 
-## 明确主调度服务器
+## 明确主调度服务器 ##
 
 建议配置显式的主调度服务器，这会减少[主调度服务器选取](flexible.md#scheduling-and-master-election)的复杂性。
 
@@ -10,6 +10,7 @@ _这里讲述了一些进阶技术，你可以通过灵活负载均衡技术实�
 
 第一件事是为你的前端和主服务器创建关联的class，代码如下：
 
+```csharp
 	public class MasterServerRegistrar : IServerRegistrar2
 	{
 		public IEnumerable<IServerAddress> Registrations
@@ -22,8 +23,8 @@ _这里讲述了一些进阶技术，你可以通过灵活负载均衡技术实�
 		}
 		public string GetCurrentServerUmbracoApplicationUrl()
 		{
-			//NOTE: If you want to explicitly define the URL that your application is running on,
-			// this wil be used for the server to communicate with itself, you can return the 
+			// NOTE: If you want to explicitly define the URL that your application is running on,
+			// this will be used for the server to communicate with itself, you can return the 
 			// custom path here and it needs to be in this format:
 			// http://www.mysite.com/umbraco
 
@@ -46,6 +47,8 @@ _这里讲述了一些进阶技术，你可以通过灵活负载均衡技术实�
 			return null;
 		}
 	}
+```
+
 
 然后你需要在应用启动时，替换注册默认的 `DatabaseServerRegistrar`。
 你需要创建一个[ApplicationEventHandler](/Documentation/Reference/Events/Application-Startup)并且复写`ApplicationStarting`方法。在这里你可以替换注册对象：
@@ -60,7 +63,7 @@ _这里讲述了一些进阶技术，你可以通过灵活负载均衡技术实�
 同时你的主服务器会使用你定义的`MasterServerRegistrar`类，他们会被一直认定为『主』服务器，而且永远执行所有的任务调度。
 
 
-## 前端服务器 - 数据库只读访问
+## 前端服务器 - 数据库只读访问 ##
 
 _这段内容仅适用于 Umbraco 数据表_
 
@@ -74,3 +77,31 @@ _这段内容仅适用于 Umbraco 数据表_
 为了能够为前端服务器设置数据库只读访问，你需要实现上面[Explicit master scheduling server](#explicit-master-scheduling-server)部分提到的配置方法。
 
 现在你的前端服务器会使用你自定义的`FrontEndReadOnlyServerRegistrar`类，他们会被一直认定是『从』服务器，而不会尝试任何主服务器选择以及任务调度工作，并且由于你不再使用默认的`DatabaseServerRegistrar`，他们也不会再尝试请求umbracoServer表。
+
+## Controlling how often the load balancing instructions from the database are processed and pruned ##
+
+During start up the `DatabaseServerMessengerOptions` can be adjusted to control how often the load balancing instructions from the database are processed and pruned.
+
+e.g. This example should be added within a [`ApplicationStarting`](../../../../Reference/Events/Application-Startup.md#startup-methods) event
+
+```csharp
+	ServerMessengerResolver.Current.SetServerMessenger(
+		new BatchedDatabaseServerMessenger(
+			applicationContext,
+			true,
+			new DatabaseServerMessengerOptions()
+			{
+				DaysToRetainInstructions = 2, // 2 days
+				ThrottleSeconds = 5, // 5 second
+				MaxProcessingInstructionCount = 1000,
+				PruneThrottleSeconds = 60 // 1 minute
+			}
+		)
+	);
+```
+
+Parameters:
+- DaysToRetainInstructions - The number of days to keep instructions in the database; records older than this number will be pruned.
+- MaxProcessingInstructionCount - The maximum number of instructions that can be processed at startup; otherwise the server cold-boots (rebuilds its caches)
+- ThrottleSeconds  - The number of seconds to wait between each sync operations
+- PruneThrottleSeconds - The number of seconds to wait between each prune operation

@@ -5,12 +5,11 @@
 
 ![数据类型定义](Built-in-Property-Editors/images/Media-Picker-DataType.jpg)
 
-## [ Umbraco 内置属性编辑器](Built-in-Property-Editors/index.md)
-Umbraco 预装了许多有用的属性编辑器...
+## [ Umbraco 内置属性编辑器](Built-in-Property-Editors/index.md) ##
+Umbraco 内置了许多有用的属性编辑器...
 
 ## 更多信息
 - [自定义数据类型](../../Data/Data-Types/)
 
 ## 教程
 - [如何创建属性编辑器](../../../Extending-Umbraco/Property-Editors/index.md)
-为 Umbraco 创建属性编辑器

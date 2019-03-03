@@ -1,10 +1,10 @@
-#通过Microsoft WebMatrix安装Umbraco 
+# 使用Microsoft WebMatrix安装Umbraco  #
 
-按照这些简单的步骤，使用WebMatrix可以快速并且容易的运行你的实例。使用WebMatrix的好处就在于，它非常的快速以及简易。
+根据下面的步骤，可以使用WebMatrix来快速地安装和运行你的实例。使用WebMatrix的好处就在于，它非常的快速以及简易
 
-##下载并启动 WebMatrix3
+## 下载并启动 WebMatrix3 ##
 
-1. 前往 [http://www.microsoft.com/web/webmatrix/](http://www.microsoft.com/web/webmatrix/) 下载免费的 WebMatrix 3。
+1. 前去 [http://www.microsoft.com/web/webmatrix/](http://www.microsoft.com/web/webmatrix/) 免费下载 WebMatrix 3。
 
 2. 正确安装后，启动WebMatrix。
 
@@ -34,7 +34,7 @@
 
   ![Web Matrix - Install Complete](images/WebMatrix/webmatrix3-install-complete.png)
 
-## Umbraco 安装网站
+## Umbraco 网站安装 ##
 本节继续讲述的内容包含当你第一次运行网站时，需要安装和配置的内部信息。	
 1. 当你完成安装后你可能需要从 WebMatrix 中启动网站 (WebMatrix也可能会在完成安装后自动启动网站。)
   1. 点击左下方的站点部分。
@@ -57,7 +57,7 @@
 
   ![Web Installer - Database choice](images/WebMatrix/web-db-CE.png)
 
-  1. 在数据库安装期间你会看到进度条提醒，安装结束点击 **Next**
+1. 在下个窗口中你会需要在表单中填写一些信息用来创建在 Umbraco 后台中操作的用户。完成之后点击 **Create user**
 
   ![Web Installer - Database Install](images/WebMatrix/web-db-install.png)
 
@@ -66,6 +66,7 @@
   ![Web Installer - Create User](images/WebMatrix/web-user.png)
 
 6.  下一步，你可以选择是否安装 starter kit。Starter kit会安装一个示例网站，并允许你分析它，并学习 Umbraco 是如何运作的。
+
 
 7. 在决定你是否要安装 starter kit 之后你就完成了整个安装过程！
 
