@@ -1,35 +1,37 @@
-# Outbound request pipeline
-The **outbound pipeline** consists out of the following steps:
+# 出站请求管道 #
+
+**出站管道**由以下步骤组成：
 
 1. [Create segments](#segments)
 2. [Create paths](#paths)
 3. [Create urls](#urls)
 
-To explain things we will use the following content tree:
+为了解释问题，我们将使用以下内容树:
+
 ![simple content tree](images/simple-content-tree.png)
 
 ## 1. <a name="segments"></a> Create segments
-When the URL is build up, Umbraco will convert every node into a segment.  Each published [Content](../../../Reference/Management/Models/Content) has a url segment. 
+当建立 URL 时，Umbraco 会转换每个节点到一个段（segment）中。每个发布的[Content](../../../Reference/Management/Models/Content)都有一个 url 段。
 
-In our example "Our Products" will become "our-products" and "Swibble" will become "swibble".
+在我们的例子中"Our Products"会变为"our-products"，"Swibble" 会变为 "swibble"。
 
-The segments are created by the "Url Segment provider"
+段是由"Url Segment provider"创建的
 
-### Url Segment provider
-On Umbraco startup the `UrlSegmentProviderResolver` will search for the first `IUrlSegmentProvider` and that does not return `null`.
+### Url Segment provider ###
+在 Umbraco 启动时，`UrlSegmentProviderResolver`会搜索第一个`IUrlSegmentProvider`，它并不会返回 `null`。
 
-If no UrlSegment provider is found, he will fall back to the *default Url segment provider*.
+如果没有找到，它会返回*default Url segment provider*。
 
-To create a new Url segment provider, implement the following interface:
+要创建一个新的 Url segment provider, 实现下面的接口：
 
     public interface IUrlSegmentProvider
     {
       string GetUrlSegment(IContentBase content);
     }
 
-The returned string will be your URL segment for this node.  You are free to return whatever string you like, but it cannot contain url segment separators `/` characters as this would create additional "segments". So something like `5678/swibble` is not allowed.
+返回的字符串就是你为这个节点生成的 URL 段。你可以自由返回任何你喜欢的字符串，但是它不能包含 url 段分隔符`/`，因为这将会创建额外的『段』。因此例如`5678/swibble`是不被允许的。
 
-#### Example
+#### 示例 ####
 
     public class MyProvider : IUrlSegmentProvider
     {
@@ -43,19 +45,19 @@ The returned string will be your URL segment for this node.  You are free to ret
       }
     }
 
-The returned string becomes the native Url segment.  You don't need any Url rewriting, ...
+返回的字符串会转换为原生的 Url 段。你不需要任何 Url 重写，……
 
-If we would use `MyProvider`, the "swibble" node from our example content tree would have "5678-swibble" as segment. 
+如果我们使用`MyProvider`，我们的示例内容树中的"swibble"节点，会拥有"5678-swibble"段。
 
-### The Default Url Segment Provider
+### The Default Url Segment Provider ###
 
-Default Url builds its segments like this. 
-First it looks (in this order) for: 
+默认的 Url 构建段看起来是这样的。
+首先它会查找（按此顺序）：
 
-- the *umbracoUrlName* property. on the node  `content.GetPropertyValue<string>("umbracoUrlName")`
+- *umbracoUrlName*属性。在节点上使用 `content.GetPropertyValue<string>("umbracoUrlName")`
 - content.Name
 
-Then uses Umbraco string extension `ToUrlSegment()` to produce a clean segment.  
+然后使用 Umbraco 字符串扩展`ToUrlSegment()`来生成一个干净的段。 
 
     // That one is initialized by default
     public class DefaultUrlSegmentProvider : IUrlSegmentProvider
@@ -66,38 +68,37 @@ Then uses Umbraco string extension `ToUrlSegment()` to produce a clean segment.
     { … }
 
 ## 2. <a name="paths"></a>Create paths
-To create a path, the pipeline will use the segments to produce the path.
+管道将使用段来创建一个路径。
 
-If we look at our example, the "swibble" node will receive the path: "/our-products/swibble".  If we take the `MyProvider` from above, the path would become: "/our-products/5678-swibble".  
+在我们的示例中，"swibble"节点会接收路径："/our-products/swibble"。如果我们使用了上面的`MyProvider`，路径会变为："/our-products/5678-swibble"。
 
-But, if you would add another site, the (internal) paths for the nodes of second site will be is prefixed by the NODE ID of the site.
-Any content node with a hostname defines a “new root” for paths.  
+但是，如果我们添加了其他站点，第二个站点中的节点路径（内部）都将会以该站点中的节点 ID 作为前缀。
+
+任何具有主机名的内容节点都为路径定义一个“新根”。 
 
 ![path example](images/path-example.png)
 
-Paths can be cached, what comes next cannot (http vs https, current request…).
+路径会被缓存，而下一个并不会（http vs https, current request…）。
 
-There are a few more notes to make if you **work with hostnames**:
+如果你**运行于hostnames**，有一些注意事项：
 
--  **Domain without path** e.g. "www.site.com"
-will become "1234/path/to/page"
-- **Domain with path** e.g. "www.site.com/dk"
-will produce "1234/dk/path/to/page" as path
+- **没有路径的域** e.g. "www.site.com"会变为"1234/path/to/page"
+- **包含路径的域** e.g. "www.site.com/dk"会生成"1234/dk/path/to/page"路径
 - **No domain specified**: "/path/to/page"
 - **Unless HideTopLevelNodeFromPath config is true**, then the path becomes "/to/page"
 
 ## 3. <a name="urls"></a> Create Urls
-The Url of a node consists out of a complete [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier): the schema, domainname, (port) and the path.  
+节点的URL 是一个完整的[URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier)：架构，域名，（端口）和路径。
 
-In our example the "swibble" node could have the following URL: "http://example.com/our-products/swibble.aspx"
+在我们的实例中，"swibble"节点拥有下面的 URL："http://example.com/our-products/swibble.aspx"。
 
-Generating this url is handled by the Url Provider.  The Url provider is every time whenever you write (e.g.):
+这个 url 是由Url Provider生成的。每次写入时Url provider 都可以（e.g.）：
 
 	@Content.Model.Url
 	@Umbraco.Url(1234)
 	@UmbracoContext.Current.UrlProvider.Geturl(1234)
 
-The `UrlProviderResolver` searches for all Url providers and will take the first one that does not return null.  If falls back to the default Urls provider if no Url provider has been found.
+`UrlProviderResolver`会搜索所有 Url 提供器，并且会返回第一个，而不是返回 null。如果没有找到则返回默认的 Urls 提供器。
 
     // That one is initialized by default
     public class DefaultUrlProvider : IUrlProvider
@@ -106,7 +107,7 @@ The `UrlProviderResolver` searches for all Url providers and will take the first
     // But feel free to use your own
     UrlProviderResolver.Current.InsertType<MyUrlProvider>();
 
-To create your own Url provider, implement the `IUrlProvider` interface
+实现`IUrlProvider`接口可以创建你自己的 Url 提供器
 
     public interface IUrlProvider
     {
@@ -116,15 +117,15 @@ To create your own Url provider, implement the `IUrlProvider` interface
             UrlProviderMode mode);
     }
 
-The returned string by GetUrl can return whatever pleases you.
+通过GetUrl返回的字符串，可以返回您喜欢的任何内容。
 
-It's tricky to implement your own provider, it is advised use override the default provider.  If implementing a custom Url Provider, consider following things:
+实现自己的提供器是很困难的，建议使用重写默认提供器的方式。如果实现自定义URL提供程序，请考虑以下事项：
 
-- cache things,
-- be sure to know how to handle schema's (http vs https) and hostnames 
-- inbound might require rewriting
+- 缓存事项
+- 一定要知道如何处理架构（HTTP vs HTTPS）和主机名
+- 入站可能要重写
 
-When you inherit from the DefaultUrlProvider, you need to implement the constructor specifying the `IRequestHandlerSection`.  The easiest way to retrieve this object is adding a constructor: 
+当从DefaultUrlProvider继承时，需要实现指定`IRequestHandlerSection`的构造函数。检索此对象的最简单方法是添加一个构造函数：
 
     public class MyUrlProvider : DefaultUrlProvider {
       public MyUrlProvider()
@@ -141,41 +142,38 @@ When you inherit from the DefaultUrlProvider, you need to implement the construc
 **TODO: "Per-context UrlProvider".
 Stéphane mentions a "per context Url provider" on page 35 of his document.  We need to find out what this is!**
 
-### How the Url provider works
+### Url 提供器是如何工作的 ###
 
-- If the current domain matches a root domain of the target content
-  - Return a relative Url
-  - Else must return an absolute Url
-- If the target content has only one root domain
-  - Use that domain to build the absolute Url
-- If the target content has more that one root domain
-  - Figure out which one to use
-  - To build the absolute Url
-- Complete the absolute Url with scheme (http vs https)
-  - If the domain contains a scheme use it
-  - Else use the current request’s scheme
+- 如果当前域与目标内容的根域相匹配
+  - 返回相关的URL
+  - 否则必须返回绝对 URL
+- 如果目标内容只包含一个根域
+  - 使用该域名构成绝对 Url
+- 如果目标内容有多个根域
+  - 找出使用哪一个
+  - 创建绝对URL
+- 使用架构完成绝对 Url（http 或 https）
+  - 如果域名包含架构就使用它
+  - 否则使用当前请求的架构
 
-If "useDirectoryUrls" is false, then add .aspx in the Url.
-If "addTrailingSlash" is true, then add a slash.
-Then add the virtual directory.
+如果"useDirectoryUrls"设置为 false，则在 URL 中添加.aspx。如果"addTrailingSlash"设置为 true，则添加斜线。然后添加虚拟目录。
 
-If the URL provider encounter collisions when generating content URLs, it will always select the first available node and assign the URL to this one.
-The remaining nodes will be marked as colliding and will not have a URL generated. If you do try to fetch the URL of a node with a collision URL you will get an error string including the node ID (#err-1094) since this node does not currently have an active URL.
-This can happen if you use the umbracoUrlName property to override the generated URL of a node, or in some cases when having multiple root nodes without hostnames assigned.
+如果 URL 提供器在生成内容 URL 时发生冲突，它将会一直选择第一个可用的节点，并为其分配URL。其余的节点将会标记冲突并且不会有 URL生成。如果你尝试获取具有冲突URL的节点的URL，则会得到一个包含节点ID（err-1094）的错误字符串，因为此节点当前没有活动的URL。
 
-Keep in mind that this means publishing a unpublished node with a conflicting URL, might change the active node being rendered on that specific URL in cases where the published node should now take priority according to sort order in the tree!
+如果使用umbracoUrlName属性覆盖节点的生成URL，或者在某些情况下，如果有多个根节点未分配主机名，则可能发生这种情况。
 
-### A few more things
+请记住，这意味着使用冲突的URL发布未发布的节点，在已发布的节点现在应根据树中的排序顺序优先处理的情况下，可能会更改正在该特定URL上呈现的活动节点！
+
+### 还有一些事情 ###
 **TODO: CHECK WITH IF THIS IS INTERPRETED CORRECTLY.  Copied from page 42 of Stéphane's document.**
  
-- The IUrlProvider also has a GetOtherUrls method (For the back-end)
-- Another implementation if the IUrlProvider is the `AliasUrlProvider`: this will show the umbracoUrlAlias url in the back-end
+- IUrlProvider 还有一个GetOtherUrls方法 (用于后端)
+- 如果IUrlProvider是`AliasUrlProvider`，还有一个可用接口：在后端显示为umbracoUrlAlias 
 
-### Url Provider Mode
-Provider "mode" determines absolute vs. relative Urls.
-You can change the mode of the current provider
+### Url 提供程序模式 ###
+提供者『模式』决定了绝对还是相对 Url。你可以改变当前提供程序的模式
 
-These are the different modes:
+这是一些不同的模式:
 
     public enum UrlProviderMode
     {
@@ -190,16 +188,17 @@ These are the different modes:
       AutoLegacy // this is the default mode in v6
     }
 
-`Auto` is equivalent to `AutoLegacy` with useDomainPrefixes set to false
+当useDomainPrefixes设置为 false 时，`Auto`等同于`AutoLegacy`。
 
-*Note*: `UseDomainPrefixes` is ignored in every mode except AutoLegacy
+*注意*: `UseDomainPrefixes` 在每个模式中都是被忽略的，除了AutoLegacy
 
-Default mode can be configured in `/umbraco/web.routing/urlProviderMode`
+默认模式可以在`/umbraco/web.routing/urlProviderMode`中配置
 
-### Site Domain Helper
-The Url provider needs a `ISiteDomainHelper` object, this object is provided by the `SiteDomainHelperResolver`.
+### 网站域名辅助 ###
 
-This object gets the current Uri and all eligible domains, and return only one domain which is used by the UrlProvider to create the Url.
+Url 提供程序需要一个`ISiteDomainHelper`对象，这个对象是由`SiteDomainHelperResolver`提供的。
+
+这个对象返回当前 Uri 以及所有合规的域名，并且仅返回UrlProvider创建 Url 时所使用的那个域名。
 
     // That one is initialized by default
     public class SiteDomainHelper : ISiteDomainHelper
@@ -208,14 +207,14 @@ This object gets the current Uri and all eligible domains, and return only one d
     public class SiteDomainHelperResolver
     { … }
 
-To create your own Site Domain helper, implement the ISiteDomainHelper and add it to the resolver.
+创建你自己的网站域名辅助，实现ISiteDomainHelper接口并添加其到解析器（resolver）。
 
     public interface ISiteDomainHelper
     {
       DomainAndUri MapDomain(Uri current, DomainAndUri[] domainAndUris);
     }
 
-You can use the default SiteDomainhelper to add extra domains:
+你可以使用默认的SiteDomainhelper添加额外的域名：
 
     public class MyApplication : ApplicationEventHandler
     {
@@ -226,9 +225,9 @@ You can use the default SiteDomainhelper to add extra domains:
       }
     } 
 
-Then it knows it should pick e.g. “www.bravo.com” when current is “www.alpha.com”.
+然后它知道当前为“www.alpha.com”时，应该选择的是“www.bravo.com”。
 
-A more complicated example with the SiteDomainHelper:
+一个更复杂的SiteDomainHelper示例：
 
     public class MyApplication : ApplicationEventHandler
     {
@@ -241,8 +240,6 @@ A more complicated example with the SiteDomainHelper:
       }
     }
 
-Back-end on www.alpha.com/umbraco
-then link is "www.bravo.com/bravo-2" ; alternate link is "mobile.bravo.com/bravo-2".  
+当后端在www.alpha.com/umbraco时链接是"www.bravo.com/bravo-2"；备用链接是"mobile.bravo.com/bravo-2"。
 
-If you have good ideas on creating better implementations, please share them on the [Umbraco dev group](https://groups.google.com/forum/#!forum/umbraco-dev).
-
+如果你有创建更好的接口的好主意，请在[Umbraco dev group](https://groups.google.com/forum/#!forum/umbraco-dev)中分享它们。

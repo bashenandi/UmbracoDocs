@@ -1,9 +1,9 @@
 # Web.config #
 
-_本章定义了可以在 web.config中找到的 appsetting 参数_
+_本节定义了可以在 web.config中找到的 appSetting 参数_
 
 ## 必填的配置 ##
-_web.config 文件中这部分 appSetting 的配置，必须要一个明确的值_
+_web.config 文件中这部分 appSetting 配置，必须要一个明确的值_
 
 ### umbracoConfigurationStatus ###
 保持这个版本号为当前安装的 Umbraco 版本。这个版本号会在运行安装或者升级安装时自动更改。不建议手工更改这个值，升级安装需要在升级的网站时执行完一些动作后更改这个值。当这个版本号和Umbraco DLL的版本号一样时，升级安装器是不会运行的。
@@ -24,14 +24,13 @@ URL 指向 Umbraco 管理文件夹。如果你重命名了`umbraco`文件夹，�
     <add key="umbracoPath" value="~/umbraco" />
 
 ### umbracoHideTopLevelNodeFromPath ###
-如果你运行了多个网站，你可能不想最高层级的节点显示在 url 中。可用的选项是`true`和`false`。
+如果你运行了多站点，你可能不想最高层级的节点显示在 url 中。可用的选项是`true`和`false`。
 
     <add key="umbracoHideTopLevelNodeFromPath" value="true" />
 
 ### umbracoUseDirectoryUrls
-
-Strips `.aspx` from URLs on the frontend when set to `true`.  
-This setting is only important to older IIS configurations where extension-less URLs weren't supported very well.
+当设置为`true`时`.aspx`会显示在前端的 URL 中。
+此设置仅对早期的IIS配置很重要，因为在这些配置中，不太支持无扩展URL。
 
 	<add key="umbracoUseDirectoryUrls" value="true" />
 	
@@ -70,8 +69,6 @@ This setting is only important to older IIS configurations where extension-less 
 
 通过将此设置添加到web.config，将能够从Umbraco中发送电子邮件。这可能是工作流的通知邮件，或者使用表单的邮件，您需要指定SMTP设置才能使用电子邮件工作流。后台的忘记密码功能还需要一个SMTP服务器来发送带有重置链接的电子邮件。
 
-By adding this settings to the web.config you will be able to send out emails from your Umbraco installation. This could be notifications emails if you are using content workflow, or you are using Umbraco Forms you also need to specify SMTP settings to be able use the email workflows. The forgot password function from the backoffice also needs a SMTP server to send the email with the reset link.
-
 	<system.net>
         <mailSettings>
         <smtp from="noreply@example.com">
@@ -80,7 +77,7 @@ By adding this settings to the web.config you will be able to send out emails fr
         </mailSettings>
     </system.net>
 
-## 选填配置 settings
+## 选填配置##
 
 _这些设置有默认值，但是能够通过在 web.config 中创建新的 appSetting 并设置它们的值来重写_
 

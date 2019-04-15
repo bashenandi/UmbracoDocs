@@ -1,8 +1,8 @@
-# Inbound request pipeline
+# 入站请求管道 #
 
-The inbound process is triggered by the Umbraco (http) Module.  The **[published content request preparation](published-content-request-preparation.md)** process kicks in and creates a `PublishedContentRequest`.
+入站进程由Umbraco（HTTP）模块触发。[已发布内容请求准备](123) 进程启动并创建一个`PublishedContentRequest`。
 
-The `PublishedContentRequest` object represents the request which Umbraco must handle.  It contains everything that will be needed to render it.  All this happens when the Umbraco modules thinks it's a document to render. 
+`PublishedContentRequest`对象代表 Umbraco 必须处理的请求。它包含渲染它所需的所有内容。所有这一切都在 Umbraco 模块认为它的一个文档要渲染时发生。
 
     public class PublishedContentRequest
     {
@@ -10,16 +10,16 @@ The `PublishedContentRequest` object represents the request which Umbraco must h
       …
     }
 
-There are 4 important properties, which contains all the information to find back a node:
+这里有4个重要的属性，其中包含了查找返回节点的所有信息。
   
     public bool HasDomain { get; }
     public Domain Domain { get; }
     public Uri DomainUri { get; }
     public CultureInfo Culture { get; }
 
-Domain contains: "example.com", while Uri is "http://example.com".
+域名包含："example.com"，Uri 就是 "http://example.com"。
 
-It contains also the content to render:
+它还包含要渲染的内容：
 
     public bool HasPublishedContent { get; }
     public IPublishedContent PublishedContent { get; set; }
@@ -29,7 +29,7 @@ It contains also the content to render:
     public void SetInternalRedirectPublishedContent(IPublishedContent content);
     public bool IsInternalRedirectPublishedContent { get; }
 
-Contains template information and the corresponding rendering engine:
+包含模板信息以及相应的渲染引擎：
 
     public bool HasTemplate { get; }
     public string TemplateAlias { get; }
@@ -37,11 +37,9 @@ Contains template information and the corresponding rendering engine:
     public bool TrySetTemplate(string alias);
     public void SetTemplate(ITemplate template);
 
-
-You can subscribe to the event to know when the `PublishedContentRequest` is ready to be processed.  It's up to you to change anything (content, template, ...): 
+您可以订阅事件来了解`PublishedContentRequest`何时处理完毕。您可以更改任何内容（内容，模板，……）
 
     // public static event EventHandler<EventArgs> Prepared;
-    
     PublishedContentRequest.Prepared += (sender, args) =>
     {
       var request = sender as PublishedContentRequest;

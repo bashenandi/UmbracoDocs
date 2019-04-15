@@ -1,39 +1,43 @@
-# Cache & Distributed Cache
+# 缓存和分布式缓存 #
 
-_This section refers to how to implement caching features in the Umbraco application in a consistent way that will work in both single server environments and load balanced (multi-server) environments. The caching described in this section relates to application caching in the context of a web application only._ 
+_本章介绍了如何以一致的方式在 Umbraco 应用程序中实现缓存功能，这在单服务器环境和负载均衡（多服务器）环境中都适用。本节中描述的缓存内容仅与 web 应用程序上下文中的应用缓存相关。_
 
-## IF YOU ARE CACHING, PLEASE READ THIS
+
+
+## 如果你正在使用缓存，请阅读这里 ##
 
 Although caching is a pretty standard concept it is very important to make sure that caching is done correctly and consistently. It is always best to ensure performance is at its best before applying any cache and also beware of *over caching* as this can cause degraded performance in your application because of cache turnover.
 
 In normal environments caching seems to be a pretty standard and easy concept, however if you are a package developer or a developer who is going to be publishing a codebase to a load balanced environment then you need to be aware of how to invalidate your cache properly so that it works in load balanced environments. If it is not done correctly then your package and/or codebase will not work the way that you would expect in a load balanced scenario. 
 
-**If you are caching business logic data that changes based on a user's action in the backoffice and you are not using an *ICacheRefresher* then you will need to review your code and update it based on the below documentation.**
 
-## Retrieving and Adding items in the cache
+**如果你缓存了业务逻辑数据，并且修改是基于用户在后台中进行，同时没有使用 *ICacheRefresher*，那么你需要根据下面的文档，重新检查你的代码。 **
 
-You can [update and insert items in the cache](updating-cache.md).
+## 检索并添加项目到缓存中 ##
 
-## Refreshing/Invalidating cache
+你可以阅读[更新、新增项目到缓存中](updating-cache.md)。
+
+
+## 刷新/废弃 缓存
 
 ### [ICacheRefresher](cache-refresher.md)
 
-The standard way to invalidate cache in Umbraco is to implement an `ICacheRefresher`.
+在 Umbraco 中作废缓存的标准方法是实现`ICacheRefresher`。
 
-The interface consists of the following methods:
+该接口包含了下面的方法：
 
-* `Guid UniqueIdentifier { get; }` - which you'd return your own unique GUID identifier
-* `string Name { get; }` - the name of the cache refresher (informational purposes)
-* `void RefreshAll();` - this would invalidate or refresh all caches of the caching type that this `ICacheRefresher` is created for. For example, if you were caching `Employee` objects, this method would invalidate all `Employee` caches.
-* `void Refresh(int Id);` - this would invalidate or refresh a single cache for an object with the provided INT id.
-* `void Refresh(Guid Id);` - this would invalidate or refresh a single cache for an object with the provided GUID id.
-* `void Remove(int Id);` - this would invalidate a single cache for an object with the provided INT id. In many cases Remove and Refresh perform the same operation but in some cases `Refresh` doesn't just remove/invalidate a cache entry, it might update it. `Remove` is specifically used to remove/invalidate a cache entry.
+* `Guid UniqueIdentifier { get; }` - 返回唯一的GUID 标识
+* `string Name { get; }` - 缓存器的名字 (易于识别)
+* `void RefreshAll();` - 废弃或者刷新所有使用`ICacheRefresher`创建的缓存。 例如，你缓存了`Employee`对象，这个方法将会废弃所有的`Employee`缓存。
+* `void Refresh(int Id);` - 废弃或刷新根据提供的 INT 类型 id 所得到的对象。
+* `void Refresh(Guid Id);` - 废弃或刷新根据提供的 GUID 类型 id 所得到的对象。
+* `void Remove(int Id);` -  废弃根据提供的 INT 类型 id 所得到的对象。在多数情况下 Remove 和 Refresh 表现为同样的操作，但是在一些情况下`Refresh`不仅是删除/废弃一个缓存实例，还会更新它。 `Remove`明确的用于删除/废弃一个缓存实例。
 
- _Some of these methods may not be relevant to the needs of your own cache invalidation so not all of them may need to perform logic._
+_其中一些方法可能与您自己的缓存释放需求不相关，因此并非所有方法都需要执行逻辑_
 
-There are 2 other base types of `ICacheRefresher` which are:
+`ICacheRefresher`还有两种基本类型，分别是：
 
-* [`ICacheRefresher<T>`](cache-refresher-t.md) - this inherits from `ICacheRefresher` and provides a set of strongly typed methods for cache invalidation. This is useful when executing the method to invoke the cache refresher, when you have the instance of the object already since this avoids the overhead of retrieving the object again.
+* [`ICacheRefresher<T>`](cache-refresher-t.md) - 继承自`ICacheRefresher`并且提供了一个强类型方法用于释放缓存。这在执行调用缓存刷新器的方法时很有用，因为这样可以避免再次检索对象的开销。
   * `void Refresh(T instance);` - this would invalidate/refresh a single cache for the specified object.
   * `void Remove(T instance);` - this would invalidate a single cache for the specified object.
 * `IJsonCacheRefresher` - this inherits from `ICacheRefresher` but provides more flexibility if you need to invalidate cache based on more complex scenarios (e.g. the [MemberGroupCacheRefresher](https://github.com/umbraco/Umbraco-CMS/blob/dev-v7/src/Umbraco.Web/Cache/MemberGroupCacheRefresher.cs)).

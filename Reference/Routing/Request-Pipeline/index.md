@@ -1,23 +1,21 @@
-# Routing in Umbraco
+# Umbraco 中的路由 #
 
-_This section describes what the Umbraco Request Pipeline is, how Umbraco matches a document to a given request and how it generates a URL for a document._
+_本节描述了 Umbraco 中的请求管道是什么，Umbraco 如何匹配一个文档到给定的请求，以及如何生成一个文档的 URL。_
 
-## Request pipeline
+## 请求管道 ##
 
-### What is the pipeline
+### 什么是管道 ###
 
-The request pipeline is the process of building up the URL for a node, resolving a request to a specified node and making sure that the right content is sent back.
+请求管道是为节点建立URL、将请求解析到指定节点并确保返回正确内容的过程。
 
-![what is the pipeline](images/what-is-the-pipeline.png)
+![什么是管道](images/what-is-the-pipeline.png)
 
-For a detailed description see [Stephan's slide deck for his presentation on the Umbraco Pipeline](document/TheUmbracoRequestPipeline.pdf).
+有关详细说明，请参阅 [Stephan's slide deck for his presentation on the Umbraco Pipeline](https://our.umbraco.com/documentation/Reference/Routing/Request-Pipeline/document/TheUmbracoRequestPipeline.pdf).
 
-### Outbound vs Inbound
+### 出站和入站
+管道是双向工作的：**[inbound](inbound-pipeline.md)** 和 **[outbound](outbound-pipeline.md)**。
 
-The pipeline works bidirectional: **[inbound](inbound-pipeline.md)** and **[outbound](outbound-pipeline.md)**.
+**[Outbound](outbound-pipeline.md)** 是为一个请求的节点构建 URL 的过程。**[Inbound](inbound-pipeline.md)** 是由Web 服务器接收并由 Umbraco处理的每个请求。
 
-**[Outbound](outbound-pipeline.md)** is the process of building up a URL for a requested node.  **[Inbound](inbound-pipeline.md)** is every request received by the web server and handled by Umbraco.
-
-### Customizing the pipeline
-
-This section will describe the components that you can use to modify Umbraco's request pipeline: **[IContentFinder](IContentFinder.md)** & `IUrlProvider`
+### 定制化管道 ###
+本节描述了你可以用来修改 Umbraco 请求管道的组件：**[IContentFinder](IContentFinder.md)** & `IUrlProvider`

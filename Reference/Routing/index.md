@@ -1,30 +1,31 @@
-# Routing & Controllers
+# 路由和控制器
 
-_All about Umbraco's routing pipeline & the types of Controllers used in Umbraco, how they work and what they are used for_
+_所有关于 Umbraco 的路由管道以及Umbraco 中使用的控制器类型，它们如何工作以及它们用在哪里_
 
 ## [Pipeline](Request-Pipeline/index.md)
-Explains how Umbraco builds its URLs and how the URLs are mapped back to content items
+解释了 Umbraco 如何构建它的 URL 以及 URL 如何映射到内容项目
 
 ## [Routing Properties](routing-properties.md)
-Describes the various Umbraco special/reserved Property Type aliases that can be used to directly manipulate Umbraco's default routing pipeline. These special Property Type aliases can be very useful when creating an Umbraco website.
+
+描述各种Umbraco特殊/保留属性类型别名，这些别名可用于直接操作Umbraco的默认路由管道。这些特殊的属性类型别名在创建Umbraco网站时非常有用。
 
 ## [Surface Controllers](surface-controllers.md)
-What is a Surface Controller and how to use them
+Surface 控制器是什么以及如何使用
 
 ## [Api Controllers](WebApi/index.md)
-What is an API Controller and how to use them
+Api 控制器是什么以及如何使用
 
 ## [Custom controllers (hijacking routes)](custom-controllers.md)
-Creating custom controllers to have 100% full control over how your pages are rendered. AKA: Hijacking Umbraco Routes
+创建自定义控制器用于100%完全控制你所有页面的渲染。又名：Umbraco 路由劫持。
 
 ## [Custom routes](custom-routes.md)
-How to specify your own custom MVC routes in your Umbraco application
+如何在你的 Umbraco 应用程序中指定你的自定义 MVC 路由
 
 ## [Routes & Authentication](Authorized/index.md)
-Routing requirements for authenticated controllers for both front-end and the backoffice
+前端以及后端的权限控制器路由请求
 
 ## [URL Tracking](URL-Tracking/index.md)
-Moving and renaming Umbraco documents will lead to URL redirects to be created
+移动或者重命名 Umbraco 文档时会创建URL重定向
 
 ## [IIS Rewrite Rules](IISRewriteRules/index.md)
-How to create static or regex based rewrite rules with a config file
+如何使用配置文件创建静态或者基于正则的重写规则

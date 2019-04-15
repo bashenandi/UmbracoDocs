@@ -1,20 +1,20 @@
-# Published Content Request Preparation
+# Published Content Request Preparation #
 
-Is called in `UmbracoModule`:
+在 `UmbracoModule`中称为:
 
     void ProcessRequest(…)
 
-What it does:
+它做哪些事情：
 
-- It ensures Umbraco is ready, and the request is a document request.
-- Creates a PublishedContentRequest instance
-- Runs PublishedContentRequestEngine.PrepareRequest() for that instance
-- Handles redirects and status
-- Forwards missing content to ugly 404
-- Forwards to either WebForms or MVC
+- 它确保 Umbraco 准备好了，并且请求是一个文档请求
+- 创建一个PublishedContentRequest 实例
+- 为实例运行PublishedContentRequestEngine.PrepareRequest()
+- 处理跳转和状态
+- 转发丢失的内容到404
+- 转发到 Webforms 或者 MVC
 
-## PrepareRequest
-The ProcessRequest method calls the PublishedContentRequestEngine.PrepareRequest method. The prepare request takes care of:
+## 准备请求 ##
+ProcessRequest方法称为PublishedContentRequestEngine.PrepareRequest 方法。准备请求处理：
 
 - FindDomain()
 - Handles redirects
@@ -26,21 +26,21 @@ The ProcessRequest method calls the PublishedContentRequestEngine.PrepareRequest
 - Handles redirects and missing content
 - Initializes a few internal stuff
 
-We will discuss a few of these steps below.
+下面我们将讨论其中的几个步骤。
 
-### FindDomain()
-The FindDomain method looks for a domain matching the request Uri
+### FindDomain() ###
+FindDomain查找与请求 Uri 匹配的域
 
-- Using a greedy match: “domain.com/foo” takes over “domain.com”
-- Sets published content request’s domain
-- If a domain was found
-	- Sets published content request’s culture accordingly
-	- Computes domain Uri based upon the current request ("domain.com" for "http://domain.com" or "https://domain.com")
-- Else
-- Sets published content request’s culture by default
-(first language, else system)
+- 使用贪婪(greedy)匹配: “domain.com/foo” 接管 “domain.com”
+- 设置已发布内容请求的域
+- 如果域名找到了
+	- 相应地设置已发布内容请求的区域性
+	- 根据当前请求计算域URI ("domain.com" for "http://domain.com" or "https://domain.com")
+- 没有找到
+- 默认设置已发布内容请求的区域性
+(第一个语言，或者系统语言)
 
-### FindPublishedContentAndTemplate()
+### FindPublishedContentAndTemplate() ###
 1. FindPublishedContent ()
 2. Handles redirects
 3. HandlePublishedContent()
@@ -48,11 +48,11 @@ The FindDomain method looks for a domain matching the request Uri
 5. FollowExternalRedirect()
 6. HandleWildcardDomains()
 
-If content is not found, the ContentFinder kicks in.  In the past this was handled by the INotFoundHandler, but the new request pipeline uses [IContentFinder](IContentFinder.md).
+如果内容没有找到，ContentFinder会介入。在过去这会通过INotFoundHandler来处理，但是新的请求管道使用[IContentFinder](IContentFinder.md)。
 
-More information can be found [here](FindPublishedContentAndTemplate.md).
+更多信息可以在[这里](FindPublishedContentAndTemplate.md)找到。
 
-UmbracoModule will pick up the redirect and redirect...  There is no need to write your own redirects:
+UmbracoModule会选取重定向设置来重定向……这里不需要编写你自己的重定向：
 
     PublishedContentRequest.Prepared += (sender, args) =>
     {
@@ -66,45 +66,45 @@ UmbracoModule will pick up the redirect and redirect...  There is no need to wri
         request.SetRedirect(redirect);
     }
 
-## Forward to either WebForms or Mvc
+## 转发到 Webforms 或者 MVC ##
 
-Concerning Webforms - that's the same as v4 (no change).  That means that MVC has been made possible by the pipeline.
+关于 Webforms - 和 v4版本是一致的（没有变化）。这意味着MVC已经通过管道实现了。
 
-You can of course create your own Mvc RenderController: 
+你当然可以创建你自己的 MVC渲染控制器： 
 
 
-    // This is the default controller
+    // 这是默认的控制器
     public class RenderMvcController : UmbracoController
     { … }
 
-    // But feel free to use your own
+    // 但请随意使用自己的
     public class DefaultRenderMvcControllerResolver
     { … }
 
-Note: a missing template goes to MVC
+注意:一个缺少的模板会转到 MVC
 
-There's one by default but you can use your own, so still time to change the view...
+默认情况下有一个，但您可以使用自己的，所以花些时间来更改视图…
 
-As a reminder, [Route hijacking](../../../Reference/routing/custom-controllers) works like this: 
+作为提醒，[Route hijacking](../../../Reference/routing/custom-controllers) 的工作原理是这样的: 
 
-- create a **MyContentType**Controller
-  - Will run in place of the default controller
-  - For every content of type **MyContentType**
-- Specific action runs if name matches the template alias
-- Otherwise default (Index) action runs
+- 创建一个**MyContentType**Controller
+  - 将代替默认控制器运行
+  - 针对每个**MyContentType**类型的内容
+- 如果名称与模板别名匹配，则运行特定操作
+- 否则默认（Index）操作将运行
 
-## Missing template?
-In case the PrepareRequest can not find a template:
+## 丢失模板? ##
+如果PrepareRequest找不到模板：
 
-* it will verify if this is route hijacking
-* otherwise handles these steps:
-  *  HandlePublishedContent()
+* 它将验证这是否是路由劫持
+* 否则，它的处理步骤:
+  * HandlePublishedContent()
   * FindTemplate()
   * Handle redirects, etc.
   * Ugly 404 (w/ message)
   * Transfer to WebForms or MVC…
 
-## Other things which got routed in the process
+## 其他在流程中被路由的东西 ##
 * The /Base Rest service
 * WebApi
 * Mvc Routes
