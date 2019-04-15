@@ -1,36 +1,38 @@
-# Surface Controllers
+# Surface Controllers #
 
-_A SurfaceController is an MVC controller that interacts with the front-end rendering of an UmbracoPage. They can be used for rendering MVC Child Actions and for handling form data submissions. SurfaceControllers are auto-routed meaning that you don't have to add/create your own routes for these controllers to work._
+_SurfaceController是一个MVC控制器，它与Umbracopage的前端渲染交互。它们可以用于呈现MVC子操作以及处理表单数据提交。SurfaceControllers是自动路由的，这意味着您不必为这些控制器添加/创建自己的路由就可以工作。_
 
-## What is a SurfaceController?
+## SurfaceController是什么? ##
 
-It is a regular ASP.NET MVC controller that:
+它是一个标准的ASP.NET MVC控制器：
 
-* Is auto routed, meaning you don't have to setup any custom routes to make it work
-* Is used for interacting with the front-end of Umbraco (not the backoffice)
+* 是自动路由的，意味着您不必配置任何自定义路由使其工作
+* 用于和 Umbraco 的前端（不是后台）交互
 
-Since any SurfaceController inherits from the `Umbraco.Web.Mvc.SurfaceController` class, the class instantly supports many of the helper methods and properties that are available on the base SurfaceController class including `UmbracoHelper` and `UmbracoContext`. Therefore, all Surface Controllers have native Umbraco support for:
+由于所有的SurfaceController都继承自`Umbraco.Web.Mvc.SurfaceController`，因此该类可以立即支持许多基本SurfaceController类上可用的辅助方法和属性，包括`UmbracoHelper` and `UmbracoContext`。
 
-* interacting with Umbraco routes during HTTP POSTs (i.e. `return CurrentUmbracoPage();` )
-* rendering forms in Umbraco (i.e. `@Html.BeginUmbracoForm<MyController>(...)` )
-* rendering ASP.NET MVC ChildAction 
+因此，所有Surface控制器都具有本地的Umbraco支持：
 
-## Creating a SurfaceController
+* 在 HTTP 提交期间与 Umbraco 路由交互(i.e. `return CurrentUmbracoPage();` )
+* 在 Umbraco 中渲染表单 (i.e. `@Html.BeginUmbracoForm<MyController>(...)` )
+* 渲染 ASP.NET MVC 子方法 
 
-SurfaceControllers are plugins, meaning they are found when the Umbraco application boots. There are 2 types of SurfaceController: **locally declared** & **plugin based**. The main difference between the two is that a plugin based controller gets routed via an MVC Area, which is defined in the controller (see below). Because a plugin based controller is routed via an MVC Area, it means that the views can be stored in a custom folder specific to the package it is being shipped in without interfering with the local developer's MVC files.
+## 创建一个SurfaceController ##
 
-### Locally declared controllers
+SurfaceControllers是一个插件，意味着当 Umbraco 应用启动时会被发现。有两种类型的SurfaceController：**本地定义**和**基于插件**。主要区别在于基于插件的控制器通过 MVC 的 Area进行路由，MVC Area 在控制器中定义（见下文）。因为基于插件的控制器是通过MVC区域路由的，这意味着视图可以存储在指定包的自定义目录中，而不会干扰本地开发人员的MVC文件。
 
-A locally declared SurfaceController is one that is not shipped within an Umbraco package. It is created by the developer of the website they are creating. If you are planning on shipping a SurfaceController in an Umbraco package then you will need to create a plugin based SurfaceController (see the next heading).
+### 本地声明的控制器 ###
 
-To create a locally declared SurfaceController: 
+本地声明的SurfaceController不是在Umbraco包中运行的。它是由创建网站的开发人员所创建。如果您计划在Umbraco包中承载SurfaceController，则需要创建基于插件的SurfaceController（请参见下一标题）。
 
-* Create a controller that inherits from `Umbraco.Web.Mvc.SurfaceController`
-* The controller must be a public class.
-* The controller's name must be suffixed with the term `Controller`
-* The controller must be inside a namespace
+创建一个本地的SurfaceController: 
 
-For example:
+* 创建一个控制器，继承自 `Umbraco.Web.Mvc.SurfaceController`
+* 控制器必须是 public 类.
+* 控制器名的后缀必须是`Controller`
+* 控制器必须位于一个命名空间内
+
+示例:
 
 ```csharp
 namespace name.Core.Controllers
@@ -45,25 +47,25 @@ namespace name.Core.Controllers
 }
 ```
 
-#### Routing for locally declared controllers
+#### 本地声明的控制器的路由 ####
 
-All locally declared controllers get routed to:
+所有本地声明的控制器都被路由到:
 
     /umbraco/surface/{controllername}/{action}/{id}
 
-They do not get routed via an MVC Area so any Views must exist in the following folders:
+它们不会被 MVC Area 路由，所以任何视图文件都必须位于下面的目录中：
 
 * `~/Views/{controllername}/`
 * `~/Views/Shared/`
 * `~/Views/`
 
 :::tip
-If you get a 404 error when trying to access your Surface Controller you may have forgotten to add a namespace to it!
+如果当你访问你的Surface控制器，而获取到404错误时，可能是你忘了给它添加一个命名空间！
 :::
 
-## Plugin based controllers
+## 基于插件的控制器 ##
 
-If you are shipping a SurfaceController in a package then you should definitely be creating a plugin based SurfaceController. The only difference between creating a plugin based controller and locally declared controller is that you need to add an attribute to your class which defines the MVC Area you'd like your controller routed through. Here's an example:
+如果你要在一个包中运行SurfaceController，你一定要创建一个基于插件的SurfaceController。创建基于插件的控制器和本地控制器仅有的区别在于，你需要添加一个属性到你的类，该属性定义了您希望控制器通过的 MVC Area。这是示例：
 
 ```chsarp
 namespace name.Core.Controllers
@@ -79,15 +81,15 @@ namespace name.Core.Controllers
 }
 ```
 
-In the above, I've specified that I'd like my MyController to belong to the MVC Area called 'SuperAwesomeAnalytics'. Perhaps it is obvious but if you are creating a package that contains many SurfaceControllers then you should most definitely ensure that all of your controllers are routed through the same MVC Area.
+在上面，我门指定了希望我的MyController属于名为“SuperAwesomeAnalytics”的MVC区域。也许这是显而易见的，但是如果您正在创建一个包含许多SurfaceController的包，那么您应该最明确地确保所有控制器都通过相同的MVC区域进行路由。
 
-#### Routing for plugin based controllers
+#### 基于插件控制器的路由 ####
 
-All plugin based controllers get routed to:
+所有基于插件的控制器都被路由到：
 
     /umbraco/{areaname}/{controllername}/{action}/{id}
 
-Since they get routed via an MVC Area your views should be placed in the following folder:
+如果它们通过 MVC Area 路由，你的视图可以位于下面的目录中：
 
 * `~/App_Plugins/{areaname}/Views/{controllername}/`
 * `~/App_Plugins/{areaname}/Views/Shared/`
