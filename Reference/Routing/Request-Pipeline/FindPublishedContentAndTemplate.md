@@ -1,7 +1,6 @@
-# FindPublishedContentAndTemplate()
+# FindPublishedContentAndTemplate() #
 
-This method is called on the "PublishedContentRequest.PrepareRequest()" method.  
-We discuss shortly what this method is doing:
+这个方法在"PublishedContentRequest.PrepareRequest()"方法中调用。我们将简要讨论此方法的使用：
 
 1. FindPublishedContent ()
 2. Handles redirects
@@ -10,19 +9,19 @@ We discuss shortly what this method is doing:
 5. FollowExternalRedirect()
 6. HandleWildcardDomains()
 
-#### HandlePublishedContent
-- No content?
- - Run the LastChanceFinder
- - Is an IContentFinder, resolved by ContentLastChanceFinderResolver
- - By default, is null (= ugly 404)
-- Follow internal redirects
- - Take care of infinite loops
-- Ensure user has access to published content
- - Else redirect to login or access denied published content
-- Loop while there is no content
- - Take care of infinite loops
+#### HandlePublishedContent ####
+- 没有内容?
+ - 运行LastChanceFinder
+ - 是一个 IContentFinder, 通过ContentLastChanceFinderResolver解析
+ - 默认，为空 (= ugly 404)
+- 遵循内部重定向
+ - 注意无限循环
+- 确保用户有权访问发布的内容
+ - 否则重定向到登录页面或者拒绝访问已经发布的内容
+- 没有内容时循环
+ - 注意无限循环
 
-#### FindTemplate
+#### FindTemplate ####
 - Use altTemplate if
  - Initial content
  - Internal redirect content, and InternalRedirectPreservesTemplate is true
@@ -46,18 +45,19 @@ We discuss shortly what this method is doing:
   - /path/to/page/template1?altTemplate=missing  template1
 - Yes, these rules are arbitrary… feedback?  Get to the [Dev Group](https://groups.google.com/forum/#!forum/umbraco-dev)!
 
-#### FollowExternalRedirect()
+#### FollowExternalRedirect() ####
 - content.GetPropertyValue<string>("umbracoRedirect")
-- If it’s there, sets the published content request to redirect to the content
-- Will trigger an external (browser) redirect
+- 如果存在，则将已发布的内容请求设置为重定向到内容
+- 将触发外部（浏览器）重定向
 
-#### HandleWildcardDomains()
+
+#### HandleWildcardDomains() ####
 
 ![](images/culture-and-hostnames.png)
 
-- Finds the deepest wildcard domain between
- - domain root (or top)
- - request’s published content
-- If found, updates the request’s culture accordingly
+- 查找之间最深的通配符域
+ - 根域 (或者顶级)
+ - 请求的已发布内容
+- 如果找到，相应地更新请求的区域性
 
-This actually implements separation between hostnames and cultures
+这实际上实现了主机名和语言之间的分离。

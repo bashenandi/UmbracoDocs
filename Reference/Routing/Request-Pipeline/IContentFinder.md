@@ -1,6 +1,6 @@
-# IContentFinder
+# IContentFinder #
 
-If you want to create your own content finder implement the IContentFinder interface:
+如果你想创建你自己的内容查询器实现IContentFinder接口：
 
 	public interface IContentFinder
 	{
@@ -12,10 +12,9 @@ If you want to create your own content finder implement the IContentFinder inter
 	public class ContentFinderResolver
 	{ … }
 
-Umbraco runs all content finders, stops at the first one that returns true.
-Finder can set content, template, redirect…
+Umbraco 会返回所有的内容查询器，在遇到第一个返回 true 的时候停止。查询器可以设置内容，模板，重定向……
 
-### Example 
+### 示例  ###
 
     public class MyContentFinder : IContentFinder
     {
@@ -36,7 +35,7 @@ Finder can set content, template, redirect…
       }
     }
 
-### Example Default content finder
+### 默认的内容查询示例 ###
 
     public class ContentFinderByNiceUrl : IContentFinder
     {
@@ -53,12 +52,11 @@ Finder can set content, template, redirect…
       }
     }
 
-Default finder will look for content under the domain root.
-This is an un-breaking change.
+默认的查询器会查找域名根下面的内容。这是始终如一的。
 
-### Example wire up
+### 示例 ###
 
-this example shows how to add custom content finder to (and how to remove ContentFinderByNiceUrl from) the ContentFinderResolver.
+本示例显示了如何添加自定义内容查询器（以及如何从中移除ContentFinderByNiceUrl）到ContentFinderResolver。
 
     public class MyApplication : ApplicationEventHandler
     {
@@ -73,10 +71,13 @@ this example shows how to add custom content finder to (and how to remove Conten
       }
     }
 
-# NotFoundHandlers
+## NotFoundHandlers ##
 
-To set your own 404 finder create an IContentFinder and set it as the ContentLastChanceFinder.
-A ContentLastChanceFinder will always return a 404 status code. This example creates a new implementation of the IContentFinder and checks whether the requested content could not be found by using the default `Is404` property presented in the `PublishedContentRequest` class.
+要设置自己的404查询器，请创建一个IContentFinder并将其设置为ContentLastChanceFinder。
+
+ContentLastChanceFinder会一直返回一个404状态码。此时里创建一个新的IContentFinder实现
+
+此示例创建IContentFinder的新实现，并使用`PublishedContentRequest`类中提供的默认`Is404`属性检查是否无法找到请求的内容。
 
     public class My404ContentFinder : IContentFinder {
     	public bool TryFindContent(PublishedContentRequest contentRequest) {
@@ -103,6 +104,6 @@ A ContentLastChanceFinder will always return a 404 status code. This example cre
 	    }
     }
     
-Example on how to register your own implementation:
+关于如何注册自己的实现的示例：
 
     ContentLastChanceFinderResolver.Current.SetFinder(new My404ContentFinder());
