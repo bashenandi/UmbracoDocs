@@ -1,31 +1,30 @@
-# Routing requirements for backoffice authentication
+# 后台身份验证路由需求 #
 
-In order for Umbraco to authentication a request for the backoffice, the routing needs to be specific. Any URL that routes to :
+为了让Umbraco对后台的请求进行身份验证，需要指定路由。任何 URL 都路由至：
 
 > /umbraco/backoffice/*
 
-will be authenticated. If you have a controller that is not routed within the prefix, it will not be authenticated for backoffice use.
+进行身份验证。如果您有一个不在前缀中路由的控制器，它将不会被后台认证使用。
 
-You do not have to worry about routing if you are using WebApi and using `Umbraco.Web.WebApi.UmbracoAuthorizedApiController` (or any inherited controller) since these are auto routed. All implementations of `UmbracoAuthorizedApiController` (which includes `UmbracoAuthorizedJsonController`) are auto-routed with the default route:
+如果使用WebApi 并使用`Umbraco.Web.WebApi.UmbracoAuthorizedApiController`（或任何继承的控制器），都无需担心路由问题，因为它们是自动路由的。所有`UmbracoAuthorizedApiController`（也包括`UmbracoAuthorizedJsonController`）的实现都会由默认路由来进行路由：
 
 > `/umbraco/backoffice/api/{controller}/{action}`
 
-In the case that an Umbraco Api Controller is a 'Plugin Controller', then the route would be:
+在某些案例中，Umbraco Api 控制器是基于一个'插件的控制器'，那么它的路由为：
 
 > `/umbraco/backoffice/{pluginname}/{controller}/{action}`
 
-_Note:_ the {area} specified by the [PluginController] attribute replaces the /api/ area for the route.
+_注意:_ {area}是由[PluginController]属性指定的，用来替代/api/ 区域的路由。
 
 
-## MVC controllers for the backoffice
+## 后台MVC控制器 ##
 
-If you are using MVC in the backoffice then you would normally inherit from `Umbraco.Web.Mvc.UmbracoAuthorizedController`. This type of controller is not auto-routed like Umbraco Api controllers so will require a custom route declaration to make it work.
+如果你在后端使用 MVC，一般来说会从`Umbraco.Web.Mvc.UmbracoAuthorizedController`继承。这个类型的控制器并不会像 Umbraco Api 控制器那样自动路由，因此需要定义一个自定义路由使其工作。
 
-For more information on authenticated/authorized controllers & attributes see the [Controllers Documentation](../../../Implementation/Controllers/index.md).
+有关认证/授权控制器和属性的更多信息，请参阅[控制器文档](../../../Implementation/Controllers/index.md)。
 
-## Defining a route
-When you create a controller that inherits from `Umbraco.Web.Mvc.UmbracoAuthorizedController` you need to explicitly define a route.  
-Defining a route is done with the standard ASP.NET MVC routing practices. In Umbraco, you will normally create custom routes in `Umbraco.Core.ApplicationEventHandler.ApplicationStarted` event similar to the following:
+## 定义一个路由 ##
+当你创建一个继承自`Umbraco.Web.Mvc.UmbracoAuthorizedController`的控制器时，你需要明确地定义一个路由。定义路由是由标准的ASP.NET MVC路由实现来完成的。在 Umbraco 中，你一般在`Umbraco.Core.ApplicationEventHandler.ApplicationStarted`事件中创建路由，像下面一样：
 
 
     protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext    
@@ -42,19 +41,19 @@ Defining a route is done with the standard ASP.NET MVC routing practices. In Umb
       });
     }
 
-_NOTE the route must be prefixed with Umbraco path which is configurable and resolved with `GlobalSettings.UmbracoMvcArea` and then by "backoffice" in order for Umbraco to check user authentication._
+_注意 路由必须使用`GlobalSettings.UmbracoMvcArea`配置并解析的 Umbraco 路径作为前缀，然后为了使 Umbraco 校验用户权限需要添加 "backoffice"。 _
 
-### What about Surface Controllers?
-Surface Controllers should not be used in the backoffice.  Surface Controllers are not designed to work with the backoffice, they are not meant to be used there and will not be supported being used there.
+### Surface 控制器是什么? ###
+Surface 控制器不能在后台使用。Surface 并不是为了在后台工作而设计的，它们不打算在那里使用，也不支持在那里使用。
 
-## Special backoffice routes for user authentication
-There are some special routes Umbraco checks to determine if the authentication should check a member of a user.
+## 用于用户身份验证的特殊后台路由 ##
+有一些特殊的路由会被Umbraco用来检查身份验证是用户的成员。
 
-If any route has an extension in the path like `.aspx` or the below are always backoffice routes:
+如果任何路由在路径中包含类似`.aspx`的扩展名，或以下路径始终是后台路由：
 
 *  /Umbraco/RestServices
 *  /Umbraco/BackOffice
 
-If the route is not any of the above, and there's no extension then Umbraco cannot determine if it's backoffice or front-end - so front-end is assumed. This will occur if a `UmbracoApiController` is used rather than `UmbracoAuthorizedApiController` and the `[IsBackOffice]` attribute is not used.
+如果路线不是上述任何一条，并且没有扩展，那么Umbraco无法确定它是后台还是前端 —— 因此会假设为前端。如果使用的是`UmbracoApiController`而不是`UmbracoAuthorizedApiController`，并且未使用`[isbackoffice]`属性，则会发生这种情况。
 
-In all of the above user authentication will be used.
+在上述所有情况下，都将使用用户身份验证。
